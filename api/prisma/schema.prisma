@@ -18,7 +18,7 @@ model User {
   email     String   @unique
   name      String
   password  String
-  phonenumber String
+  phonenumber String?
   profilepicture String?
   description String?
   createdAt DateTime @default(now())
