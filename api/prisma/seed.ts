@@ -1,4 +1,4 @@
-import {db} from "../utils/db.server";
+import {db} from "../src/utils/db.server";
 
 type User = {
     email: string;
