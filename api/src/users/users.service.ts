@@ -4,15 +4,18 @@ import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 
 type User = {
+    id: any;
     email: string;
     name: string;
+    password: string;
 }
 export const allUsers =  async (): Promise<User[]> => {
           return db.user.findMany({
             select:{
                 id: true,
                 name: true,  
-                email: true
+                email: true,
+                password: true
             }
             }
           )
