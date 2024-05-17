@@ -21,7 +21,8 @@ model User {
   phonenumber String?
   profilepicture String?
   description String?
-  createdAt DateTime @default(now())
+  // role       String   @default("user")
+  createdAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
   books     Book[]
   refreshTokens RefreshToken[]

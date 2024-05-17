@@ -12,7 +12,7 @@ export function generateAccessToken(user: any) {
   export function generateRefreshToken(user: any, jti: any) {
     return jwt.sign({
       userId: user.id,
-      jti
+      id: jti
     }, jwtSecret, {
       expiresIn: '4h',
     });

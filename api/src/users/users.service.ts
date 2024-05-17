@@ -36,7 +36,7 @@ export const CreateUser= async(user: any) => {
     })
 }
 
-export function findUserById(id: any) {
+export function findUserById(id: string) {
   return db.user.findUnique({
     where: {
       id,
