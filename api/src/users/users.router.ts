@@ -3,10 +3,12 @@ import  express  from "express";
 import type { Request, Response } from "express";
 import {body, validationResult} from "express-validator";
 import * as UserService from "./users.service";
+import { adminAuthorization } from "../middlewares/authorization.middleware";
 
 export const userRouter = express.Router();
 
-userRouter.get("/get-all", async (request: Request, response: Response) => {
+userRouter.get("/get-all", adminAuthorization(['admin']), async (request: Request, response: Response) => {
+   console.log("Authorized succesfully");
  try {
     const users = await UserService.allUsers();
     return response.status(200).json(users);
