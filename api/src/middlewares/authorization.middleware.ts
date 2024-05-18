@@ -9,7 +9,7 @@ interface DecodedToken {
     [key: string]: any; // for any other properties in the token
   }
   
-export const adminAuthorization = (roles: string[]) =>{
+export const Authorization = (roles: string[]) =>{
     return async (req: Request, res: Response, next: NextFunction) =>{
         const token = req.headers.authorization?.split(' ')[1];
         

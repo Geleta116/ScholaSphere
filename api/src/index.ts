@@ -5,6 +5,9 @@ import cookieParser from "cookie-parser";
 import session from 'express-session';
 import { userRouter } from "./users/users.router";
 import { authRouter } from "./auth/auth.router";
+import { bookRouter } from "./book/book.route";
+import 'reflect-metadata';
+
 dotenv.config();
 
 if (!process.env.PORT){
@@ -24,6 +27,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/users", userRouter);
 app.use("/api/auth/", authRouter);
+app.use("/api/book/", bookRouter);
 app.listen(PORT, () => {
     console.log(`listening on port: `, PORT);
 })
