@@ -1,5 +1,9 @@
 import { Express} from "express";
+import { BookDTO } from "./contrat/dtos/Upload_book.dto";
+import { db } from "../utils/db.server";
 
-function AddBook(bookName: string, ){
-    
+export async function AddBook(bookDTO: BookDTO){
+    await db.book.create({
+        data : {...bookDTO}
+    })
 }

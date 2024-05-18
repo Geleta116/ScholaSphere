@@ -8,7 +8,7 @@ import { Authorization } from "../middlewares/authorization.middleware";
 export const userRouter = express.Router();
 
 userRouter.get("/get-all", Authorization(['admin']), async (request: Request, response: Response) => {
-   console.log("Authorized succesfully");
+  
  try {
     const users = await UserService.allUsers();
     return response.status(200).json(users);

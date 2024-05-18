@@ -98,7 +98,6 @@ authRouter.post('/token', async (req: Request, res: Response, next: NextFunction
       refreshToken,
     });
   } catch (e) {
-    console.log(e)
     res.status(500).json({ error: 'Server error' });
   }
 });

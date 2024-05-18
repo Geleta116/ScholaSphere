@@ -14,18 +14,16 @@ export const Authorization = (roles: string[]) =>{
         const token = req.headers.authorization?.split(' ')[1];
         
         if (!token){
-            return res.status(401).json({ message: 'unauthorized'});
+            return res.status(401).json({ message: 'unauthenticated'});
         }
         
         try{
-            
             const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
            
             if (!decoded) {
-                console.log(decoded)
+               
                 return res.status(401).json({ message: 'Authentication Failed' });
             }
-            console.log(decoded)
             const newDecod =  jwt.decode(token) as DecodedToken;
             
             const user = await db.user.findUnique({
@@ -50,6 +48,7 @@ export const Authorization = (roles: string[]) =>{
         } catch(e){
             return res.status(401).json({
                 message: "Authentication Failed"
+
 
         });
     }

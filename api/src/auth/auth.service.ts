@@ -74,11 +74,18 @@ export async function refreshTokenService(refreshToken: string) {
 }
 
 
+export async function findUserFromToken(authToken: string){
+  let decoded = jwt.decode(authToken) as jwt.JwtPayload | null;
+  if(decoded) return decoded.userId;
+  else throw new Error('Invalid token');
+}
+
   
   module.exports = {
     addRefreshTokenToWhitelist,
     findRefreshTokenById,
     deleteRefreshToken,
     revokeTokens,
-    refreshTokenService
+    refreshTokenService,
+    findUserFromToken
   };
