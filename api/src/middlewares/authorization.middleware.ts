@@ -6,7 +6,7 @@ dotenv.config();
 
 interface DecodedToken {
   userId: string;
-  [key: string]: any; // for any other properties in the token
+  [key: string]: any; 
 }
 
 export const Authorization = (roles: string[]) => {

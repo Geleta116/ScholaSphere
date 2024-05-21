@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
-import multer from "multer";
+import multer, { FileFilterCallback } from "multer";
 import { Authorization } from "../middlewares/authorization.middleware";
 import { plainToClass } from "class-transformer";
 import { BookDTO } from "./contrat/dtos/Upload_book.dto";
@@ -10,9 +10,12 @@ import {
   GetApprovedBooks,
   GetBookById,
   GetFilteredBooks,
+  UpdateBook,
 } from "../book/book.service";
 import { BookSchema } from "./contrat/validators/schema/book.schema";
 import { GenericValidator } from "../middlewares/validation.middleware";
+import { UpdateBookSchema } from "./contrat/validators/schema/updateBook.schema";
+import { UpdateBookDto } from "./contrat/dtos/Update_book.dto";
 
 const storage = multer.diskStorage({
   destination: (
@@ -27,7 +30,30 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const fileFilter = (
+  req: Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback
+) => {
+  const allowedMimeTypes = [
+    "application/pdf",
+    "text/plain",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ];
+  if (allowedMimeTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(
+      new Error("Invalid file type. Only PDF, TXT, and DOCX files are allowed.")
+    );
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+});
+
 export const bookRouter = express.Router();
 
 export interface BookFilters {
@@ -78,11 +104,11 @@ bookRouter.get(
 );
 
 bookRouter.get(
-  "/get-book-by-id",
+  "/get-book-by-id/:id",
   Authorization(["user", "admin"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = req.query.id as string;
+      const id = req.params.id as string;
       const book = await GetBookById(id);
       return res.status(200).json(book);
     } catch (e) {
@@ -92,11 +118,11 @@ bookRouter.get(
 );
 
 bookRouter.delete(
-  "/delete-book",
-  Authorization(["Admin"]),
+  "/delete-book/:id",
+  Authorization(["admin"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const toBeDeletedId = req.query.id as string;
+      const toBeDeletedId = req.params.id as string;
       const DeletedBook = await DeleteBookById(toBeDeletedId);
       return res.status(204).json(DeletedBook);
     } catch (e) {
@@ -112,6 +138,26 @@ bookRouter.get(
     try {
       const books = await GetApprovedBooks();
       return res.status(200).json(books);
+    } catch (e) {
+      return res.status(500).send("Internal server error");
+    }
+  }
+);
+
+bookRouter.put(
+  "/update-book/:id",
+  Authorization(["user", "admin"]),
+  GenericValidator(UpdateBookSchema),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const BookId = req.params.id;
+      const token = req.headers.authorization?.split(" ")[1];
+      if (!token) return res.status(401).send("unauthenticated");
+      const user = await findUserFromToken(token);
+      const userData = { id: user.id, role: user.role };
+      const updateDto = plainToClass(UpdateBookDto, req.body);
+      await UpdateBook(BookId, userData, updateDto);
+      return res.status(204).send();
     } catch (e) {
       return res.status(500).send("Internal server error");
     }
