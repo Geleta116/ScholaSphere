@@ -1,27 +1,27 @@
-import { Expose } from 'class-transformer';
+import { Expose } from "class-transformer";
 
 export class BookDTO {
-    @Expose()
-    title!: string;
+  @Expose()
+  title!: string;
 
-     @Expose()
-    author!: string;
+  @Expose()
+  author!: string;
 
-     @Expose()
-    description!: string;
+  @Expose()
+  description!: string;
 
-     @Expose()
-    image!: string;
+  @Expose()
+  image!: string;
 
-     @Expose()
-    createdById!: string;
+  @Expose()
+  createdById!: string;
 
-     @Expose()
-    year!: number;
+  @Expose()
+  year!: number;
 
-     @Expose()
-    course!: string;
+  @Expose()
+  course!: string;
 
-     @Expose()
-    department!: string;
+  @Expose()
+  department!: string;
 }

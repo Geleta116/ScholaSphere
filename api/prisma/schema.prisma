@@ -58,6 +58,7 @@ model Book {
   year       Int
   course    String
   department String
+  isApproved Boolean  @default(false)
 }
 
 model RefreshToken {

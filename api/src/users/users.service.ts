@@ -1,40 +1,39 @@
-import {db} from "../utils/db.server";
+import { db } from "../utils/db.server";
 import { Express } from "express";
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 
 type User = {
-    id: any;
-    email: string;
-    name: string;
-    password: string;
-}
-export const allUsers =  async (): Promise<User[]> => {
-          return db.user.findMany({
-            select:{
-                id: true,
-                name: true,  
-                email: true,
-                password: true
-            }
-            }
-          )
-}
+  id: any;
+  email: string;
+  name: string;
+  password: string;
+};
+export const allUsers = async (): Promise<User[]> => {
+  return db.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      password: true,
+    },
+  });
+};
 
-export const FindUserByEmail =  async(email: string): Promise<User | null> => {
+export const FindUserByEmail = async (email: string): Promise<User | null> => {
   return db.user.findUnique({
     where: {
       email,
     },
   });
-}
+};
 
-export const CreateUser= async(user: any) => {
-    user.password = bcrypt.hashSync(user.password, 12);
-    return db.user.create({
-      data: user
-    })
-}
+export const CreateUser = async (user: any) => {
+  user.password = bcrypt.hashSync(user.password, 12);
+  return db.user.create({
+    data: user,
+  });
+};
 
 export function findUserById(id: string) {
   return db.user.findUnique({
