@@ -34,11 +34,30 @@ export async function GetFilteredBooks(filter: BookFilters) {
   }
 }
 
-export async function DeleteBookById(id: string) {
+export async function DeleteBookById(
+  bookid: string,
+  currUserId: string,
+  roles: string[]
+) {
   try {
-    return await __db?.book.delete({
-      where: { id: id },
+    const book = await __db?.book.findFirst({
+      where: {
+        id: bookid,
+      },
     });
+
+    if (!book) throw new Error("Book not found");
+    if (book.isApproved && !roles.includes("admin")) {
+      throw new Error(" You can't delete a book that is Approved");
+    }
+    if (
+      (!book.isApproved &&
+      (roles.includes("admin")) || (!book.isApproved && book.createdById === currUserId))
+    ) {
+      return await __db?.book.delete({
+        where: { id: bookid },
+      });
+    }
   } catch (e) {
     throw e;
   }
@@ -65,7 +84,7 @@ export async function UpdateBookById(id: string, data: any): Promise<void> {
 
 export async function UpdateBook(
   id: string,
-  userData: { id: string; role: string },
+  userData: { id: string; role: string[] },
   requestBody: UpdateBookDto
 ) {
   const book = await __db?.book.findFirst({
@@ -78,10 +97,10 @@ export async function UpdateBook(
     throw new Error("Book not found.");
   }
 
-  if (book.createdById !== userData.id && userData.role !== "admin")
+  if (book.createdById !== userData.id && !userData.role.includes("admin"))
     throw new Error("you don't have permission to delete the book");
 
-  if (book.isApproved && userData.role !== "admin")
+  if (book.isApproved && !userData.role.includes("admin"))
     throw new Error("you can't edit this book as it has been approved");
 
   if (!book.isApproved) {
@@ -104,4 +123,21 @@ export async function UpdateBook(
   } else {
     await UpdateBookById(id, requestBody);
   }
+}
+
+export async function ApproveBook(bookId: string){
+  const book = await __db?.book.findFirst({
+    where:{
+      id: bookId
+    }
+  });
+
+  if(!book) throw new Error("Book not found");
+  await __db?.book.update({
+    where: {
+      id: bookId
+    }, data:{
+      isApproved: true
+    }
+  })
 }

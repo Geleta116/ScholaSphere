@@ -18,25 +18,27 @@ import {
   refreshTokenService,
 } from "./auth.service";
 import { Module } from "module";
+import { GenericValidator } from "../middlewares/validation.middleware";
+import { CreateUserSchema } from "./contract/schema/CreateUserSchema";
 
 export const authRouter = Express.Router();
 
-authRouter.post("/sign-up", async (req: Request, res: Response, next: any) => {
+authRouter.post("/sign-up", GenericValidator(CreateUserSchema), async (req: Request, res: Response, next: any) => {
   try {
     const { email, password, name } = req.body;
     if (!email || !password) {
-      res.status(400);
-      throw new Error("You must provide an email and a password.");
+      res.status(400).send("please provide necessary credentials");
+    
     }
 
     const existingUser = await FindUserByEmail(email);
 
     if (existingUser) {
-      res.status(400);
-      throw new Error("Email already in use.");
+      res.status(400).send("email already in use");
+      
     }
 
-    const user = await CreateUser({ email, password, name });
+    const user = await CreateUser({ email, password, name, role : ["user"] });
     const jti = uuidv4();
     const { accessToken, refreshToken } = generateTokens(user, jti);
     await addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });

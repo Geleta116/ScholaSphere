@@ -6,15 +6,16 @@ import { BookDTO } from "./contrat/dtos/Upload_book.dto";
 import { findUserFromToken } from "../auth/auth.service";
 import {
   AddBook,
+  ApproveBook,
   DeleteBookById,
   GetApprovedBooks,
   GetBookById,
   GetFilteredBooks,
   UpdateBook,
 } from "../book/book.service";
-import { BookSchema } from "./contrat/validators/schema/book.schema";
+import { BookSchema } from "./contrat/schema/book.schema";
 import { GenericValidator } from "../middlewares/validation.middleware";
-import { UpdateBookSchema } from "./contrat/validators/schema/updateBook.schema";
+import { UpdateBookSchema } from "./contrat/schema/updateBook.schema";
 import { UpdateBookDto } from "./contrat/dtos/Update_book.dto";
 
 const storage = multer.diskStorage({
@@ -119,12 +120,20 @@ bookRouter.get(
 
 bookRouter.delete(
   "/delete-book/:id",
-  Authorization(["admin"]),
+  Authorization(["user", "admin"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const toBeDeletedId = req.params.id as string;
-      const DeletedBook = await DeleteBookById(toBeDeletedId);
-      return res.status(204).json(DeletedBook);
+      const currUserId = req.user?.id;
+      const currUserRole = req.user?.roles;
+      if (!currUserId || !currUserRole)
+        return res.status(401).send("UnAuthorized");
+      const DeletedBook = await DeleteBookById(
+        toBeDeletedId,
+        currUserId,
+        currUserRole
+      );
+      return res.status(204).json({ DeletedBook });
     } catch (e) {
       return res.status(500).send("Internal server error");
     }
@@ -151,15 +160,30 @@ bookRouter.put(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const BookId = req.params.id;
-      const token = req.headers.authorization?.split(" ")[1];
-      if (!token) return res.status(401).send("unauthenticated");
-      const user = await findUserFromToken(token);
-      const userData = { id: user.id, role: user.role };
+      const user = req.user;
+      if (!user) {
+        return res.status(401).send("Unauthenticated");
+      }
+      const userData = { id: user.id, role: user.roles };
       const updateDto = plainToClass(UpdateBookDto, req.body);
       await UpdateBook(BookId, userData, updateDto);
       return res.status(204).send();
     } catch (e) {
       return res.status(500).send("Internal server error");
+    }
+  }
+);
+
+bookRouter.put(
+  "/approve-book/:id",
+  Authorization(["admin"]),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const BookId = req?.params.id;
+      if(!BookId) return res.status(400).send("Please add BookId");
+      await ApproveBook(BookId);
+    } catch (e) {
+      return res.status(500).send("internal server error");
     }
   }
 );

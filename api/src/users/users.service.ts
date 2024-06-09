@@ -30,9 +30,33 @@ export const FindUserByEmail = async (email: string): Promise<User | null> => {
 
 export const CreateUser = async (user: any) => {
   user.password = bcrypt.hashSync(user.password, 12);
-  return db.user.create({
-    data: user,
+
+  const { name, email, password, roles=["user"] } = user;
+
+  const createdUser = await db.user.create({
+    data: {
+      email,
+      password,
+      name,
+    },
   });
+
+  await Promise.all(
+    roles.map(async (roleName: string) => {
+      const role = await db.role.findUnique({
+        where: { name: roleName },
+      });
+      if (role) {
+        await db.userRole.create({
+          data: {
+            userId: createdUser.id,
+            roleId: role.id,
+          },
+        });
+      }
+    })
+  );
+  return createdUser;
 };
 
 export function findUserById(id: string) {

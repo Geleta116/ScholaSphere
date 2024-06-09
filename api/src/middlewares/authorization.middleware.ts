@@ -46,6 +46,11 @@ export const Authorization = (roles: string[]) => {
       if (!hasRole) {
         return res.status(403).json({ message: "Forbidden" });
       }
+      req.user = {
+        id: user.id,
+        roles: userRoles,
+      };
+      req.token = token;
 
       next();
     } catch (e) {
