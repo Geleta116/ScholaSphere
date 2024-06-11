@@ -1,7 +1,7 @@
 import { Express } from "express";
 import { BookDTO } from "./contrat/dtos/Upload_book.dto";
 import { db } from "../utils/db.server";
-import { BookFilters } from "./book.route";
+import { BookFilters } from "./book.controller";
 import { UpdateBookDto } from "./contrat/dtos/Update_book.dto";
 
 export async function AddBook(bookDTO: BookDTO) {

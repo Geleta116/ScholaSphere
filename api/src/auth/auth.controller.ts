@@ -21,24 +21,21 @@ import { Module } from "module";
 import { GenericValidator } from "../middlewares/validation.middleware";
 import { CreateUserSchema } from "./contract/schema/CreateUserSchema";
 
-export const authRouter = Express.Router();
 
-authRouter.post("/sign-up", GenericValidator(CreateUserSchema), async (req: Request, res: Response, next: any) => {
+export const signup = async (req: Request, res: Response, next: any) => {
   try {
     const { email, password, name } = req.body;
     if (!email || !password) {
       res.status(400).send("please provide necessary credentials");
-    
     }
 
     const existingUser = await FindUserByEmail(email);
 
     if (existingUser) {
       res.status(400).send("email already in use");
-      
     }
 
-    const user = await CreateUser({ email, password, name, role : ["user"] });
+    const user = await CreateUser({ email, password, name, role: ["user"] });
     const jti = uuidv4();
     const { accessToken, refreshToken } = generateTokens(user, jti);
     await addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
@@ -51,9 +48,9 @@ authRouter.post("/sign-up", GenericValidator(CreateUserSchema), async (req: Requ
   } catch (err) {
     next(err);
   }
-});
+};
 
-authRouter.post("/login", async (req: Request, res: Response, next: any) => {
+export const Login = async (req: Request, res: Response, next: any) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -88,34 +85,36 @@ authRouter.post("/login", async (req: Request, res: Response, next: any) => {
   } catch (err) {
     next(err);
   }
-});
-authRouter.post(
-  "/token",
-  async (req: Request, res: Response, next: NextFunction) => {
-    const IncomingRefreshToken = req.headers["refresh_token"] as string;
-    if (!IncomingRefreshToken) {
-      res.status(400).json({ error: "Refresh Token not provided" });
-      return;
-    }
-    try {
-      let userId = await refreshTokenService(IncomingRefreshToken);
-      let jti = uuidv4();
-      let { accessToken, refreshToken } = generateTokens(userId, jti);
-      await addRefreshTokenToWhitelist({ jti, refreshToken, userId });
-      res.cookie("access_token", accessToken, { httpOnly: true });
-      res.cookie("refresh_token", refreshToken, { httpOnly: true });
+};
 
-      res.json({
-        accessToken,
-        refreshToken,
-      });
-    } catch (e) {
-      res.status(500).json({ error: "Server error" });
-    }
+export const RefreshToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const IncomingRefreshToken = req.headers["refresh_token"] as string;
+  if (!IncomingRefreshToken) {
+    res.status(400).json({ error: "Refresh Token not provided" });
+    return;
   }
-);
+  try {
+    let userId = await refreshTokenService(IncomingRefreshToken);
+    let jti = uuidv4();
+    let { accessToken, refreshToken } = generateTokens(userId, jti);
+    await addRefreshTokenToWhitelist({ jti, refreshToken, userId });
+    res.cookie("access_token", accessToken, { httpOnly: true });
+    res.cookie("refresh_token", refreshToken, { httpOnly: true });
+
+    res.json({
+      accessToken,
+      refreshToken,
+    });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
 function session(arg0: {
-  secret: string; 
+  secret: string;
   resave: boolean;
   saveUninitialized: boolean;
 }): any {

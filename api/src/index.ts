@@ -3,10 +3,11 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import { userRouter } from "./users/users.router";
-import { authRouter } from "./auth/auth.router";
-import { bookRouter } from "./book/book.route";
 import "reflect-metadata";
+import { AuthRouter } from "./router/auth.router";
+import { BookRouter } from "./router/book.router";
+import { UserRouter } from "./router/user.router";
+
 
 dotenv.config();
 
@@ -27,9 +28,9 @@ app.use(
 );
 app.use(cors());
 app.use(express.json());
-app.use("/api/users", userRouter);
-app.use("/api/auth/", authRouter);
-app.use("/api/book/", bookRouter);
+app.use("/api/users", UserRouter);
+app.use("/api/auth/", AuthRouter);
+app.use("/api/book/", BookRouter);
 app.listen(PORT, () => {
   console.log(`listening on port: `, PORT);
 });

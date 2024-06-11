@@ -1,13 +1,9 @@
-import * as express from 'express';
+import { Request } from "express";
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        id: string;
-        roles: string[];
-      };
-      token?: string;
-    }
-  }
+export interface Req extends Request {
+  user?: {
+    id: string;
+    roles: string[];
+  };
+  token?: string;
 }

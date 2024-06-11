@@ -1,20 +1,21 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import { db } from "../utils/db.server";
+import { Req } from "@/utils/req";
 dotenv.config();
 
 interface DecodedToken {
   userId: string;
-  [key: string]: any; 
+  [key: string]: any;
 }
 
 export const Authorization = (roles: string[]) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Req, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
-      return res.status(401).json({ message: "unauthenticated" });
+      return res.status(401).json({ message: "Unauthenticated" });
     }
 
     try {
@@ -23,6 +24,7 @@ export const Authorization = (roles: string[]) => {
       if (!decoded) {
         return res.status(401).json({ message: "Authentication Failed" });
       }
+
       const newDecod = jwt.decode(token) as DecodedToken;
 
       const user = await db.user.findUnique({
@@ -46,6 +48,7 @@ export const Authorization = (roles: string[]) => {
       if (!hasRole) {
         return res.status(403).json({ message: "Forbidden" });
       }
+
       req.user = {
         id: user.id,
         roles: userRoles,
@@ -54,9 +57,7 @@ export const Authorization = (roles: string[]) => {
 
       next();
     } catch (e) {
-      return res.status(401).json({
-        message: "Authentication Failed",
-      });
+      return res.status(401).json({ message: "Authentication Failed" });
     }
   };
 };
