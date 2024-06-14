@@ -23,87 +23,85 @@ const SignUpForm = () => {
   };
 
   return (
-   
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col space-y-4 p-4 border rounded-lg bg-white shadow-md w-full max-w-xl"
-      >
-        <div className="flex flex-col sm:flex-row justify-around">
-          <div className="flex flex-col mb-4">
-            <label htmlFor="firstName" className="mb-1">
-              First Name
-            </label>
-            <input
-              {...register("firstName")}
-              id="firstName"
-              placeholder="e.g., John"
-              className="border rounded p-2"
-            />
-            {errors.firstName && (
-              <p className="text-red-500 text-sm">{errors.firstName.message}</p>
-            )}
-          </div>
-          <div className="flex flex-col mb-4">
-            <label htmlFor="lastName" className="mb-1">
-              Last Name
-            </label>
-            <input
-              {...register("lastName")}
-              id="lastName"
-              placeholder="e.g., Doe"
-              className="border rounded p-2"
-            />
-            {errors.lastName && (
-              <p className="text-red-500 text-sm">{errors.lastName.message}</p>
-            )}
-          </div>
-        </div>
-        <div className="flex flex-col mb-4">
-          <label htmlFor="userName" className="mb-1">
-            User Name
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col space-y-4 p-4  rounded-lg shadow-2xl w-full max-w-xl"
+    >
+      <div className="flex flex-col sm:flex-row sm:space-x-4">
+        <div className="flex-1 mb-4 sm:mb-0">
+          <label htmlFor="firstName" className="mb-1 text-white">
+            First Name
           </label>
           <input
-            {...register("userName")}
-            id="userName"
-            placeholder="e.g., JohnDoe123"
-            className="border rounded p-2"
+            {...register("firstName")}
+            id="firstName"
+            placeholder="e.g. John"
+            className="border rounded p-2 bg-transparent text-white w-full"
           />
-          {errors.userName && (
-            <p className="text-red-500 text-sm">{errors.userName.message}</p>
+          {errors.firstName && (
+            <p className="text-red-500 text-sm">{errors.firstName.message}</p>
           )}
         </div>
-        <div className="flex flex-col mb-4">
-          <label htmlFor="email" className="mb-1">
-            Your email
+        <div className="flex-1">
+          <label htmlFor="lastName" className="mb-1 text-white">
+            Last Name
           </label>
           <input
-            {...register("email")}
-            id="email"
-            placeholder="e.g., name@company.com"
-            className="border rounded p-2"
+            {...register("lastName")}
+            id="lastName"
+            placeholder="e.g. Doe"
+            className="border rounded p-2 bg-transparent text-white w-full"
           />
-          {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email.message}</p>
+          {errors.lastName && (
+            <p className="text-red-500 text-sm">{errors.lastName.message}</p>
           )}
         </div>
-        <div className="flex flex-col mb-4">
-          <label htmlFor="password" className="mb-1">
-            Password
-          </label>
-          <input
-            {...register("password")}
-            type="password"
-            id="password"
-            placeholder="••••••••"
-            className="border rounded p-2"
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password.message}</p>
-          )}
-        </div>
-        <PrimaryButton type="submit" title="Sign Up" />
-      </form>
-    
+      </div>
+      <div className="flex flex-col">
+        <label htmlFor="userName" className="mb-1 text-white">
+          User Name
+        </label>
+        <input
+          {...register("userName")}
+          id="userName"
+          placeholder="e.g. JohnDoe123"
+          className="border rounded p-2 bg-transparent text-white w-full"
+        />
+        {errors.userName && (
+          <p className="text-red-500 text-sm">{errors.userName.message}</p>
+        )}
+      </div>
+      <div className="flex flex-col">
+        <label htmlFor="email" className="mb-1 text-white">
+          Your email
+        </label>
+        <input
+          {...register("email")}
+          id="email"
+          placeholder="e.g. name@company.com"
+          className="border rounded p-2 bg-transparent text-white w-full"
+        />
+        {errors.email && (
+          <p className="text-red-500 text-sm">{errors.email.message}</p>
+        )}
+      </div>
+      <div className="flex flex-col">
+        <label htmlFor="password" className="mb-1 text-white">
+          Password
+        </label>
+        <input
+          {...register("password")}
+          type="password"
+          id="password"
+          placeholder="••••••••"
+          className="border rounded p-2 bg-transparent text-white w-full"
+        />
+        {errors.password && (
+          <p className="text-red-500 text-sm">{errors.password.message}</p>
+        )}
+      </div>
+      <PrimaryButton type="submit" title="Sign Up" />
+    </form>
   );
 };
 

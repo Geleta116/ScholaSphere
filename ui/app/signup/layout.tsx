@@ -1,11 +1,12 @@
+
+
 export default function SignUpLayout({
-    children, // will be a page or nested layout
+    children, 
   }: {
     children: React.ReactNode
   }) {
     return (
       <section>
-   
         {children}
       </section>
     )

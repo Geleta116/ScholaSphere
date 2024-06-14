@@ -1,0 +1,1 @@
+export const  api =  process.env.ROOT_API;
