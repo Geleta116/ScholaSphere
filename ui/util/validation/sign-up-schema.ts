@@ -31,7 +31,6 @@ export const SignUpSchema = z.object({
     .regex(passwordValidation, { message: "Password is not strong enough" }),
   phoneNumber: z
     .string()
-    .min(1, { message: "Must have at least 1 character" })
-    .regex(phoneValidation, { message: "invalid phone" }),
+    .regex(phoneValidation, { message: "invalid phone" }).optional(),
 });
 

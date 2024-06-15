@@ -3,8 +3,10 @@ import bcrypt from "bcrypt";
 
 type User = {
   email: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   password: string;
+  userName: string;
   phonenumber: string;
   roles: string[];
 };
@@ -24,10 +26,13 @@ function getUsers(): Array<User> {
   return [
     {
       email: "geleta.dabakumsa@gmail.com",
-      name: "Geleta Daba",
+      firstName: "Geleta",
+      lastName: "Kumsa",
       password: "password",
+      userName: "gelo116",
       phonenumber: "0912345678",
       roles: ["admin"],
+
     },
   ];
 }
@@ -66,12 +71,14 @@ async function seed() {
   // Create users and assign roles
   await Promise.all(
     getUsers().map(async (user) => {
-      const { email, name, password, phonenumber, roles } = user;
+      const { email, firstName, lastName, userName, password, phonenumber, roles } = user;
       let hashedpassword = bcrypt.hashSync(user.password, 12);
       const createdUser = await db.user.create({
         data: {
           email,
-          name,
+          firstName,
+          lastName,
+          userName,
           password: hashedpassword,
           phonenumber,
         },

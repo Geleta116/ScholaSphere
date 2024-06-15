@@ -1,31 +1,37 @@
-import { api } from "./shared";
+import { api, authPath } from "./shared";
 
-export const SignUp = async (
-  email: string,
-  name: string,
-  password: string,
-  username: string,
-  phonenumber: string | undefined
-): Promise<void> => {
+export interface SignUpPayload {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  userName: string;
+  phoneNumber?: string;
+}
+
+export interface SignUpResponse {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export const SignUp = async (payload: SignUpPayload): Promise<SignUpResponse> => {
   try {
-    const body = {
-      email: email,
-      password: password,
-      phonenumber: phonenumber,
-      username: username,
-      name: name,
-    };
-    const res = await fetch(`${api}/sign-up`, {
+    const response = await fetch(`${api}/${authPath}/sign-up`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(payload),
     });
-    if (!res.ok) {
-      throw new Error("Failed to signup");
+
+    if (!response.ok) {
+      const errorData = await response.json() ;
+      throw new Error(errorData.message || "Failed to signup");
     }
-    
-    return res.json();
-  } catch (e) {}
+
+    return response.json() as Promise<SignUpResponse>;
+  } catch (error) {
+    console.error("Signup error:", error);
+    throw new Error((error as Error).message || "Signup failed");
+  }
 };

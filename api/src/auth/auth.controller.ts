@@ -12,19 +12,14 @@ import { generateTokens } from "../utils/jwt";
 import hashTokens from "../utils/hashToken";
 import {
   addRefreshTokenToWhitelist,
-  findRefreshTokenById,
-  deleteRefreshToken,
-  revokeTokens,
   refreshTokenService,
 } from "./auth.service";
-import { Module } from "module";
-import { GenericValidator } from "../middlewares/validation.middleware";
-import { CreateUserSchema } from "./contract/schema/CreateUserSchema";
+
 
 
 export const signup = async (req: Request, res: Response, next: any) => {
   try {
-    const { email, password, name } = req.body;
+    const { email, password, firstName, lastName, userName } = req.body;
     if (!email || !password) {
       res.status(400).send("please provide necessary credentials");
     }
@@ -35,7 +30,7 @@ export const signup = async (req: Request, res: Response, next: any) => {
       res.status(400).send("email already in use");
     }
 
-    const user = await CreateUser({ email, password, name, role: ["user"] });
+    const user = await CreateUser({ email, password, firstName, lastName, userName, role: ["user"] });
     const jti = uuidv4();
     const { accessToken, refreshToken } = generateTokens(user, jti);
     await addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });

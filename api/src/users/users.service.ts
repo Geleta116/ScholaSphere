@@ -6,14 +6,18 @@ import bcrypt from "bcrypt";
 type User = {
   id: any;
   email: string;
-  name: string;
+  firstName: string;
+  lastName: string;
+  userName: string;
   password: string;
 };
 export const allUsers = async (): Promise<User[]> => {
   return db.user.findMany({
     select: {
       id: true,
-      name: true,
+      firstName: true,
+      lastName: true,
+      userName: true,
       email: true,
       password: true,
     },
@@ -31,13 +35,15 @@ export const FindUserByEmail = async (email: string): Promise<User | null> => {
 export const CreateUser = async (user: any) => {
   user.password = bcrypt.hashSync(user.password, 12);
 
-  const { name, email, password, roles=["user"] } = user;
+  const { firstName, lastName, userName, email, password, roles=["user"] } = user;
 
   const createdUser = await db.user.create({
     data: {
       email,
       password,
-      name,
+      firstName,
+      lastName,
+      userName
     },
   });
 

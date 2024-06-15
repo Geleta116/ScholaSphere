@@ -6,26 +6,35 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpSchema } from "@/util/validation/sign-up-schema";
 import PrimaryButton from "../Buttons/PrimaryButton";
 import z from "zod";
+import useAuthStore from "@/store/auth-store";
 
-type SignUpProp = z.infer<typeof SignUpSchema>;
+type SignUpFormProps = z.infer<typeof SignUpSchema>;
 
-const SignUpForm = () => {
+const SignUpForm: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignUpProp>({
+  } = useForm<SignUpFormProps>({
     resolver: zodResolver(SignUpSchema),
   });
 
-  const onSubmit = (data: SignUpProp) => {
-    console.log(data);
+  const { signup, error } = useAuthStore(); // Accessing Zustand store
+
+  const onSubmit = async (data: SignUpFormProps) => {
+    console.log("Form data:", data);
+    try {
+      console.log("asdasd");
+      await signup(data); // Call signup function from Zustand store
+    } catch (error) {
+      console.error("Error during signup:", error);
+    }
   };
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col space-y-4 p-4  rounded-lg shadow-2xl w-full max-w-xl"
+      onSubmit={handleSubmit(onSubmit)} // Ensure handleSubmit is correctly attached
+      className="flex flex-col space-y-4 p-4 rounded-lg shadow-2xl w-full max-w-xl"
     >
       <div className="flex flex-col sm:flex-row sm:space-x-4">
         <div className="flex-1 mb-4 sm:mb-0">
@@ -100,6 +109,7 @@ const SignUpForm = () => {
           <p className="text-red-500 text-sm">{errors.password.message}</p>
         )}
       </div>
+
       <PrimaryButton type="submit" title="Sign Up" />
     </form>
   );
