@@ -1,15 +1,18 @@
 import Image from "next/image";
 import SignUpForm from "@/components/Form/SignUpForm";
 import { Pacifico } from "next/font/google";
-import 'animate.css';
+import "animate.css";
+import { BackgroundBeams } from "@/components/Background/BackgroundBeams";
 
-const pacifico = Pacifico({ weight: '400', subsets: ["latin"] });
+const pacifico = Pacifico({ weight: "400", subsets: ["latin"] });
 
 export default function Page() {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen p-4 lg:p-8 shadow-2xl">
       <div className="bg-gradient-to-b from-blue-950 via-purple-900 to-gray-950 p-4 sm:p-18 md:p-24 rounded-xl shadow-lg">
-        <h1 className={`relative text-6xl font-bold text-center mb-20 text-white z-10 ${pacifico.className} animate__animated animate__zoomInLeft`}>
+        <h1
+          className={`relative text-6xl font-bold text-center mb-20 text-white z-10 ${pacifico.className} animate__animated animate__zoomInLeft`}
+        >
           Sign Up
         </h1>
         <div className="relative flex flex-col lg:flex-row items-center justify-center w-full max-w-screen-xl z-10">
@@ -27,6 +30,7 @@ export default function Page() {
           </div>
         </div>
       </div>
+      <BackgroundBeams />
     </div>
   );
 }

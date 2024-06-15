@@ -7,6 +7,7 @@ import { SignUpSchema } from "@/util/validation/sign-up-schema";
 import PrimaryButton from "../Buttons/PrimaryButton";
 import z from "zod";
 import useAuthStore from "@/store/auth-store";
+import { toast } from "react-toastify";
 
 type SignUpFormProps = z.infer<typeof SignUpSchema>;
 
@@ -19,21 +20,19 @@ const SignUpForm: React.FC = () => {
     resolver: zodResolver(SignUpSchema),
   });
 
-  const { signup, error } = useAuthStore(); // Accessing Zustand store
+  const { signup, error } = useAuthStore(); 
 
   const onSubmit = async (data: SignUpFormProps) => {
-    console.log("Form data:", data);
     try {
-      console.log("asdasd");
-      await signup(data); // Call signup function from Zustand store
-    } catch (error) {
-      console.error("Error during signup:", error);
+      await signup(data); 
+    } catch (e) {
+      toast(error);
     }
   };
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)} // Ensure handleSubmit is correctly attached
+      onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col space-y-4 p-4 rounded-lg shadow-2xl w-full max-w-xl"
     >
       <div className="flex flex-col sm:flex-row sm:space-x-4">

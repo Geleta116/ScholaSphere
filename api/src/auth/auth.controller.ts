@@ -21,13 +21,13 @@ export const signup = async (req: Request, res: Response, next: any) => {
   try {
     const { email, password, firstName, lastName, userName } = req.body;
     if (!email || !password) {
-      res.status(400).send("please provide necessary credentials");
+      res.status(400).send({message: "please provide necessary credentials"});
     }
 
     const existingUser = await FindUserByEmail(email);
 
     if (existingUser) {
-      res.status(400).send("email already in use");
+      res.status(400).send({message:"A user with this email already exists"});
     }
 
     const user = await CreateUser({ email, password, firstName, lastName, userName, role: ["user"] });
@@ -89,7 +89,7 @@ export const RefreshToken = async (
 ) => {
   const IncomingRefreshToken = req.headers["refresh_token"] as string;
   if (!IncomingRefreshToken) {
-    res.status(400).json({ error: "Refresh Token not provided" });
+    res.status(400).json({ message: "Refresh Token not provided" });
     return;
   }
   try {
@@ -105,7 +105,7 @@ export const RefreshToken = async (
       refreshToken,
     });
   } catch (e) {
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 function session(arg0: {

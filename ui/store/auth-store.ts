@@ -30,6 +30,7 @@ const useAuthStore = create<AuthStore>(
           });
         } catch (error) {
           set({ error: (error as Error).message });
+          throw error;
         }
       },
       logout: () => {
