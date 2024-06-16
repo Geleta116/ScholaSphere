@@ -18,7 +18,7 @@ model User {
   email          String         @unique
   firstName      String
   lastName       String
-  userName       String
+  userName       String         @unique
   password       String
   phonenumber    String?
   profilepicture String?

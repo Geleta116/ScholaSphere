@@ -32,6 +32,14 @@ export const FindUserByEmail = async (email: string): Promise<User | null> => {
   });
 };
 
+export const FindUserByUserName = async (userName: string): Promise<User | null> => {
+  return db.user.findUnique({
+    where: {
+      userName : userName,
+    },
+  });
+};
+
 export const CreateUser = async (user: any) => {
   user.password = bcrypt.hashSync(user.password, 12);
 

@@ -7,6 +7,7 @@ import {
   FindUserByEmail,
   CreateUser,
   findUserById,
+  FindUserByUserName,
 } from "../users/users.service";
 import { generateTokens } from "../utils/jwt";
 import hashTokens from "../utils/hashToken";
@@ -15,22 +16,31 @@ import {
   refreshTokenService,
 } from "./auth.service";
 
-
-
 export const signup = async (req: Request, res: Response, next: any) => {
   try {
     const { email, password, firstName, lastName, userName } = req.body;
     if (!email || !password) {
-      res.status(400).send({message: "please provide necessary credentials"});
+      res.status(400).send({ message: "please provide necessary credentials" });
     }
 
-    const existingUser = await FindUserByEmail(email);
-
+    let existingUser = await FindUserByEmail(email);
+    if (!existingUser) {
+      existingUser = await FindUserByUserName(userName);
+    }
     if (existingUser) {
-      res.status(400).send({message:"A user with this email already exists"});
+      res
+        .status(400)
+        .send({ message: "A user with this email already exists" });
     }
 
-    const user = await CreateUser({ email, password, firstName, lastName, userName, role: ["user"] });
+    const user = await CreateUser({
+      email,
+      password,
+      firstName,
+      lastName,
+      userName,
+      role: ["user"],
+    });
     const jti = uuidv4();
     const { accessToken, refreshToken } = generateTokens(user, jti);
     await addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
@@ -47,21 +57,20 @@ export const signup = async (req: Request, res: Response, next: any) => {
 
 export const Login = async (req: Request, res: Response, next: any) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      res.status(400);
-      throw new Error("you must provide an email and a password");
+    const { userName, password } = req.body;
+    if (!userName || !password) {
+      res
+        .status(400)
+        .send({ message: "please provide both email and password" });
     }
-    const existingUser = await FindUserByEmail(email);
+    const existingUser = await FindUserByUserName(userName);
     if (!existingUser) {
-      res.status(403);
-      throw new Error("Invalid login credentials.");
+      return res.status(403).send({ message: "Invalid Credentials" });
     }
 
     const validPassword = await bcrypt.compare(password, existingUser.password);
     if (!validPassword) {
-      res.status(403);
-      throw new Error("Invalid login credentials.");
+      return res.status(403).send("Invalid Credentials");
     }
 
     const jti = uuidv4();

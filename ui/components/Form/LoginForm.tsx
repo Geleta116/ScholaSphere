@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import PrimaryButton from "../Buttons/PrimaryButton";
 import z from "zod";
 import { LoginSchema } from "@/util/validation/login-schema";
+import useAuthStore from "@/store/auth-store";
+import { toast } from "react-toastify";
 
 type LoginProp = z.infer<typeof LoginSchema>;
 
@@ -18,8 +20,14 @@ const LoginForm = () => {
     resolver: zodResolver(LoginSchema),
   });
 
-  const onSubmit = (data: LoginProp) => {
-    console.log(data);
+  const { login, error } = useAuthStore();
+
+  const onSubmit = async (data: LoginProp) => {
+    try {
+      await login(data);
+    } catch (e) {
+      toast(error);
+    }
   };
 
   return (

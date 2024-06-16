@@ -10,7 +10,7 @@ export interface SignUpPayload {
 }
 
 export interface LoginPayload {
-  email: string;
+  userName: string;
   password: string;
 }
 
