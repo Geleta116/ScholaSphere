@@ -9,12 +9,19 @@ export interface SignUpPayload {
   phoneNumber?: string;
 }
 
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
 export interface SignUpResponse {
   accessToken: string;
   refreshToken: string;
 }
 
-export const SignUp = async (payload: SignUpPayload): Promise<SignUpResponse> => {
+export const SignUp = async (
+  payload: SignUpPayload
+): Promise<SignUpResponse> => {
   try {
     const response = await fetch(`${api}/${authPath}/sign-up`, {
       method: "POST",
@@ -25,7 +32,31 @@ export const SignUp = async (payload: SignUpPayload): Promise<SignUpResponse> =>
     });
 
     if (!response.ok) {
-      const errorData = await response.json() ;
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to signup");
+    }
+
+    return response.json() as Promise<SignUpResponse>;
+  } catch (error) {
+    console.error("Signup error:", error);
+    throw new Error((error as Error).message || "Signup failed");
+  }
+};
+
+export const Login = async (
+  payload: LoginPayload
+): Promise<SignUpResponse> => {
+  try {
+    const response = await fetch(`${api}/${authPath}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
       throw new Error(errorData.message || "Failed to signup");
     }
 

@@ -14,7 +14,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   return (
     <button
       type={type}
-      className="dark:bg-black bg-white text-black dark:text-white hover:bg-blue-700 font-bold py-2 px-4 rounded"
+      className="dark:bg-purple-800 bg-white text-black dark:text-white hover:bg-blue-700 font-bold py-2 px-4 rounded"
     >
       {title}
     </button>
@@ -22,3 +22,4 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
 };
 
 export default PrimaryButton;
+  

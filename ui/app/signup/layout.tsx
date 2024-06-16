@@ -6,7 +6,7 @@ export default function SignUpLayout({
     children: React.ReactNode
   }) {
     return (
-      <section>
+      <section >
         {children}
       </section>
     )

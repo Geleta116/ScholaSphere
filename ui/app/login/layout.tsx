@@ -6,5 +6,5 @@ export default function LoginLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <section className={`${pacifico.className}`}>{children}</section>;
+  return <section >{children}</section>;
 }
