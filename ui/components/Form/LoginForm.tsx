@@ -8,6 +8,7 @@ import z from "zod";
 import { LoginSchema } from "@/util/validation/login-schema";
 import useAuthStore from "@/store/auth-store";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type LoginProp = z.infer<typeof LoginSchema>;
 
@@ -19,12 +20,14 @@ const LoginForm = () => {
   } = useForm<LoginProp>({
     resolver: zodResolver(LoginSchema),
   });
+  const router = useRouter();
 
   const { login, error } = useAuthStore();
 
   const onSubmit = async (data: LoginProp) => {
     try {
       await login(data);
+      router.push("/home");
     } catch (e) {
       toast(error);
     }
