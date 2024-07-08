@@ -40,6 +40,7 @@ const SignUpForm: React.FC = () => {
           <label htmlFor="firstName" className="mb-1 text-white">
             First Name
           </label>
+          
           <input
             {...register("firstName")}
             id="firstName"

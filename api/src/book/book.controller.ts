@@ -14,8 +14,6 @@ import {
 import { UpdateBookDto } from "./contrat/dtos/Update_book.dto";
 import { Req } from "@/utils/req";
 
-export const bookRouter = express.Router();
-
 export interface BookFilters {
   year?: number;
   department?: string;

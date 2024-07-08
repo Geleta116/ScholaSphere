@@ -27,6 +27,7 @@ export const signup = async (req: Request, res: Response, next: any) => {
     if (!existingUser) {
       existingUser = await FindUserByUserName(userName);
     }
+    
     if (existingUser) {
       res
         .status(400)
@@ -117,6 +118,7 @@ export const RefreshToken = async (
     res.status(500).json({ message: "Server error" });
   }
 };
+
 function session(arg0: {
   secret: string;
   resave: boolean;
