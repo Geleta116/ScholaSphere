@@ -141,3 +141,25 @@ export async function ApproveBook(bookId: string){
     }
   })
 }
+
+export async function GetUsersUnApprovedBook(userId: string) {
+ const unApprovedBooks =  await __db?.book.findMany({
+    where: {
+      createdById: userId,
+      isApproved: false
+    }
+  });
+  return unApprovedBooks;
+
+}
+
+export async function GetUsersApprovedBook(userId: string){
+  const approvedBooks = await __db?.book.findMany({
+    where :{
+      createdById: userId,
+      isApproved: true
+    }
+  });
+
+  return approvedBooks;
+}

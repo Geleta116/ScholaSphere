@@ -9,6 +9,8 @@ import {
   GetApprovedBooks,
   GetBookById,
   GetFilteredBooks,
+  GetUsersApprovedBook,
+  GetUsersUnApprovedBook,
   UpdateBook,
 } from "./book.service";
 import { UpdateBookDto } from "./contrat/dtos/Update_book.dto";
@@ -139,4 +141,38 @@ export const ApproveBookController = async (
   } catch (e) {
     return res.status(500).send("internal server error");
   }
+};
+
+export const GetYourBookInPending = async (
+  req: Req,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(401).send("Unauthenticated");
+    }
+    const userId = user.id;
+    const usersUnApprovedBooks = await GetUsersUnApprovedBook(userId);
+    return res.status(200).json(usersUnApprovedBooks);
+  } catch (e) {
+    return res.status(500).send("Internal Server error");
+  }
+};
+
+export const GetYourApprovedBooks = async (
+  req: Req,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(401).send("Unauthenticated");
+    }
+    const userId = user.id;
+    const usersApprovedBook =  await GetUsersApprovedBook(userId);
+    return res.status(200).json(usersApprovedBook);
+  } catch (e) {}
 };
