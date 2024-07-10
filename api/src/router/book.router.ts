@@ -4,6 +4,8 @@ import {
   FilterBookController,
   GetApprovedBooksController,
   GetBookByIdController,
+  GetYourApprovedBooksController,
+  GetYourUnApprovedBooksController,
   UpdateBookController,
   UploadBookController,
 } from "../book/book.controller";
@@ -23,7 +25,7 @@ const storage = multer.diskStorage({
     file: Express.Multer.File,
     cb: (error: Error | null, destination: string) => void
   ) => {
-    cb(null, "uploads/");
+    cb(null, "uploads/books/");
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
@@ -98,3 +100,17 @@ BookRouter.put(
   Authorization(["admin"]),
   ApproveBookController
 );
+
+BookRouter.get(
+  "/get-your-approved-books",
+  Authorization(["user", "admin"]),
+  GetYourApprovedBooksController
+)
+
+BookRouter.get(
+  "/get-your-unApproved-books",
+  Authorization(["user", "admin"]),
+  GetYourUnApprovedBooksController
+)
+
+

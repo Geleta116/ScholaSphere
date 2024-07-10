@@ -15,6 +15,7 @@ import {
 } from "./book.service";
 import { UpdateBookDto } from "./contrat/dtos/Update_book.dto";
 import { Req } from "@/utils/req";
+import path from "path";
 
 export interface BookFilters {
   year?: number;
@@ -143,7 +144,7 @@ export const ApproveBookController = async (
   }
 };
 
-export const GetYourBookInPending = async (
+export const GetYourUnApprovedBooksController = async (
   req: Req,
   res: Response,
   next: NextFunction
@@ -161,7 +162,7 @@ export const GetYourBookInPending = async (
   }
 };
 
-export const GetYourApprovedBooks = async (
+export const GetYourApprovedBooksController = async (
   req: Req,
   res: Response,
   next: NextFunction
@@ -176,3 +177,14 @@ export const GetYourApprovedBooks = async (
     return res.status(200).json(usersApprovedBook);
   } catch (e) {}
 };
+
+export const DownloadBookController = async (req: Req, res: Response, next: NextFunction) => {
+  const bookName = req.params.bookName;
+  const filepath = path.join(__dirname, 'uploads/books', bookName);
+  res.download(filepath, (err) => {
+      if (err) {
+          res.status(500).send('Error downloading the file');
+      }
+  });
+
+}
