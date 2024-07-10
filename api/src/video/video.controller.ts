@@ -3,6 +3,7 @@ import { Req } from "@/utils/req";
 import { plainToClass, plainToInstance } from "class-transformer";
 import { UploadVideoDto } from "./contrat/dtos/Upload_video.dto";
 import { findUserFromToken } from "@/auth/auth.service";
+import { AddVideo } from "./videos.service";
 
 export const UploadVideoController = async (
   req: Req,
@@ -18,7 +19,7 @@ export const UploadVideoController = async (
         videoDto.year =  parseInt(videoDto.year);
     }
 
-    await AddVide(videoDto);
+    await AddVideo(videoDto);
     res.json({message: "video uploaded successfully"})
 
     
