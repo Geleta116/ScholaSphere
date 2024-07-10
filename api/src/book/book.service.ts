@@ -4,11 +4,38 @@ import { db } from "../utils/db.server";
 import { BookFilters } from "./book.controller";
 import { UpdateBookDto } from "./contrat/dtos/Update_book.dto";
 
+
+
 export async function AddBook(bookDTO: BookDTO) {
-  await db.book.create({
-    data: { ...bookDTO },
+  const { tags, ...bookData } = bookDTO;
+
+  // Find or create tags
+  const tagPromises = tags.map(async (tagName) => {
+    return __db?.tag.upsert({
+      where: { name: tagName },
+      update: {},
+      create: { name: tagName },
+    });
   });
+  const tagRecords = await Promise.all(tagPromises);
+
+  const book = await __db?.book.create({
+    data: {
+      ...bookData,
+      tags: {
+        create: tagRecords.map(tag => ({
+          tag: {
+            connect: { id: tag.id },
+          },
+        })),
+      },
+    },
+  });
+
+  return book;
 }
+
+
 
 export async function GetBookById(id: string) {
   try {

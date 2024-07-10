@@ -47,19 +47,35 @@ model UserRole {
 }
 
 model Book {
-  id          String   @id @default(cuid())
+  id          String        @id @default(cuid())
   title       String
   author      String
   description String
   image       String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  createdBy   User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  createdBy   User          @relation(fields: [createdById], references: [id], onDelete: Cascade)
   createdById String
   year        Int
   course      String
   department  String
-  isApproved  Boolean  @default(false)
+  isApproved  Boolean       @default(false)
+  tags        TagsOnBooks[]
+}
+
+model Tag {
+  id    String        @id @default(cuid())
+  name  String        @unique
+  Books TagsOnBooks[]
+}
+
+model TagsOnBooks {
+  book   Book   @relation(fields: [bookId], references: [id])
+  bookId String
+  tag    Tag    @relation(fields: [tagId], references: [id])
+  tagId  String
+
+  @@id([bookId, tagId])
 }
 
 model RefreshToken {

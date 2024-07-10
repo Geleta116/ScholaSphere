@@ -1,6 +1,7 @@
 import {
   ApproveBookController,
   DeleteBookController,
+  DownloadBookController,
   FilterBookController,
   GetApprovedBooksController,
   GetBookByIdController,
@@ -105,12 +106,16 @@ BookRouter.get(
   "/get-your-approved-books",
   Authorization(["user", "admin"]),
   GetYourApprovedBooksController
-)
+);
 
 BookRouter.get(
   "/get-your-unApproved-books",
   Authorization(["user", "admin"]),
   GetYourUnApprovedBooksController
-)
+);
 
-
+BookRouter.get(
+  "/download-book/:bookName",
+  Authorization(["user", "admin"]),
+  DownloadBookController
+);

@@ -24,4 +24,7 @@ export class BookDTO {
 
   @Expose()
   department!: string;
+
+  @Expose()
+  tags!: string[];
 }

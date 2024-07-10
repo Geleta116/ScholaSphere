@@ -32,9 +32,12 @@ function getUsers(): Array<User> {
       userName: "gelo116",
       phonenumber: "0912345678",
       roles: ["admin"],
-
     },
   ];
+}
+
+function getTags(): Array<string> {
+  return ["UnTagged", "Other", "DataBase", "OOP", "DSA", "Machine Learning", "Maths"];
 }
 
 function getBooks(): Array<Book> {
@@ -104,6 +107,17 @@ async function seed() {
     })
   );
 
+  // Create tags
+  const createdTags = await Promise.all(
+    getTags().map((tag) => {
+      return db.tag.create({
+        data: {
+          name: tag,
+        },
+      });
+    })
+  );
+
   // Create books
   const seededUser = await db.user.findFirst({
     where: {
@@ -113,10 +127,9 @@ async function seed() {
 
   if (seededUser) {
     await Promise.all(
-      getBooks().map((book) => {
-        const { title, author, description, image, year, course, department } =
-          book;
-        return db.book.create({
+      getBooks().map(async (book) => {
+        const { title, author, description, image, year, course, department } = book;
+        const createdBook = await db.book.create({
           data: {
             title,
             author,
@@ -128,6 +141,17 @@ async function seed() {
             department,
           },
         });
+
+        const otherTag = createdTags.find((tag) => tag.name === "Other");
+        if (otherTag) {
+          
+          await db.tagsOnBooks.create({
+            data: {
+              bookId: createdBook.id,
+              tagId: otherTag.id,
+            },
+          });
+        }
       })
     );
   }
