@@ -9,12 +9,10 @@ import { UpdateBookDto } from "./contrat/dtos/Update_book.dto";
 export async function AddBook(bookDTO: BookDTO) {
   const { tags, ...bookData } = bookDTO;
 
-  // Find or create tags
-  const tagPromises = tags.map(async (tagName) => {
-    return __db?.tag.upsert({
-      where: { name: tagName },
-      update: {},
-      create: { name: tagName },
+ 
+  const tagPromises = tags.map(async (tagName?) => {
+    return __db?.tag.findFirst({
+      where: { name: tagName? tagName : "Untagged" },
     });
   });
   const tagRecords = await Promise.all(tagPromises);
@@ -25,7 +23,7 @@ export async function AddBook(bookDTO: BookDTO) {
       tags: {
         create: tagRecords.map(tag => ({
           tag: {
-            connect: { id: tag.id },
+            connect: { id: tag?.id },
           },
         })),
       },
