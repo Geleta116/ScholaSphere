@@ -20,16 +20,21 @@ export const signup = async (req: Request, res: Response, next: any) => {
   try {
     const { email, password, firstName, lastName, userName } = req.body;
     if (!email || !password) {
-      res.status(400).send({ message: "please provide necessary credentials" });
+      return res
+        .status(400)
+        .send({ message: "please provide necessary credentials" });
     }
 
     let existingUser = await FindUserByEmail(email);
-    if (!existingUser) {
+    if (existingUser == null && !existingUser) {
       existingUser = await FindUserByUserName(userName);
     }
-    
-    if (existingUser) {
-      res
+
+    if (
+      existingUser &&
+      (existingUser.email === email || existingUser.userName === userName)
+    ) {
+      return res
         .status(400)
         .send({ message: "A user with this email already exists" });
     }
@@ -53,6 +58,7 @@ export const signup = async (req: Request, res: Response, next: any) => {
     });
   } catch (err) {
     next(err);
+    // return res.status(500).send({ message: "Internal server error" });
   }
 };
 
@@ -60,7 +66,7 @@ export const Login = async (req: Request, res: Response, next: any) => {
   try {
     const { userName, password } = req.body;
     if (!userName || !password) {
-      res
+      return res
         .status(400)
         .send({ message: "please provide both email and password" });
     }
@@ -99,8 +105,7 @@ export const RefreshToken = async (
 ) => {
   const IncomingRefreshToken = req.headers["refresh_token"] as string;
   if (!IncomingRefreshToken) {
-    res.status(400).json({ message: "Refresh Token not provided" });
-    return;
+    return res.status(400).json({ message: "Refresh Token not provided" });
   }
   try {
     let userId = await refreshTokenService(IncomingRefreshToken);
@@ -110,12 +115,12 @@ export const RefreshToken = async (
     res.cookie("access_token", accessToken, { httpOnly: true });
     res.cookie("refresh_token", refreshToken, { httpOnly: true });
 
-    res.json({
+    return res.json({
       accessToken,
       refreshToken,
     });
   } catch (e) {
-    res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
