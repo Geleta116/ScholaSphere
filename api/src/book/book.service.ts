@@ -4,15 +4,12 @@ import { db } from "../utils/db.server";
 import { BookFilters } from "./book.controller";
 import { UpdateBookDto } from "./contrat/dtos/Update_book.dto";
 
-
-
 export async function AddBook(bookDTO: BookDTO) {
   const { tags, ...bookData } = bookDTO;
 
- 
   const tagPromises = tags.map(async (tagName?) => {
     return __db?.tag.findFirst({
-      where: { name: tagName? tagName : "Untagged" },
+      where: { name: tagName ? tagName : "Untagged" },
     });
   });
   const tagRecords = await Promise.all(tagPromises);
@@ -21,7 +18,7 @@ export async function AddBook(bookDTO: BookDTO) {
     data: {
       ...bookData,
       tags: {
-        create: tagRecords.map(tag => ({
+        create: tagRecords.map((tag) => ({
           tag: {
             connect: { id: tag?.id },
           },
@@ -32,8 +29,6 @@ export async function AddBook(bookDTO: BookDTO) {
 
   return book;
 }
-
-
 
 export async function GetBookById(id: string) {
   try {
@@ -49,9 +44,21 @@ export async function GetBookById(id: string) {
 }
 
 export async function GetFilteredBooks(filter: BookFilters) {
+  const { tags, ...filterData } = filter;
   try {
     const books = await __db?.book.findMany({
-      where: filter,
+      where: {
+        ...filterData,
+        tags: {
+          some: {
+            tag: {
+              name: {
+                in: tags,
+              },
+            },
+          },
+        },
+      },
     });
     return books;
   } catch (e) {
@@ -76,8 +83,8 @@ export async function DeleteBookById(
       throw new Error(" You can't delete a book that is Approved");
     }
     if (
-      (!book.isApproved &&
-      (roles.includes("admin")) || (!book.isApproved && book.createdById === currUserId))
+      (!book.isApproved && roles.includes("admin")) ||
+      (!book.isApproved && book.createdById === currUserId)
     ) {
       return await __db?.book.delete({
         where: { id: bookid },
@@ -150,40 +157,40 @@ export async function UpdateBook(
   }
 }
 
-export async function ApproveBook(bookId: string){
+export async function ApproveBook(bookId: string) {
   const book = await __db?.book.findFirst({
-    where:{
-      id: bookId
-    }
+    where: {
+      id: bookId,
+    },
   });
 
-  if(!book) throw new Error("Book not found");
+  if (!book) throw new Error("Book not found");
   await __db?.book.update({
     where: {
-      id: bookId
-    }, data:{
-      isApproved: true
-    }
-  })
+      id: bookId,
+    },
+    data: {
+      isApproved: true,
+    },
+  });
 }
 
 export async function GetUsersUnApprovedBook(userId: string) {
- const unApprovedBooks =  await __db?.book.findMany({
+  const unApprovedBooks = await __db?.book.findMany({
     where: {
       createdById: userId,
-      isApproved: false
-    }
+      isApproved: false,
+    },
   });
   return unApprovedBooks;
-
 }
 
-export async function GetUsersApprovedBook(userId: string){
+export async function GetUsersApprovedBook(userId: string) {
   const approvedBooks = await __db?.book.findMany({
-    where :{
+    where: {
       createdById: userId,
-      isApproved: true
-    }
+      isApproved: true,
+    },
   });
 
   return approvedBooks;

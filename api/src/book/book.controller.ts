@@ -21,6 +21,7 @@ export interface BookFilters {
   year?: number;
   department?: string;
   course?: string;
+  tags?: string[];
 }
 
 export const UploadBookController = async (
@@ -47,11 +48,12 @@ export const FilterBookController = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { year, department, course } = req.query;
+  const { year, department, course, tags } = req.query;
   const filter: BookFilters = {};
   if (year) filter.year = parseInt(year as string);
   if (department) filter.department = department as string;
   if (course) filter.course = course as string;
+  if (tags) filter.tags = (tags as string).split(",");
 
   try {
     const books = await GetFilteredBooks(filter);
