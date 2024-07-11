@@ -8,6 +8,7 @@ import PrimaryButton from "../Buttons/PrimaryButton";
 import z from "zod";
 import useAuthStore from "@/store/auth-store";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type SignUpFormProps = z.infer<typeof SignUpSchema>;
 
@@ -20,13 +21,17 @@ const SignUpForm: React.FC = () => {
     resolver: zodResolver(SignUpSchema),
   });
 
-  const { signup, error } = useAuthStore(); 
+  const router = useRouter();
+
+  const { signup, error } = useAuthStore();
 
   const onSubmit = async (data: SignUpFormProps) => {
     try {
-      await signup(data); 
+      await signup(data);
+      toast.success("signedup successfully", {autoClose: 500});
+      router.push("/login");
     } catch (e) {
-      toast(error);
+      toast.error(error, {autoClose: 1000});
     }
   };
 
@@ -40,7 +45,7 @@ const SignUpForm: React.FC = () => {
           <label htmlFor="firstName" className="mb-1 text-white">
             First Name
           </label>
-          
+
           <input
             {...register("firstName")}
             id="firstName"

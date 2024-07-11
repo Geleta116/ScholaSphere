@@ -27,9 +27,10 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginProp) => {
     try {
       await login(data);
+      toast.success("logged in succesfully", {autoClose: 500})
       router.push("/home");
     } catch (e) {
-      toast(error);
+      toast.error(error, {autoClose: 1000});
     }
   };
 

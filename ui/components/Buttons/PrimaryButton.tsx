@@ -14,7 +14,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   return (
     <button
       type={type}
-      className="dark:bg-gray-600 bg-white text-black dark:text-white hover:bg-gray-950 font-bold py-2 px-4 rounded"
+      className="bg-gray-950  text-black dark:text-white hover:bg-purple-700 font-bold py-2 px-4 rounded"
     >
       {title}
     </button>
