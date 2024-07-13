@@ -5,7 +5,7 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import NavBar from "@/components/NavBar/NavBar";
-
+import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 const pacifico = Pacifico({ weight: "400", subsets: ["latin"] });
@@ -26,7 +26,14 @@ export default function RootLayout({
         className={`${inter.className} h-screen w-screen bg-gradient-to-l from-gray-950 via-gray-950 to-gray-950`}
       >
         <ToastContainer />
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

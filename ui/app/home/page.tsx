@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import BookCard from "@/components/Card/BookCard";
 import { useBookStore } from "@/store/book-store";
 import { useEffect } from "react";
@@ -7,18 +7,19 @@ export default function Page() {
   const { books, getBookById, approvedBooks, getApprovedBooks } =
     useBookStore();
   useEffect(() => {
-    
-     getApprovedBooks();
-    
+    getApprovedBooks();
   }, []);
+
   return (
-    <div className=" w-screen h-screen dark:bg-black bg-white  dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center text-white">
-      <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] bg-gradient-to-b  "></div>
-      {approvedBooks.map((book) => (
+  
+    <div className=" w-screen h-screen dark:bg-black bg-white dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center">
+         <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+         
+
+      {approvedBooks.slice(0,3).map((book) => (
         <BookCard
-          title="Title"
-          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
-"
+          title={book.title}
+          description={book.description}
           key={book.id}
           tags={["Untagged", "non"]}
           department="Software"

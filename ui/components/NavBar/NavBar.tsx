@@ -2,7 +2,14 @@
 
 import React from "react";
 import { FloatingNav } from "@/components/NavBar/FloatingNavBar";
-import { IconHome, IconBook, IconUser, IconFileDescription, IconBrandYoutube } from "@tabler/icons-react";
+import {
+  IconHome,
+  IconBook,
+  IconUser,
+  IconFileDescription,
+  IconBrandYoutube,
+} from "@tabler/icons-react";
+import { ModeToggle } from "../ModeToggle/ModeToggle";
 const NavBar: React.FC = () => {
   const navItems = [
     {
@@ -30,7 +37,11 @@ const NavBar: React.FC = () => {
       ),
     },
   ];
-  return <FloatingNav navItems={navItems} />;
+  return (
+    <div>
+      <FloatingNav navItems={navItems} /> <ModeToggle />
+    </div>
+  );
 };
 
 export default NavBar;

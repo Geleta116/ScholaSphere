@@ -6,7 +6,7 @@ export default function HomeLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="flex-1  bg-gradient-to-b ">
+    <main className="flex-1   ">
       <NavBar />
       {children}
     </main>

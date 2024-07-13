@@ -44,6 +44,7 @@ export const useBookStore = create<BookStore>((set) => ({
   },
   getApprovedBooks: async () => {
     try {
+      console.log("getApprovedBooks");
       const books = await GetApprovedBooks();
       set({ approvedBooks: books });
     } catch (error) {
