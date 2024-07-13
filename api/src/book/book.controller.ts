@@ -43,23 +43,27 @@ export const UploadBookController = async (
   res.json({ message: "File uploaded successfully!" });
 };
 
+import { Request, Response, NextFunction } from 'express';
+
 export const FilterBookController = async (
-  req: Req,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const { year, department, course, tags } = req.query;
   const filter: BookFilters = {};
-  if (year) filter.year = parseInt(year as string);
+
+  if (year) filter.year = parseInt(year as string, 10);
   if (department) filter.department = department as string;
   if (course) filter.course = course as string;
-  if (tags) filter.tags = (tags as string).split(",");
+  if (tags) filter.tags = Array.isArray(tags) ? tags : [tags];
 
   try {
     const books = await GetFilteredBooks(filter);
     return res.status(200).json({ books });
   } catch (e) {
-    return res.status(500).send("Internal server error");
+    console.error('Error filtering books:', e);
+    return res.status(500).send('Internal server error');
   }
 };
 

@@ -83,6 +83,7 @@ export const updateBook = async (payload: UpdateBookPayload) => {
     const response = await fetch(
       `${api}/${bookPath}/update-book:${payload.bookId}`,
       {
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           "Content-Type": "multipart/form-data",
@@ -96,4 +97,28 @@ export const updateBook = async (payload: UpdateBookPayload) => {
   }
 };
 
-export const filterBook = async();
+export const filterBook = async (payload: FilterBookPayload) => {
+  try {
+    const queryParams = new URLSearchParams();
+    Object.entries(payload).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach((item) => queryParams.append(key, item));
+      } else if (value !== undefined) {
+        queryParams.set(key, value.toString());
+      }
+    });
+    const response = await fetch(
+      `${api}/${bookPath}/filter-book?${queryParams}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          "content-type": "application/json",
+        },
+      }
+    );
+  } catch (e) {
+    console.log("Filter error:", e);
+    throw new Error("Filter failed");
+  }
+};
