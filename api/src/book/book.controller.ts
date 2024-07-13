@@ -43,10 +43,28 @@ export const UploadBookController = async (
   res.json({ message: "File uploaded successfully!" });
 };
 
-import { Request, Response, NextFunction } from 'express';
-
 export const FilterBookController = async (
-  req: Request,
+  req: Req,
+  res: Response,
+  next: NextFunction
+) => {
+  const { year, department, course, tags } = req.query;
+  const filter: BookFilters = {};
+  if (year) filter.year = parseInt(year as string);
+  if (department) filter.department = department as string;
+  if (course) filter.course = course as string;
+  if (tags) filter.tags = (tags as string).split(",");
+
+  try {
+    const books = await GetFilteredBooks(filter);
+    return res.status(200).json({ books });
+  } catch (e) {
+    return res.status(500).send("Internal server error");
+  }
+};
+
+export const FilterBookControlle = async (
+  req: Req,
   res: Response,
   next: NextFunction
 ) => {
@@ -56,14 +74,21 @@ export const FilterBookController = async (
   if (year) filter.year = parseInt(year as string, 10);
   if (department) filter.department = department as string;
   if (course) filter.course = course as string;
-  if (tags) filter.tags = Array.isArray(tags) ? tags : [tags];
+
+  if (tags) {
+    if (typeof tags === "string") {
+      filter.tags = [tags]; 
+    } else if (Array.isArray(tags)) {
+      filter.tags = tags.map(String); 
+    }
+  }
 
   try {
     const books = await GetFilteredBooks(filter);
     return res.status(200).json({ books });
   } catch (e) {
-    console.error('Error filtering books:', e);
-    return res.status(500).send('Internal server error');
+    console.error("Error filtering books:", e);
+    return res.status(500).send("Internal server error");
   }
 };
 
@@ -179,18 +204,21 @@ export const GetYourApprovedBooksController = async (
       return res.status(401).send("Unauthenticated");
     }
     const userId = user.id;
-    const usersApprovedBook =  await GetUsersApprovedBook(userId);
+    const usersApprovedBook = await GetUsersApprovedBook(userId);
     return res.status(200).json(usersApprovedBook);
   } catch (e) {}
 };
 
-export const DownloadBookController = async (req: Req, res: Response, next: NextFunction) => {
+export const DownloadBookController = async (
+  req: Req,
+  res: Response,
+  next: NextFunction
+) => {
   const bookName = req.params.bookName;
-  const filepath = path.join(__dirname, 'uploads/books', bookName);
+  const filepath = path.join(__dirname, "uploads/books", bookName);
   res.download(filepath, (err) => {
-      if (err) {
-          res.status(500).send('Error downloading the file');
-      }
+    if (err) {
+      res.status(500).send("Error downloading the file");
+    }
   });
-
-}
+};

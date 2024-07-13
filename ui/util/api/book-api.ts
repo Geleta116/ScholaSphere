@@ -122,3 +122,29 @@ export const filterBook = async (payload: FilterBookPayload) => {
     throw new Error("Filter failed");
   }
 };
+
+export const getBookById = async (bookId: string) => {
+  try {
+    const response = await fetch(
+      `${api}/${bookPath}/get-book-by-id/${bookId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          "content-type": "application/json",
+        },
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to get book");
+    } else {
+      return response.json();
+    }
+  } catch (e) {
+    console.log("Get book error:", e);
+    throw new Error("Failed to get book");
+  }
+};
+
+
