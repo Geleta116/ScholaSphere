@@ -12,11 +12,11 @@ interface Props {
 
 const BookCard: React.FC<Props> = ({ title, description, tags, year, department }) => {
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg p-4">
-      <Image width={400} height={200} src="/book-place-holder.png" alt='book place holder image'></Image>
+    <div className="max-w-sm rounded overflow-hidden shadow-lg p-4 dark:bg-black bg-white ">
+      <Image width={400} height={200} src="/book-place-holder.png" alt='book place holder image' className=' bg-white'></Image>
       <div className="px-6 py-4">
         <div className="font-bold text-xl mb-2">{title}</div>
-        <p className="text-gray-700 text-base">{description}</p>
+        <p className="text-white-700 text-base">{description}</p>
       </div>
       <div className="px-6 pt-4 pb-2">
         {tags.map((tag, index) => (
@@ -29,11 +29,10 @@ const BookCard: React.FC<Props> = ({ title, description, tags, year, department 
         ))}
       </div>
       <div className="px-6 py-4">
-        <p className="text-gray-700 text-base">Year: {year}</p>
-        <p className="text-gray-700 text-base">Department: {department}</p>
+        <p className="text-white-700 text-base">Year: {year}</p>
+        <p className="text-white-700 text-base">Department: {department}</p>
       </div>
     </div>
   );
 };
-
 export default BookCard;
