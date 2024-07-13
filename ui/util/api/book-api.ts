@@ -187,7 +187,6 @@ export const GetApprovedBooks = async () => {
   }
 };
 
-
 export const approveBook = async (bookId: string) => {
   try {
     const response = await fetch(`${api}/${bookPath}/approve-book/${bookId}`, {
@@ -205,7 +204,7 @@ export const approveBook = async (bookId: string) => {
     console.log("Approve book error:", e);
     throw new Error("Failed to approve book");
   }
-}
+};
 
 export const getYourApprovedBooks = async () => {
   try {
@@ -226,4 +225,30 @@ export const getYourApprovedBooks = async () => {
     console.log("Get your approved books error:", e);
     throw new Error("Failed to get your approved books");
   }
-}
+};
+
+export const GetYourUnApprovedBooks = async () => {
+  try {
+    const response = await fetch(
+      `${api}/${bookPath}/get-your-unapproved-books`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          "content-type": "application/json",
+        },
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        errorData.message || "Failed to get your unapproved books"
+      );
+    } else {
+      return response.json();
+    }
+  } catch (e) {
+    console.log("Get your unapproved books error:", e);
+    throw new Error("Failed to get your unapproved books");
+  }
+};
