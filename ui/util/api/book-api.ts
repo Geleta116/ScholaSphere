@@ -147,4 +147,42 @@ export const getBookById = async (bookId: string) => {
   }
 };
 
+export const deleteBook = async (bookId: string) => {
+  try {
+    const response = await fetch(`${api}/${bookPath}/delete-book/${bookId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        "content-type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to delete book");
+    }
+  } catch (e) {
+    console.log("Delete book error:", e);
+    throw new Error("Failed to delete book");
+  }
+};
 
+export const GetApprovedBooks = async () => {
+  try {
+    const response = await fetch(`${api}/${bookPath}/get-approved-books`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        "content-type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to get approved books");
+    } else {
+      return response.json();
+    }
+  } catch (e) {
+    console.log("Get approved books error:", e);
+    throw new Error("Failed to get approved books");
+  }
+};
