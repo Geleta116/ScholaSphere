@@ -252,3 +252,36 @@ export const GetYourUnApprovedBooks = async () => {
     throw new Error("Failed to get your unapproved books");
   }
 };
+
+export const downloadBook = async (bookName: string) => {
+  try {
+    const response = await fetch(
+      `${api}/${bookPath}/download-book/${bookName}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to download the file");
+    }
+
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = bookName;
+    document.body.appendChild(link);
+    link.click();
+
+    window.URL.revokeObjectURL(url);
+    link.remove();
+  } catch (error) {
+    console.error("Error downloading the file:", error);
+  }
+};
