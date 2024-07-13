@@ -38,8 +38,8 @@ const NavBar: React.FC = () => {
     },
   ];
   return (
-    <div>
-      <FloatingNav navItems={navItems} /> <ModeToggle />
+    <div className="flex flex-col ">
+      <FloatingNav navItems={navItems}  />   
     </div>
   );
 };

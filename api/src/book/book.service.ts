@@ -98,16 +98,33 @@ export async function DeleteBookById(
 }
 
 export async function GetApprovedBooks() {
-  return await __db?.book.findMany({
-    where: {
-      isApproved: true,
-    },
-  });
+  return await __db?.book
+    .findMany({
+      where: {
+        isApproved: true,
+      },
+      include: {
+        tags: {
+          select: {
+            tag: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    })
+    .then((books) =>
+      books.map((book) => ({
+        ...book,
+        tags: book.tags.map((tagJoin) => tagJoin.tag.name),
+      }))
+    );
 }
-
 export async function UpdateBookById(id: string, data: any): Promise<void> {
   try {
-   await __db?.book.update({
+    await __db?.book.update({
       where: { id: id },
       data: { ...data },
     });
@@ -161,7 +178,6 @@ export async function UpdateBook(
 }
 
 export async function ApproveBook(bookId: string) {
-  
   const book = await __db?.book.findFirst({
     where: {
       id: bookId,
@@ -169,7 +185,7 @@ export async function ApproveBook(bookId: string) {
   });
 
   if (!book) throw new Error("Book not found");
-  
+
   await __db?.book.update({
     where: {
       id: bookId,
@@ -178,7 +194,34 @@ export async function ApproveBook(bookId: string) {
       isApproved: true,
     },
   });
-  return book ;
+
+  const bookWithTags = await __db?.book.findUnique({
+    where: {
+      id: bookId,
+    },
+    include: {
+      tags: {
+        select: {
+          tag: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!bookWithTags) throw new Error("Book not found");
+
+  const transformedTags = bookWithTags.tags.map((t) => t.tag.name);
+
+  const result = {
+    ...bookWithTags,
+    tags: transformedTags,
+  };
+
+  return result;
 }
 
 export async function GetUsersUnApprovedBook(userId: string) {
@@ -196,6 +239,9 @@ export async function GetUsersApprovedBook(userId: string) {
     where: {
       createdById: userId,
       isApproved: true,
+    },
+    include: {
+      tags: true,
     },
   });
 
