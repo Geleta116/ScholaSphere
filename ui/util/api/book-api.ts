@@ -186,3 +186,23 @@ export const GetApprovedBooks = async () => {
     throw new Error("Failed to get approved books");
   }
 };
+
+
+export const approveBook = async (bookId: string) => {
+  try {
+    const response = await fetch(`${api}/${bookPath}/approve-book/${bookId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        "content-type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to approve book");
+    }
+  } catch (e) {
+    console.log("Approve book error:", e);
+    throw new Error("Failed to approve book");
+  }
+}
