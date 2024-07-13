@@ -168,10 +168,11 @@ export const ApproveBookController = async (
 ) => {
   try {
     const BookId = req?.params.id;
-    if (!BookId) return res.status(400).send("Please add BookId");
-    await ApproveBook(BookId);
+    if (!BookId) return res.status(400).send({message:"Please add BookId"});
+    const response = await ApproveBook(BookId);
+    return res.status(200).send(response);
   } catch (e) {
-    return res.status(500).send("internal server error");
+    return res.status(500).send({message: "internal server error"});
   }
 };
 

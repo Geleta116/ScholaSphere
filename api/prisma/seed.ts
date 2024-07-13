@@ -75,7 +75,7 @@ async function seed() {
   await Promise.all(
     getUsers().map(async (user) => {
       const { email, firstName, lastName, userName, password, phonenumber, roles } = user;
-      let hashedpassword = bcrypt.hashSync(user.password, 12);
+      let hashedpassword = bcrypt.hashSync(password, 12);
       const createdUser = await db.user.create({
         data: {
           email,

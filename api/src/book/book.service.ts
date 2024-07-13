@@ -7,9 +7,11 @@ import { UpdateBookDto } from "./contrat/dtos/Update_book.dto";
 export async function AddBook(bookDTO: BookDTO) {
   const { tags, ...bookData } = bookDTO;
 
-  const tagPromises = tags.map(async (tagName?) => {
+  let normalizedTags = Array.isArray(tags) ? tags : [tags];
+
+  const tagPromises = await normalizedTags.map(async (tagName?) => {
     return __db?.tag.findFirst({
-      where: { name: tagName ? tagName : "Untagged" },
+      where: { name: tagName ? tagName : "UnTagged" },
     });
   });
   const tagRecords = await Promise.all(tagPromises);
@@ -105,10 +107,11 @@ export async function GetApprovedBooks() {
 
 export async function UpdateBookById(id: string, data: any): Promise<void> {
   try {
-    await __db?.book.update({
+   await __db?.book.update({
       where: { id: id },
       data: { ...data },
     });
+    return;
   } catch (error) {
     throw new Error(`Failed to update book with ID ${id}: ${error}`);
   }
@@ -158,6 +161,7 @@ export async function UpdateBook(
 }
 
 export async function ApproveBook(bookId: string) {
+  
   const book = await __db?.book.findFirst({
     where: {
       id: bookId,
@@ -165,6 +169,7 @@ export async function ApproveBook(bookId: string) {
   });
 
   if (!book) throw new Error("Book not found");
+  
   await __db?.book.update({
     where: {
       id: bookId,
@@ -173,6 +178,7 @@ export async function ApproveBook(bookId: string) {
       isApproved: true,
     },
   });
+  return book ;
 }
 
 export async function GetUsersUnApprovedBook(userId: string) {

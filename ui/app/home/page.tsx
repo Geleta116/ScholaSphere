@@ -1,3 +1,4 @@
+"use client"
 import BookCard from "@/components/Card/BookCard";
 import { useBookStore } from "@/store/book-store";
 import { useEffect } from "react";
@@ -6,9 +7,9 @@ export default function Page() {
   const { books, getBookById, approvedBooks, getApprovedBooks } =
     useBookStore();
   useEffect(() => {
-    async () => {
-      await getApprovedBooks();
-    };
+    
+     getApprovedBooks();
+    
   }, []);
   return (
     <div className=" w-screen h-screen dark:bg-black bg-white  dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center text-white">
