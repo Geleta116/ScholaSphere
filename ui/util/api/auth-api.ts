@@ -14,14 +14,14 @@ export interface LoginPayload {
   password: string;
 }
 
-export interface SignUpResponse {
+export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
 }
 
 export const SignUp = async (
   payload: SignUpPayload
-): Promise<SignUpResponse> => {
+): Promise<AuthResponse> => {
   try {
     const response = await fetch(`${api}/${authPath}/sign-up`, {
       method: "POST",
@@ -36,16 +36,14 @@ export const SignUp = async (
       throw new Error(errorData.message || "Failed to signup");
     }
 
-    return response.json() as Promise<SignUpResponse>;
+    return response.json() as Promise<AuthResponse>;
   } catch (error) {
     console.error("Signup error:", error);
     throw new Error((error as Error).message || "Signup failed");
   }
 };
 
-export const Login = async (
-  payload: LoginPayload
-): Promise<SignUpResponse> => {
+export const Login = async (payload: LoginPayload): Promise<AuthResponse> => {
   try {
     const response = await fetch(`${api}/${authPath}/login`, {
       method: "POST",
@@ -60,7 +58,8 @@ export const Login = async (
       throw new Error(errorData.message || "Failed to signup");
     }
 
-    return response.json() as Promise<SignUpResponse>;
+    const tokens: AuthResponse = await response.json();
+    return tokens;
   } catch (error) {
     console.error("Signup error:", error);
     throw new Error((error as Error).message || "Signup failed");

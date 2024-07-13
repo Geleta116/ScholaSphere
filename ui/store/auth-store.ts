@@ -1,4 +1,4 @@
-import { Login, LoginPayload, SignUp, SignUpPayload, SignUpResponse } from "@/util/api/auth-api";
+import { Login, LoginPayload, SignUp, SignUpPayload, AuthResponse } from "@/util/api/auth-api";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -20,7 +20,7 @@ const useAuthStore = create<AuthStore>(
       error: undefined,
       signup: async (credentials: SignUpPayload) => {
         try {
-          const data: SignUpResponse = await SignUp(credentials);
+          const data: AuthResponse = await SignUp(credentials);
           localStorage.setItem("accessToken", data.accessToken);
           localStorage.setItem("refreshToken", data.refreshToken);
           set({
@@ -36,7 +36,7 @@ const useAuthStore = create<AuthStore>(
       },
       login: async (credentials: LoginPayload) => {
         try {
-          const data: SignUpResponse = await Login(credentials);
+          const data: AuthResponse = await Login(credentials);
           localStorage.setItem("accessToken", data.accessToken);
           localStorage.setItem("refreshToken", data.refreshToken);
           set({
