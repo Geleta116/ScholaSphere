@@ -1,8 +1,8 @@
-import {api} from "./shared";
+import {api, filterPath} from "./shared";
 
 export const fetchTags = async () => {
     try {
-        const response = await fetch(`${api}/tags`);
+        const response = await fetch(`${api}/${filterPath}/get-tags`);
         return response.json();
     } catch (error) {
         console.error("Failed to fetch tags:", error);
@@ -12,7 +12,7 @@ export const fetchTags = async () => {
 
 export const fetchYears = async () => {
     try {
-        const response = await fetch(`${api}/years`);
+        const response = await fetch(`${api}/${filterPath}/get-years`);
         return response.json();
     } catch (error) {
         console.error("Failed to fetch years:", error);
@@ -22,7 +22,7 @@ export const fetchYears = async () => {
 
 export const fetchDepartments = async () => {
     try {
-        const response = await fetch(`${api}/departments`);
+        const response = await fetch(`${api}/${filterPath}/get-departments`);
         return response.json();
     } catch (error) {
         console.error("Failed to fetch departments:", error);
@@ -32,7 +32,7 @@ export const fetchDepartments = async () => {
 
 export const fetchCourses = async () => {
     try {
-        const response = await fetch(`${api}/courses`);
+        const response = await fetch(`${api}/${filterPath}/courses`);
         return response.json();
     } catch (error) {
         console.error("Failed to fetch courses:", error);
