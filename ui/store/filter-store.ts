@@ -1,19 +1,20 @@
+import { fetchCourses, fetchDepartments, fetchTags, fetchYears } from '@/util/api/filters-api';
 import { create } from 'zustand';
 
 interface FilterState {
   tags: string[];
-  years: string[];
+  years: number[];
   departments: string[];
   courses: string[];
-  selectedYear: string;
+  selectedYear: number;
   selectedDepartment: string;
   selectedCourse: string;
   selectedTags: string[];
   setTags: (tags: string[]) => void;
-  setYears: (years: string[]) => void;
+  setYears: (years: number[]) => void;
   setDepartments: (departments: string[]) => void;
   setCourses: (courses: string[]) => void;
-  setSelectedYear: (year: string) => void;
+  setSelectedYear: (year: number) => void;
   setSelectedDepartment: (department: string) => void;
   setSelectedCourse: (course: string) => void;
   setSelectedTags: (tags: string[]) => void;
@@ -25,7 +26,7 @@ const useFilterStore = create<FilterState>((set) => ({
   years: [],
   departments: [],
   courses: [],
-  selectedYear: '',
+  selectedYear: 1,
   selectedDepartment: '',
   selectedCourse: '',
   selectedTags: [],
@@ -40,10 +41,10 @@ const useFilterStore = create<FilterState>((set) => ({
   fetchFilterOptions: async () => {
     try {
       const [tagsRes, yearsRes, departmentsRes, coursesRes] = await Promise.all([
-        fetch('/api/tags').then((res) => res.json()),
-        fetch('/api/years').then((res) => res.json()),
-        fetch('/api/departments').then((res) => res.json()),
-        fetch('/api/courses').then((res) => res.json()),
+        fetchTags(),
+        fetchYears(),
+        fetchDepartments(),
+        fetchCourses(),
       ]);
       set({ tags: tagsRes, years: yearsRes, departments: departmentsRes, courses: coursesRes });
     } catch (error) {

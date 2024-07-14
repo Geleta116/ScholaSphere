@@ -1,3 +1,4 @@
+import { Book } from "@/model/Book";
 import { api, bookPath } from "./shared";
 
 export interface CreateBookPayload {
@@ -97,7 +98,7 @@ export const updateBook = async (payload: UpdateBookPayload) => {
   }
 };
 
-export const filterBook = async (payload: FilterBookPayload) => {
+export const filterBook = async (payload: FilterBookPayload) : Promise<Book[]> => {
   try {
     const queryParams = new URLSearchParams();
     Object.entries(payload).forEach(([key, value]) => {
@@ -117,6 +118,7 @@ export const filterBook = async (payload: FilterBookPayload) => {
         },
       }
     );
+    return await response.json() as Book[];
   } catch (e) {
     console.log("Filter error:", e);
     throw new Error("Filter failed");

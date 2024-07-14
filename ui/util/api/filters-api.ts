@@ -1,6 +1,6 @@
 import {api, filterPath} from "./shared";
 
-export const fetchTags = async () => {
+export const fetchTags = async (): Promise<string[]> => {
     try {
         const response = await fetch(`${api}/${filterPath}/get-tags`);
         return response.json();
@@ -10,7 +10,7 @@ export const fetchTags = async () => {
     }
 }
 
-export const fetchYears = async () => {
+export const fetchYears = async ():Promise<number[]> => {
     try {
         const response = await fetch(`${api}/${filterPath}/get-years`);
         return response.json();
@@ -20,7 +20,7 @@ export const fetchYears = async () => {
     }
 }
 
-export const fetchDepartments = async () => {
+export const fetchDepartments = async (): Promise<string[]> => {
     try {
         const response = await fetch(`${api}/${filterPath}/get-departments`);
         return response.json();
@@ -30,7 +30,7 @@ export const fetchDepartments = async () => {
     }
 }
 
-export const fetchCourses = async () => {
+export const fetchCourses = async (): Promise<string[]> => {
     try {
         const response = await fetch(`${api}/${filterPath}/courses`);
         return response.json();
