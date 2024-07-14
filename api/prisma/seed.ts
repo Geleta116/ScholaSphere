@@ -17,9 +17,9 @@ type Book = {
   description: string;
   image: string;
   createdById: string;
-  year: number;
-  course: string;
-  department: string;
+  yearId: string;
+  courseId: string;
+  departmentId: string;
 };
 
 function getUsers(): Array<User> {
@@ -40,23 +40,27 @@ function getTags(): Array<string> {
   return ["UnTagged", "Other", "DataBase", "OOP", "DSA", "Machine Learning", "Maths"];
 }
 
-function getBooks(): Array<Book> {
+function getRoles(): Array<string> {
+  return ["admin", "user"];
+}
+
+function getYears(): Array<number> {
+  return [1, 2, 3, 4, 5];
+}
+
+function getDepartments(): Array<string> {
   return [
-    {
-      title: "Alchemist",
-      author: "Paulo Coehlo",
-      description: "Paulo Coehlo wrote this amazing book about a shepherd",
-      image: "path/to/image.jpg",
-      createdById: "dummy-user-id",
-      year: 2024,
-      course: "Mathematics for AI",
-      department: "myown",
-    },
+    "Software Engineering",
+    "Mechanical Engineering",
+    "Biomedical Engineering",
+    "Chemical Engineering",
+    "Civil Engineering",
+    "Electrical Engineering",
   ];
 }
 
-function getRoles(): Array<string> {
-  return ["admin", "user"];
+function getCourses(): Array<string> {
+  return ["DSA", "OOP"];
 }
 
 async function seed() {
@@ -118,6 +122,39 @@ async function seed() {
     })
   );
 
+  // Create years
+  const createdYears = await Promise.all(
+    getYears().map((year) => {
+      return db.year.create({
+        data: {
+          year,
+        },
+      });
+    })
+  );
+
+  // Create departments
+  const createdDepartments = await Promise.all(
+    getDepartments().map((departmentName) => {
+      return db.department.create({
+        data: {
+          departmentName,
+        },
+      });
+    })
+  );
+
+  // Create courses
+  const createdCourses = await Promise.all(
+    getCourses().map((courseName) => {
+      return db.course.create({
+        data: {
+          courseName,
+        },
+      });
+    })
+  );
+
   // Create books
   const seededUser = await db.user.findFirst({
     where: {
@@ -126,34 +163,42 @@ async function seed() {
   });
 
   if (seededUser) {
-    await Promise.all(
-      getBooks().map(async (book) => {
-        const { title, author, description, image, year, course, department } = book;
-        const createdBook = await db.book.create({
-          data: {
-            title,
-            author,
-            description,
-            image,
-            createdById: seededUser.id,
-            year,
-            course,
-            department,
+    const course = createdCourses.find((c) => c.courseName === "DSA");
+    const department = createdDepartments.find((d) => d.departmentName === "Software Engineering");
+    const year = createdYears.find((y) => y.year === 3);
+
+    if (course && department && year) {
+      await db.book.create({
+        data: {
+          title: "Data Structures and Algorithms",
+          author: "Mark Allen Weiss",
+          description: "An in-depth exploration of data structures and algorithms.",
+          image: "path/to/image.jpg",
+          createdById: seededUser.id,
+          yearId: year.id,
+          courseId: course.id,
+          departmentId: department.id,
+        },
+      });
+
+      const otherTag = createdTags.find((tag) => tag.name === "Other");
+      if (otherTag) {
+        const book = await db.book.findFirst({
+          where: {
+            title: "Data Structures and Algorithms",
           },
         });
 
-        const otherTag = createdTags.find((tag) => tag.name === "Other");
-        if (otherTag) {
-          
+        if (book) {
           await db.tagsOnBooks.create({
             data: {
-              bookId: createdBook.id,
+              bookId: book.id,
               tagId: otherTag.id,
             },
           });
         }
-      })
-    );
+      }
+    }
   }
 }
 

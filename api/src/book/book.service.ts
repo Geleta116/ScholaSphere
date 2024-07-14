@@ -3,32 +3,66 @@ import { BookDTO } from "./contrat/dtos/Upload_book.dto";
 import { db } from "../utils/db.server";
 import { BookFilters } from "./book.controller";
 import { UpdateBookDto } from "./contrat/dtos/Update_book.dto";
-
+import { connect } from "http2";
 export async function AddBook(bookDTO: BookDTO) {
-  const { tags, ...bookData } = bookDTO;
-
+  const { tags, year, department, course, createdById,...bookData } = bookDTO;
+  
   let normalizedTags = Array.isArray(tags) ? tags : [tags];
 
-  const tagPromises = await normalizedTags.map(async (tagName?) => {
+  const tagPromises = normalizedTags.map(async (tagName) => {
     return __db?.tag.findFirst({
       where: { name: tagName ? tagName : "UnTagged" },
     });
   });
   const tagRecords = await Promise.all(tagPromises);
 
-  const book = await __db?.book.create({
-    data: {
-      ...bookData,
-      tags: {
-        create: tagRecords.map((tag) => ({
-          tag: {
-            connect: { id: tag?.id },
-          },
-        })),
-      },
-    },
+  const yearRecord = await __db?.year.findFirst({
+    where: { year: year },
   });
 
+  const departmentRecord = await __db?.department.findFirst({
+    where: { departmentName: department },
+  });
+
+  const courseRecord = await __db?.course.findFirst({
+    where: { courseName: course },
+  });
+
+  const createData: any = {
+    ...bookData,
+    createdBy: {
+      connect: { id: bookDTO.createdById }
+    },
+    tags: {
+      create: tagRecords.map((tag) => ({
+        tag: {
+          connect: { id: tag?.id },
+        },
+      })),
+    },
+  };
+
+  if (yearRecord) {
+    createData.year = {
+      connect: { id: yearRecord.id },
+    };
+  }
+
+  if (departmentRecord) {
+    createData.department = {
+      connect: { id: departmentRecord.id },
+    };
+  }
+
+  if (courseRecord) {
+    createData.course = {
+      connect: { id: courseRecord.id },
+    };
+  }
+
+  const book = await __db?.book.create({
+    data: createData,
+  });
   return book;
 }
 
@@ -46,16 +80,45 @@ export async function GetBookById(id: string) {
 }
 
 export async function GetFilteredBooks(filter: BookFilters) {
-  const { tags, ...filterData } = filter;
+  const { tags, year, department, course } = filter;
   try {
     const books = await __db?.book.findMany({
       where: {
-        ...filterData,
+       
+        year: year? {year : year} : undefined,
+        department: department? {departmentName: department} :undefined,
+        course: course? {courseName: course} : undefined,
         tags: {
           some: {
             tag: {
               name: {
                 in: tags,
+              },
+            },
+          },
+        },
+      },
+      include: {
+        year: {
+          select: {
+            year: true
+          }
+        },
+        department: {
+          select: {
+            departmentName: true
+          }
+        },
+        course: {
+          select: {
+            courseName: true
+          }
+        },
+        tags: {
+          select: {
+            tag: {
+              select: {
+                name: true,
               },
             },
           },
@@ -200,6 +263,21 @@ export async function ApproveBook(bookId: string) {
       id: bookId,
     },
     include: {
+      year: {
+        select: {
+          year: true
+        }
+      },
+      department: {
+        select :{
+          departmentName: true
+        }
+      },
+      course: {
+        select :{
+          courseName: true
+        }
+      },
       tags: {
         select: {
           tag: {

@@ -47,20 +47,23 @@ model UserRole {
 }
 
 model Book {
-  id          String        @id @default(cuid())
-  title       String
-  author      String
-  description String
-  image       String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  createdBy   User          @relation(fields: [createdById], references: [id], onDelete: Cascade)
-  createdById String
-  year        Int
-  course      String
-  department  String
-  isApproved  Boolean       @default(false)
-  tags        TagsOnBooks[]
+  id           String        @id @default(cuid())
+  title        String
+  author       String
+  description  String
+  image        String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  createdBy    User          @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById  String
+  year         Year          @relation(fields: [yearId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  yearId       String
+  course       Course        @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  courseId     String
+  department   Department    @relation(fields: [departmentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  departmentId String
+  isApproved   Boolean       @default(false)
+  tags         TagsOnBooks[]
 }
 
 model Tag {
@@ -76,6 +79,24 @@ model TagsOnBooks {
   tagId  String
 
   @@id([bookId, tagId])
+}
+
+model Course {
+  id         String @id @unique @default(uuid())
+  courseName String @unique
+  books      Book[]
+}
+
+model Department {
+  id             String @id @unique @default(uuid())
+  departmentName String @unique
+  books          Book[]
+}
+
+model Year {
+  id   String @id @unique @default(uuid())
+  year Int    @unique
+  Book Book[]
 }
 
 model RefreshToken {
