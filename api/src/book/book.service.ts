@@ -4,6 +4,35 @@ import { db } from "../utils/db.server";
 import { BookFilters } from "./book.controller";
 import { UpdateBookDto } from "./contrat/dtos/Update_book.dto";
 import { connect } from "http2";
+
+const bookInclude = {
+  year: {
+    select: {
+      year: true,
+    },
+  },
+  department: {
+    select: {
+      departmentName: true,
+    },
+  },
+  course: {
+    select: {
+      courseName: true,
+    },
+  },
+  tags: {
+    select: {
+      tag: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  },
+};
+
+
 export async function AddBook(bookDTO: BookDTO) {
   const { tags, year, department, course, createdById,...bookData } = bookDTO;
   
@@ -98,32 +127,7 @@ export async function GetFilteredBooks(filter: BookFilters) {
           },
         },
       },
-      include: {
-        year: {
-          select: {
-            year: true
-          }
-        },
-        department: {
-          select: {
-            departmentName: true
-          }
-        },
-        course: {
-          select: {
-            courseName: true
-          }
-        },
-        tags: {
-          select: {
-            tag: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
+      include: bookInclude
     });
     return books;
   } catch (e) {
@@ -166,17 +170,7 @@ export async function GetApprovedBooks() {
       where: {
         isApproved: true,
       },
-      include: {
-        tags: {
-          select: {
-            tag: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
+      include: bookInclude
     })
     .then((books) =>
       books.map((book) => ({
@@ -262,32 +256,7 @@ export async function ApproveBook(bookId: string) {
     where: {
       id: bookId,
     },
-    include: {
-      year: {
-        select: {
-          year: true
-        }
-      },
-      department: {
-        select :{
-          departmentName: true
-        }
-      },
-      course: {
-        select :{
-          courseName: true
-        }
-      },
-      tags: {
-        select: {
-          tag: {
-            select: {
-              name: true,
-            },
-          },
-        },
-      },
-    },
+    include: bookInclude
   });
 
   if (!bookWithTags) throw new Error("Book not found");
@@ -309,17 +278,7 @@ export async function GetUsersUnApprovedBook(userId: string) {
         createdById: userId,
         isApproved: false,
       },
-      include: {
-        tags: {
-          select: {
-            tag: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
+      include: bookInclude
     })
     .then((books) =>
       books.map((book) => ({
@@ -336,17 +295,7 @@ export async function GetUsersApprovedBook(userId: string) {
         createdById: userId,
         isApproved: true,
       },
-      include: {
-        tags: {
-          select: {
-            tag: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
+      include: bookInclude
     })
     .then((books) =>
       books.map((book) => ({
