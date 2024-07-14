@@ -225,25 +225,57 @@ export async function ApproveBook(bookId: string) {
 }
 
 export async function GetUsersUnApprovedBook(userId: string) {
-  const unApprovedBooks = await __db?.book.findMany({
-    where: {
-      createdById: userId,
-      isApproved: false,
-    },
-  });
-  return unApprovedBooks;
+  return await __db?.book
+    .findMany({
+      where: {
+        createdById: userId,
+        isApproved: false,
+      },
+      include: {
+        tags: {
+          select: {
+            tag: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    })
+    .then((books) =>
+      books.map((book) => ({
+        ...book,
+        tags: book.tags.map((tagJoin) => tagJoin.tag.name),
+      }))
+    );
 }
 
 export async function GetUsersApprovedBook(userId: string) {
-  const approvedBooks = await __db?.book.findMany({
-    where: {
-      createdById: userId,
-      isApproved: true,
-    },
-    include: {
-      tags: true,
-    },
-  });
+  const approvedBooks = await __db?.book
+    .findMany({
+      where: {
+        createdById: userId,
+        isApproved: true,
+      },
+      include: {
+        tags: {
+          select: {
+            tag: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    })
+    .then((books) =>
+      books.map((book) => ({
+        ...book,
+        tags: book.tags.map((tagJoin) => tagJoin.tag.name),
+      }))
+    );
 
   return approvedBooks;
 }

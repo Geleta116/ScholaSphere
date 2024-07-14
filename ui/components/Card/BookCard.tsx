@@ -13,7 +13,7 @@ interface Props {
 const BookCard: React.FC<Props> = ({ title, description, tags, year, department, course }) => {
   
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg p-4 dark:bg-black bg-white transform transition-transform duration-300 hover:scale-105 hover:border-blue-500 border-2 group">
+    <div className="max-w-sm overflow-hidden shadow-lg p-4 dark:bg-black bg-white transform transition-transform duration-300 hover:scale-105 hover:border-blue-500 border-2 group rounded-2xl">
       <Image width={400} height={200} src="/book.png" alt="book placeholder image" className="bg-gray-800" />
       <div className="px-6 py-4">
         <div className="font-bold text-xl mb-2 transition-colors duration-300 group-hover:text-blue-500">{title}</div>

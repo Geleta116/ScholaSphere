@@ -2,16 +2,18 @@
 import BookCard from "@/components/Card/BookCard";
 import { useBookStore } from "@/store/book-store";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
   const { books, getBookById, approvedBooks, getApprovedBooks } =
     useBookStore();
 
   useEffect(() => {
     getApprovedBooks();
-    
   }, []);
 
+  
   return (
     <div>
       <div className="w-screen h-screen dark:bg-black bg-white dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex flex-col items-center justify-center">
@@ -23,13 +25,15 @@ export default function Page() {
               title={book.title}
               description={book.description}
               key={book.id}
-              tags={["Untagged", "non"]}
+              tags={book.tags}
               department="Software"
               year={3}
               course={book.course}
             />
           ))}
-          <p className={`text-3xl`}>More {`>>`} </p>
+          <p className={`text-3xl hover:cursor-pointer hover:underline `} onClick={() => router.push("/book")}>
+            More {`>>`}{" "}
+          </p>
         </div>
       </div>
       <div className="w-screen h-screen dark:bg-black bg-white dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex flex-col items-center justify-center">
