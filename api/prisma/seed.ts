@@ -64,7 +64,7 @@ function getCourses(): Array<string> {
 }
 
 async function seed() {
-  // Create roles
+  
   await Promise.all(
     getRoles().map((role) => {
       return db.role.create({
