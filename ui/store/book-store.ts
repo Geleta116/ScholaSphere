@@ -116,7 +116,7 @@ export const useBookStore = create<BookStore>((set) => ({
 
     try {
       const books = await filterBook(filter);
-      set({ books });
+      set({ books : books});
     } catch (error) {
       set({ error: (error as Error).message });
       throw error;

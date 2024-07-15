@@ -53,7 +53,15 @@ export const FilterBookController = async (
   if (year) filter.year = parseInt(year as string);
   if (department) filter.department = department as string;
   if (course) filter.course = course as string;
-  if (tags) filter.tags = (tags as string).split(",");
+
+  
+  if (tags) {
+    if (typeof tags === "string") {
+      filter.tags = [tags];
+    } else if (Array.isArray(tags)) {
+      filter.tags = tags.map(String);
+    }
+  }
 
   try {
     const books = await GetFilteredBooks(filter);
