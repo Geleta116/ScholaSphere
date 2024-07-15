@@ -21,12 +21,12 @@ interface FilterState {
   fetchFilterOptions: () => Promise<void>;
 }
 
-const useFilterStore = create<FilterState>((set) => ({
+export const useFilterStore = create<FilterState>((set) => ({
   tags: [],
   years: [],
   departments: [],
   courses: [],
-  selectedYear: 1,
+  selectedYear: NaN,
   selectedDepartment: '',
   selectedCourse: '',
   selectedTags: [],
@@ -41,12 +41,15 @@ const useFilterStore = create<FilterState>((set) => ({
   fetchFilterOptions: async () => {
     try {
       const [tagsRes, yearsRes, departmentsRes, coursesRes] = await Promise.all([
-        fetchTags(),
-        fetchYears(),
-        fetchDepartments(),
-        fetchCourses(),
+        await fetchTags(),
+        await fetchYears(),
+        await fetchDepartments(),
+        await fetchCourses(),
       ]);
+
+      
       set({ tags: tagsRes, years: yearsRes, departments: departmentsRes, courses: coursesRes });
+      console.log(tagsRes)
     } catch (error) {
       console.error('Failed to fetch filter options:', error);
     }

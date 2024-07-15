@@ -4,6 +4,7 @@ import { db } from "../utils/db.server";
 import { BookFilters } from "./book.controller";
 import { UpdateBookDto } from "./contrat/dtos/Update_book.dto";
 import { connect } from "http2";
+import { any } from "zod";
 
 const bookInclude = {
   year: {
@@ -32,10 +33,43 @@ const bookInclude = {
   },
 };
 
+interface Year {
+  year: number;
+}
+
+interface Department {
+  departmentName: string;
+}
+
+interface Course {
+  courseName: string;
+}
+
+interface Tag {
+  name: string;
+}
+
+interface Book {
+  year: Year;
+  department: Department;
+  course: Course;
+  tags: { tag: Tag }[];
+  [key: string]: any;
+}
+
+const formatBooks = (books: Book[] ): any[] => {
+  return books?.map((book) => ({
+    ...book,
+    year: book.year.year,
+    department: book.department.departmentName,
+    course: book.course.courseName,
+    tags: book.tags.map((tagJoin) => tagJoin.tag.name),
+  }));
+};
 
 export async function AddBook(bookDTO: BookDTO) {
-  const { tags, year, department, course, createdById,...bookData } = bookDTO;
-  
+  const { tags, year, department, course, createdById, ...bookData } = bookDTO;
+
   let normalizedTags = Array.isArray(tags) ? tags : [tags];
 
   const tagPromises = normalizedTags.map(async (tagName) => {
@@ -60,7 +94,7 @@ export async function AddBook(bookDTO: BookDTO) {
   const createData: any = {
     ...bookData,
     createdBy: {
-      connect: { id: bookDTO.createdById }
+      connect: { id: bookDTO.createdById },
     },
     tags: {
       create: tagRecords.map((tag) => ({
@@ -113,10 +147,9 @@ export async function GetFilteredBooks(filter: BookFilters) {
   try {
     const books = await __db?.book.findMany({
       where: {
-       
-        year: year? {year : year} : undefined,
-        department: department? {departmentName: department} :undefined,
-        course: course? {courseName: course} : undefined,
+        year: year ? { year: year } : undefined,
+        department: department ? { departmentName: department } : undefined,
+        course: course ? { courseName: course } : undefined,
         tags: {
           some: {
             tag: {
@@ -127,9 +160,10 @@ export async function GetFilteredBooks(filter: BookFilters) {
           },
         },
       },
-      include: bookInclude
+      include: bookInclude,
     });
-    return books;
+    if (!books) return [];
+    return formatBooks(books);
   } catch (e) {
     throw e;
   }
@@ -165,20 +199,20 @@ export async function DeleteBookById(
 }
 
 export async function GetApprovedBooks() {
-  return await __db?.book
-    .findMany({
+  try {
+    const books = await __db?.book.findMany({
       where: {
         isApproved: true,
       },
-      include: bookInclude
-    })
-    .then((books) =>
-      books.map((book) => ({
-        ...book,
-        tags: book.tags.map((tagJoin) => tagJoin.tag.name),
-      }))
-    );
+      include: bookInclude,
+    });
+    if (!books) return [];
+    return formatBooks(books);
+  } catch (e) {
+    throw e;
+  }
 }
+
 export async function UpdateBookById(id: string, data: any): Promise<void> {
   try {
     await __db?.book.update({
@@ -256,53 +290,42 @@ export async function ApproveBook(bookId: string) {
     where: {
       id: bookId,
     },
-    include: bookInclude
+    include: bookInclude,
   });
 
   if (!bookWithTags) throw new Error("Book not found");
-
-  const transformedTags = bookWithTags.tags.map((t) => t.tag.name);
-
-  const result = {
-    ...bookWithTags,
-    tags: transformedTags,
-  };
-
-  return result;
+ 
+  return formatBooks([bookWithTags])[0];
 }
 
 export async function GetUsersUnApprovedBook(userId: string) {
-  return await __db?.book
-    .findMany({
+  try {
+    const books = await __db?.book.findMany({
       where: {
         createdById: userId,
         isApproved: false,
       },
-      include: bookInclude
-    })
-    .then((books) =>
-      books.map((book) => ({
-        ...book,
-        tags: book.tags.map((tagJoin) => tagJoin.tag.name),
-      }))
-    );
+      include: bookInclude,
+    });
+    if (!books) return [];
+    return formatBooks(books);
+  } catch (e) {
+    throw e;
+  }
 }
 
 export async function GetUsersApprovedBook(userId: string) {
-  const approvedBooks = await __db?.book
-    .findMany({
+  try {
+    const books = await __db?.book.findMany({
       where: {
         createdById: userId,
         isApproved: true,
       },
-      include: bookInclude
-    })
-    .then((books) =>
-      books.map((book) => ({
-        ...book,
-        tags: book.tags.map((tagJoin) => tagJoin.tag.name),
-      }))
-    );
-
-  return approvedBooks;
+      include: bookInclude,
+    });
+    if (!books) return [];
+    return formatBooks(books);
+  } catch (e) {
+    throw e;
+  }
 }

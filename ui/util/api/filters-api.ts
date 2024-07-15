@@ -2,8 +2,15 @@ import {api, filterPath} from "./shared";
 
 export const fetchTags = async (): Promise<string[]> => {
     try {
+        console.log("fetching tags")
         const response = await fetch(`${api}/${filterPath}/get-tags`);
-        return response.json();
+        console.log("front end tags")
+        console.log(response)
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const tags: string[] = await response.json(); // Parse the JSON in the response body
+        return tags; // Return the parsed data
     } catch (error) {
         console.error("Failed to fetch tags:", error);
         throw new Error((error as Error).message || "Failed to fetch tags");
@@ -32,7 +39,7 @@ export const fetchDepartments = async (): Promise<string[]> => {
 
 export const fetchCourses = async (): Promise<string[]> => {
     try {
-        const response = await fetch(`${api}/${filterPath}/courses`);
+        const response = await fetch(`${api}/${filterPath}/get-courses`);
         return response.json();
     } catch (error) {
         console.error("Failed to fetch courses:", error);

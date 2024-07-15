@@ -1,17 +1,17 @@
 import {
-  fetchCourses,
-  fetchDepartments,
-  fetchTags,
-  fetchYears,
-} from "@/filter/filter.service";
+  fetchCoursesController,
+  fetchDepartmentsController,
+  fetchTagsController,
+  fetchYearsController,
+} from "../filter/filter.controller";
 import Express from "express";
 
 export const FilterRouter = Express.Router();
 
-FilterRouter.get("/get-tags", fetchTags);
+FilterRouter.get("/get-tags", fetchTagsController);
 
-FilterRouter.get("/get-years", fetchYears);
+FilterRouter.get("/get-years", fetchYearsController);
 
-FilterRouter.get("/get-departments", fetchDepartments);
+FilterRouter.get("/get-departments", fetchDepartmentsController);
 
-FilterRouter.get("/get-courses", fetchCourses);
+FilterRouter.get("/get-courses", fetchCoursesController);

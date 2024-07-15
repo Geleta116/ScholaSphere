@@ -1,65 +1,64 @@
 "use client";
+import { useFilterStore } from "@/store/filter-store";
+import { useBookStore } from "@/store/book-store";
+import React, { useEffect } from "react";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+const FilterDropDown = () => {
+  const {
+    tags,
+    years,
+    departments,
+    courses,
+    setTags,
+    setYears,
+    setDepartments,
+    setCourses,
+    selectedYear,
+    setSelectedYear,
+    selectedDepartment,
+    setSelectedDepartment,
+    selectedCourse,
+    setSelectedCourse,
+    selectedTags,
+    setSelectedTags,
+    fetchFilterOptions,
+  } = useFilterStore();
 
-interface Filter {
-  year: string;
-  department: string;
-  tags: string[];
-}
-
-interface Props {
-  onFilter: (filter: Filter) => void;
-}
-
-const ResourceFilterDropDown = ({ onFilter }: Props) => {
-  const [tags, setTags] = useState<string[]>([]);
-  const [years, setYears] = useState<string[]>([]);
-  const [departments, setDepartments] = useState<string[]>([]);
-  const [selectedYear, setSelectedYear] = useState("");
-  const [selectedDepartment, setSelectedDepartment] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const { fetchFilteredBooks } = useBookStore();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const [tagsRes, yearsRes, departmentsRes] = await Promise.all([
-        axios.get("/api/tags"),
-        axios.get("/api/years"),
-        axios.get("/api/departments"),
-      ]);
-
-      setTags(tagsRes.data.map((tag: any) => tag.name));
-      setYears(yearsRes.data.map((year: any) => year.toString()));
-      setDepartments(departmentsRes.data.map((dept: any) => dept.name));
-    };
-
-    fetchData();
-  }, []);
+    fetchFilterOptions();
+    fetchFilteredBooks();
+  }, [fetchFilterOptions, fetchFilteredBooks]);
 
   const handleFilter = () => {
-    const filter: Filter = {
-      year: selectedYear,
-      department: selectedDepartment,
-      tags: selectedTags,
-    };
-    onFilter(filter);
+    fetchFilteredBooks();
   };
 
   return (
     <div>
-      <select onChange={(e) => setSelectedYear(e.target.value)}>
+      <select
+        onChange={(e) => {
+          setSelectedYear(parseInt(e.target.value));
+          fetchFilteredBooks();
+        }}
+      >
         <option value="">Select Year</option>
-        {years.map((year, index) => (
+        {years.map((year: number, index: number) => (
           <option key={index} value={year}>
             {year}
           </option>
         ))}
       </select>
 
-      <select onChange={(e) => setSelectedDepartment(e.target.value)}>
+      <select
+        onChange={(e) => {
+          setSelectedDepartment(e.target.value);
+          fetchFilteredBooks();
+        }}
+      >
         <option value="">Select Department</option>
-        {departments.map((dept, index) => (
+        {departments.map((dept: string, index: number) => (
           <option key={index} value={dept}>
             {dept}
           </option>
@@ -67,29 +66,41 @@ const ResourceFilterDropDown = ({ onFilter }: Props) => {
       </select>
 
       <select
-        multiple
-        value={selectedTags}
         onChange={(e) => {
-          const options = e.target.options;
-          const value: string[] = [];
-          for (let i = 0, l = options.length; i < l; i++) {
-            if (options[i].selected) {
-              value.push(options[i].value);
-            }
-          }
-          setSelectedTags(value);
+          setSelectedCourse(e.target.value);
+          fetchFilteredBooks();
         }}
       >
-        {tags.map((tag, index) => (
-          <option key={index} value={tag}>
-            {tag}
+        <option value="">Select Course</option>
+        {courses.map((course: string, index: number) => (
+          <option key={index} value={course}>
+            {course}
           </option>
         ))}
       </select>
 
-      <button onClick={handleFilter}>Filter</button>
+      <div>
+        {/* {tags.map((tag:string, index:number) => (
+          <label key={index}>
+            <input
+              type="checkbox"
+              value={tag}
+              checked={selectedTags.includes(tag)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSelectedTags((prev) =>
+                  e.target.checked
+                    ? [...prev, value]
+                    : prev.filter((t) => t !== value)
+                );
+              }}
+            />
+            {tag}
+          </label>
+        ))} */}
+      </div>
     </div>
   );
 };
 
-export default ResourceFilterDropDown;
+export default FilterDropDown;
