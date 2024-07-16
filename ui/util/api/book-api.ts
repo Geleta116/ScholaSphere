@@ -97,8 +97,7 @@ export const updateBook = async (payload: UpdateBookPayload) => {
     throw new Error("Update failed");
   }
 };
-
-export const filterBook = async (payload: FilterBookPayload) : Promise<Book[]> => {
+export const filterBook = async (payload: FilterBookPayload) : Promise<{ books: Book[] }> => {
   try {
     const queryParams = new URLSearchParams();
     Object.entries(payload).forEach(([key, value]) => {
@@ -118,12 +117,14 @@ export const filterBook = async (payload: FilterBookPayload) : Promise<Book[]> =
         },
       }
     );
-    return await response.json() as Book[];
+    const data = await response.json();
+    return data;
   } catch (e) {
     console.log("Filter error:", e);
     throw new Error("Filter failed");
   }
 };
+
 
 export const getBookById = async (bookId: string) => {
   try {

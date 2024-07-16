@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.className} h-screen w-screen bg-gradient-to-l from-gray-950 via-gray-950 to-gray-950`}
+        className={`${inter.className} h-screen w-screen bg-gradient-to-l from-gray-950 via-gray-950 to-gray-950 font-mono`}
       >
         <ToastContainer />
         <ThemeProvider

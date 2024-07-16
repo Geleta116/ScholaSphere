@@ -3,7 +3,7 @@ import { useFilterStore } from "@/store/filter-store";
 import { useBookStore } from "@/store/book-store";
 import React, { useEffect } from "react";
 
-const FilterDropDown = () => {
+const ResourceFilterDropDown = () => {
   const {
     tags,
     years,
@@ -41,112 +41,113 @@ const FilterDropDown = () => {
     } else {
       setSelectedTags([...selectedTags, tag]);
     }
-    fetchFilteredBooks();
   };
 
-  const handleYearChange = (year: number) => {
-    setSelectedYear(year);
-    fetchFilteredBooks();
+  const renderTags = () => {
+    const tagsPerRow = [11, 8, 10];
+    const rows: string[][] = [];
+    let startIndex = 0;
+  
+    tagsPerRow.forEach((count) => {
+      const rowTags = tags.slice(startIndex, startIndex + count);
+      rows.push(rowTags);
+      startIndex += count;
+    });
+  
+    // In case there are more tags left after filling the specified rows
+    if (startIndex < tags.length) {
+      rows.push(tags.slice(startIndex));
+    }
+  
+    return rows.map((rowTags, rowIndex) => (
+      <div key={rowIndex} className="flex flex-wrap gap-2 justify-center mb-2">
+        {rowTags.map((tag, index) => (
+          <div
+            key={index}
+            onClick={() => {
+              handleTagChange(tag);
+              fetchFilteredBooks();
+            }}
+            className={`cursor-pointer p-1 rounded-3xl border border-gray-700 w-fit min-w-20 font-bold flex items-center justify-center text-gray-400 text-sm hover:text-gray-800 hover:bg-blue-500 ${
+              selectedTags.includes(tag)
+                ? "bg-blue-500 text-gray-950 font-mono font-bold"
+                : "font-mono"
+            }`}
+          >
+            {tag}
+          </div>
+        ))}
+      </div>
+    ));
   };
-
-  const handleDepartmentChange = (department: string) => {
-    setSelectedDepartment(department);
-    fetchFilteredBooks();
-  };
-
-  const handleCourseChange = (course: string) => {
-    setSelectedCourse(course);
-    fetchFilteredBooks();
-  };
-
+  
   return (
-    <div className="p-6 rounded-lg shadow-lg">
-      <div className="flex flex-col gap-4 mb-6">
-        <div className="flex flex-wrap items-center">
+    <div className="p-6 rounded-lg shadow-lg w-64 md:left-0 items-center justify-center flex flex-col">
+      <div className="flex flex-col md:flex-row grid-row-1 gap-6 sm:grid-row-2 md:grid-row-1">
+        <div className="flex flex-col min-w-fit sm:min-w-52">
           <label className="mb-2 font-bold text-gray-700">Year</label>
-          <div className="flex flex-wrap gap-2">
-            {years.map((year:number, index) => (
-              <div
-                key={index}
-                onClick={() => handleYearChange(year)}
-                className={`cursor-pointer p-2 rounded-full w-12 h-12 flex items-center justify-center ${
-                  selectedYear === year
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-700"
-                }`}
-              >
+          <select
+            onChange={(e) => {
+              setSelectedYear(parseInt(e.target.value));
+              fetchFilteredBooks();
+            }}
+            className="p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500  "
+            value={selectedYear || ""}
+          >
+            <option value="">Select Year</option>
+            {years.map((year: number, index: number) => (
+              <option key={index} value={year}>
                 {year}
-              </div>
+              </option>
             ))}
-          </div>
+          </select>
         </div>
 
-        <div className="flex flex-wrap items-center">
+        <div className="flex flex-col min-w-fit sm:min-w-52">
           <label className="mb-2 font-bold text-gray-700">Department</label>
-          <div className="flex flex-wrap gap-2">
-            {departments.map((dept, index) => (
-              <div
-                key={index}
-                onClick={() => handleDepartmentChange(dept)}
-                className={`cursor-pointer p-2 rounded-full w-36 h-12 flex items-center justify-center ${
-                  selectedDepartment === dept
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-700"
-                }`}
-              >
+          <select
+            onChange={(e) => {
+              setSelectedDepartment(e.target.value);
+              fetchFilteredBooks();
+            }}
+            className="p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+            value={selectedDepartment || ""}
+          >
+            <option value="">Select Department</option>
+            {departments.map((dept: string, index: number) => (
+              <option key={index} value={dept}>
                 {dept}
-              </div>
+              </option>
             ))}
-          </div>
+          </select>
         </div>
 
-        <div className="flex flex-wrap items-center">
+        <div className="flex flex-col min-w-fit sm:min-w-52">
           <label className="mb-2 font-bold text-gray-700">Course</label>
-          <div className="flex flex-wrap gap-2">
-            {courses.map((course, index) => (
-              <div
-                key={index}
-                onClick={() => handleCourseChange(course)}
-                className={`cursor-pointer p-2 rounded-full w-36 h-12 flex items-center justify-center ${
-                  selectedCourse === course
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-700"
-                }`}
-              >
+          <select
+            onChange={(e) => {
+              setSelectedCourse(e.target.value);
+              fetchFilteredBooks();
+            }}
+            className="p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+            value={selectedCourse || ""}
+          >
+            <option value="">Select Course</option>
+            {courses.map((course: string, index: number) => (
+              <option key={index} value={course}>
                 {course}
-              </div>
+              </option>
             ))}
-          </div>
+          </select>
         </div>
       </div>
 
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center mt-6">
         <label className="mb-2 font-bold text-gray-700">Tags</label>
-        <div className="flex flex-wrap gap-2">
-          {tags.map((tag, index) => (
-            <div
-              key={index}
-              onClick={() => handleTagChange(tag)}
-              className={`cursor-pointer p-2 rounded-full w-24 h-12 flex items-center justify-center ${
-                selectedTags.includes(tag)
-                  ? "bg-purple-800 text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              {tag}
-            </div>
-          ))}
-        </div>
+        {renderTags()}
       </div>
-
-      <button
-        onClick={handleFilter}
-        className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition duration-150 ease-in-out"
-      >
-        Filter
-      </button>
     </div>
   );
 };
 
-export default FilterDropDown;
+export default ResourceFilterDropDown;

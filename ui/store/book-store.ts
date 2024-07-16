@@ -113,13 +113,13 @@ export const useBookStore = create<BookStore>((set) => ({
       course: selectedCourse,
       tags: selectedTags,
     };
-
+  
     try {
-      const books = await filterBook(filter);
-      set({ books : books});
+      const response = await filterBook(filter);
+      set({ books: response.books });
     } catch (error) {
       set({ error: (error as Error).message });
       throw error;
     }
-  },
+  }
 }));
