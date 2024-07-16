@@ -12,13 +12,14 @@ export default function Page() {
   }, [fetchFilteredBooks]);
 
   return (
-    <div className="w-screen h-screen dark:bg-black bg-white dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex flex-col items-center justify-start">
-      <div className="w-screen h-screen absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+    <div className="w-screen h-screen dark:bg-black bg-white dark:bg-grid-white/[0.1] bg-grid-black/[0.1] relative flex flex-col items-center justify-start">
+      <div className="w-screen h-screen absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black-800 bg-white [mask-image:radial-gradient(ellipse_at_top,transparent_90%,black)]"></div>
+      <div className="w-screen h-screen absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-purple-800 bg-white [mask-image:radial-gradient(ellipse_at_top,transparent_70%,black)]"></div>
       <div className="flex flex-col items-center w-full">
-        <div className="w-full flex justify-center  z-10 py-20">
+        <div className="w-full flex justify-center z-10 pt-20">
           <ResourceFilterDropDown />
         </div>
-        <div className="flex-grow flex flex-wrap justify-center gap-4 mt-4 w-full">
+        <div className="flex flex-wrap justify-center items-center  gap-4 lg:grid-cols-3  mt-4 w-full px-4">
           {Array.isArray(books) && books.length > 0 ? (
             books.map((book) => (
               <BookCard
@@ -32,7 +33,7 @@ export default function Page() {
               />
             ))
           ) : (
-            <p className="text-center">No books available.</p>
+            <p className="text-center col-span-full">No books available.</p>
           )}
         </div>
       </div>
