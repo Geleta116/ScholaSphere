@@ -33,28 +33,28 @@ export interface FilterBookPayload {
 export const uploadBook = async (payload: CreateBookPayload) => {
   try {
     console.log("payload.file");
-    console.log(payload);
-   
+    console.log(typeof payload.tags);
+    console.log("asdsad")
+
     const formData = new FormData();
     formData.append("title", payload.title);
     formData.append("description", payload.description);
-    formData.append("tags", JSON.stringify(payload.tags));
+    
+    payload.tags.forEach((tag) => {
+      formData.append("tags", tag);
+    });
     if (payload.file) {
       formData.append("file", payload.file);
     }
     formData.append("year", payload.year.toString());
     formData.append("department", payload.department);
     formData.append("course", payload.course);
-    formData.append("author", payload.author);  
-
-
-
+    formData.append("author", payload.author);
 
     const response = await fetch(`${api}/${bookPath}/upload`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-       
       },
       body: formData,
     });
@@ -109,7 +109,9 @@ export const updateBook = async (payload: UpdateBookPayload) => {
     throw new Error("Update failed");
   }
 };
-export const filterBook = async (payload: FilterBookPayload) : Promise<{ books: Book[] }> => {
+export const filterBook = async (
+  payload: FilterBookPayload
+): Promise<{ books: Book[] }> => {
   try {
     const queryParams = new URLSearchParams();
     Object.entries(payload).forEach(([key, value]) => {
@@ -136,7 +138,6 @@ export const filterBook = async (payload: FilterBookPayload) : Promise<{ books: 
     throw new Error("Filter failed");
   }
 };
-
 
 export const getBookById = async (bookId: string) => {
   try {
@@ -190,7 +191,7 @@ export const GetApprovedBooks = async () => {
         "content-type": "application/json",
       },
     });
-    console.log(response)
+    console.log(response);
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || "Failed to get approved books");

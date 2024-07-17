@@ -29,7 +29,7 @@ export const UploadBookController = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.body);
+ 
   const bookDTO = plainToClass(BookDTO, req.body, {
     excludeExtraneousValues: true,
   });
