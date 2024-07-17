@@ -29,9 +29,11 @@ export const UploadBookController = async (
   res: Response,
   next: NextFunction
 ) => {
+  console.log(req.body);
   const bookDTO = plainToClass(BookDTO, req.body, {
     excludeExtraneousValues: true,
   });
+ 
   const token = req.headers.authorization?.split(" ")[1];
   const createdById = await findUserFromToken(token as string);
   bookDTO.createdById = createdById;

@@ -4,6 +4,8 @@ import { useFilterStore } from "@/store/filter-store";
 import { RenderTags } from "../DropDown/TagsFilter";
 import { z } from "zod";
 import bookSchema from "@/util/validation/book-schema";
+import { useBookStore } from "@/store/book-store";
+import { CreateBookPayload } from "@/util/api/book-api";
 
 
 
@@ -11,15 +13,19 @@ type FormData = z.infer<typeof bookSchema>;
 
 const AddBookModal: React.FC = () => {
   const { tags, years, departments, courses } = useFilterStore();
+  const {addBook} = useBookStore();
 
-  const [formData, setFormData] = useState<FormData>({
-    file: undefined as unknown as File,
+ 
+  
+  const [formData, setFormData] = useState<CreateBookPayload>({
+    file: null,
     title: "",
     description: "",
-    year: undefined as unknown as number,
+    year: NaN,
     department: "",
     course: "",
     tags: [],
+    author: "",
   });
 
   const [errors, setErrors] = useState<Partial<z.ZodFormattedError<FormData>>>({});
@@ -48,8 +54,9 @@ const AddBookModal: React.FC = () => {
       const fieldErrors = result.error.format();
       setErrors(fieldErrors);
     } else {
-      // Submit form data
+       
       console.log("Form data is valid:", formData);
+       addBook(formData);
     }
   };
 
@@ -57,6 +64,7 @@ const AddBookModal: React.FC = () => {
     <form
       onSubmit={handleSubmit}
       className="space-y-4 p-6 bg-white dark:bg-zinc-900 rounded-lg shadow-md"
+       encType="multipart/form-data"
     >
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -83,6 +91,20 @@ const AddBookModal: React.FC = () => {
           className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
         {errors.title && <p className="text-red-500 text-sm">{errors.title._errors[0]}</p>}
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+          Book Author
+        </label>
+        <input
+          type="text"
+          name="author"
+          value={formData.author}
+          onChange={handleChange}
+          placeholder="Book Author"
+          className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+        {errors.author && <p className="text-red-500 text-sm">{errors.author._errors[0]}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">

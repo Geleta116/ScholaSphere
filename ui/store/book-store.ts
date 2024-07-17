@@ -9,9 +9,11 @@ import {
   downloadBook,
   deleteBook,
   filterBook,
+  CreateBookPayload,
 } from "@/util/api/book-api";
 import { Book } from "@/model/Book";
 import useFilterStore from "./filter-store";
+
 
 interface BookStore {
   books: Book[];
@@ -27,6 +29,7 @@ interface BookStore {
   deleteBook: (id: string) => Promise<void>;
   downloadBook: (bookName: string) => Promise<void>;
   fetchFilteredBooks: () => Promise<void>;
+  addBook: (book: CreateBookPayload) => void;
   error: string | undefined;
 }
 
@@ -121,5 +124,13 @@ export const useBookStore = create<BookStore>((set) => ({
       set({ error: (error as Error).message });
       throw error;
     }
-  }
+  },
+  addBook: async (book: CreateBookPayload) => {
+    try {
+    const response = await uploadBook(book);
+    } catch (error) {
+      set({ error: (error as Error).message });
+      throw error;
+    }
+  },
 }));

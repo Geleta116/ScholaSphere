@@ -5,10 +5,11 @@ export interface CreateBookPayload {
   title: string;
   description: string;
   tags: string[];
-  file: File;
+  file: File | null;
   year: number;
   department: string;
   course: string;
+  author: string;
 }
 
 export interface UpdateBookPayload {
@@ -20,6 +21,7 @@ export interface UpdateBookPayload {
   year?: number;
   department?: string;
   course?: string;
+  author?: string;
 }
 
 export interface FilterBookPayload {
@@ -30,19 +32,29 @@ export interface FilterBookPayload {
 }
 export const uploadBook = async (payload: CreateBookPayload) => {
   try {
+    console.log("payload.file");
+    console.log(payload);
+   
     const formData = new FormData();
     formData.append("title", payload.title);
     formData.append("description", payload.description);
     formData.append("tags", JSON.stringify(payload.tags));
-    formData.append("file", payload.file);
+    if (payload.file) {
+      formData.append("file", payload.file);
+    }
     formData.append("year", payload.year.toString());
     formData.append("department", payload.department);
+    formData.append("course", payload.course);
+    formData.append("author", payload.author);  
+
+
+
 
     const response = await fetch(`${api}/${bookPath}/upload`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        "Content-Type": "multipart/form-data",
+       
       },
       body: formData,
     });
