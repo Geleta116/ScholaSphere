@@ -14,7 +14,7 @@ export default function Page() {
     fetchFilteredBooks();
    
   }, [fetchFilteredBooks]);
-  console.log(books)
+ 
   return (
     <div className="w-screen h-screen dark:bg-black bg-white relative overflow-hidden">
       <div className="fixed inset-0 dark:bg-black bg-white dark:bg-grid-white/[0.1] bg-grid-black/[0.1]"></div>

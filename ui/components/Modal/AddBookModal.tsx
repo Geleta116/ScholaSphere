@@ -54,8 +54,6 @@ const AddBookModal: React.FC = () => {
       const fieldErrors = result.error.format();
       setErrors(fieldErrors);
     } else {
-       
-      console.log("Form data is valid:", formData);
        addBook(formData);
     }
   };

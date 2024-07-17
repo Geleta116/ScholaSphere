@@ -2,7 +2,7 @@ export async function fetchTags() {
   try {
     const response = await __db?.tag.findMany();
     const names = response?.map((item: any) => item.name);
-    console.log("tags:", names);
+    
     return names;
   } catch (e) {
     console.error("Failed to fetch tags:", e);
