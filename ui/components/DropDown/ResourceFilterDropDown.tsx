@@ -3,6 +3,7 @@ import { useFilterStore } from "@/store/filter-store";
 import { useBookStore } from "@/store/book-store";
 import React, { useEffect } from "react";
 import AddBook from "../BookOperations/AddBook";
+import { RenderTags } from "./TagsFilter";
 
 const ResourceFilterDropDown = () => {
   const {
@@ -81,7 +82,6 @@ const ResourceFilterDropDown = () => {
   return (
     <div className="p-6 rounded-lg shadow-lg w-full flex flex-col items-center justify-center">
       <div className="flex flex-col md:flex-row gap-6">
-      
         <div className="flex flex-col min-w-fit sm:min-w-52">
           <label className="mb-2 font-bold text-white-700">Year</label>
           <select
@@ -142,7 +142,7 @@ const ResourceFilterDropDown = () => {
 
       <div className="flex flex-col items-center mt-6 w-full">
         <label className="mb-2 font-bold text-white-700">Tags</label>
-        {renderTags()}
+        <RenderTags handleTagChange={handleTagChange} selectedTags={selectedTags}/>
       </div>
     </div>
   );
