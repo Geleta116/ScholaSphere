@@ -12,7 +12,7 @@ interface Props {
 
 const BookCard = ({ title, description, tags, department, year, course }: Props) => {
   return (
-    <div className="relative max-w-sm overflow-hidden border-gray-900 shadow-lg p-2 px-6 dark:bg-black bg-white transform transition-transform duration-300 hover:scale-105 hover:border-blue-500 border-2 group rounded-2xl min-w-96 min-h-80">
+    <div className="relative max-w-sm overflow-hidden border-gray-900 shadow-lg p-2 px-6 bg-zinc-950 transform transition-transform duration-300 hover:scale-105 hover:border-blue-500 hover:bg-neutral-900 border-2 group rounded-2xl min-w-96 min-h-80 mb-4">
       <div className="absolute top-5 left-5 transform -translate-x-1/2 -translate-y-1/2 z-10">
         <Image width={50} height={50} src="/book.png" alt="book placeholder image" className="bg-gray-800 rounded-full border-2 border-white" />
       </div>
