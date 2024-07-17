@@ -70,24 +70,9 @@ const formatBooks = (books: Book[] ): any[] => {
 export async function AddBook(bookDTO: BookDTO) {
   const { tags, year, department, course, createdById, ...bookData } = bookDTO;
 
-  let parsedTags: string[];
-  if (typeof tags === 'string') {
-    try {
-      parsedTags = JSON.parse(tags);
-      console.log(parsedTags)
-      console.log(typeof parsedTags);
-      if (!Array.isArray(parsedTags)) {
-        throw new Error('Tags should be an array');
-      }
-    } catch (err) {
-      throw Error('Tags should be an array');
-    }
-  } else {
-    parsedTags = tags; // If tags is already an array (in case of other input formats)
-  }
  
   
-  let normalizedTags = Array.isArray(parsedTags) ? parsedTags : [parsedTags];
+  let normalizedTags = Array.isArray(tags) ? tags : [tags];
   
   const tagPromises = normalizedTags.map(async (tagName) => {
     return __db?.tag.findFirst({

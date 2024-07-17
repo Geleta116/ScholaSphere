@@ -33,7 +33,7 @@ export interface FilterBookPayload {
 export const uploadBook = async (payload: CreateBookPayload) => {
   try {
     console.log("payload.file");
-    console.log(typeof payload.tags);
+    console.log( payload.tags);
     console.log("asdsad")
 
     const formData = new FormData();
