@@ -27,7 +27,7 @@ export default function Page() {
          
           {isOpen && (
             <Modal handleClose={() => setIsOpen(false)} isOpen={isOpen}>
-              <AddBookModal />
+              <AddBookModal handleClose={() => setIsOpen(false)} />
             </Modal>
           )}
           <div className="flex flex-col items-center w-full">

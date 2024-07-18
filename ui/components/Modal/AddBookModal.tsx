@@ -6,17 +6,18 @@ import { z } from "zod";
 import bookSchema from "@/util/validation/book-schema";
 import { useBookStore } from "@/store/book-store";
 import { CreateBookPayload } from "@/util/api/book-api";
-
-
+import { toast } from "react-toastify";
 
 type FormData = z.infer<typeof bookSchema>;
 
-const AddBookModal: React.FC = () => {
-  const { tags, years, departments, courses } = useFilterStore();
-  const {addBook} = useBookStore();
+interface props {
+  handleClose: () => void;
+}
+const AddBookModal = ({ handleClose }: props) => {
+  const { tags, years, departments, courses,  } = useFilterStore();
+  const  {books } = useBookStore();
+  const { addBook } = useBookStore();
 
- 
-  
   const [formData, setFormData] = useState<CreateBookPayload>({
     file: null,
     title: "",
@@ -28,10 +29,16 @@ const AddBookModal: React.FC = () => {
     author: "",
   });
 
-  const [errors, setErrors] = useState<Partial<z.ZodFormattedError<FormData>>>({});
+  const [errors, setErrors] = useState<Partial<z.ZodFormattedError<FormData>>>(
+    {}
+  );
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value, files } = e.target as HTMLInputElement & { files: FileList };
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value, files } = e.target as HTMLInputElement & {
+      files: FileList;
+    };
     setFormData((prevData) => ({
       ...prevData,
       [name]: name === "year" ? parseInt(value, 10) : files ? files[0] : value,
@@ -54,7 +61,13 @@ const AddBookModal: React.FC = () => {
       const fieldErrors = result.error.format();
       setErrors(fieldErrors);
     } else {
-       addBook(formData);
+      try {
+        addBook(formData);
+        toast.success("Book added successfully", { autoClose: 200 });
+        handleClose();
+      } catch (error) {
+        toast.error("Failed to add book");
+      }
     }
   };
 
@@ -62,7 +75,7 @@ const AddBookModal: React.FC = () => {
     <form
       onSubmit={handleSubmit}
       className="space-y-4 p-6 bg-white dark:bg-zinc-900 rounded-lg shadow-md"
-       encType="multipart/form-data"
+      encType="multipart/form-data"
     >
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -74,7 +87,9 @@ const AddBookModal: React.FC = () => {
           onChange={handleChange}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
-        {errors.file && <p className="text-red-500 text-sm">{errors.file._errors[0]}</p>}
+        {errors.file && (
+          <p className="text-red-500 text-sm">{errors.file._errors[0]}</p>
+        )}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -88,7 +103,9 @@ const AddBookModal: React.FC = () => {
           placeholder="Book Title"
           className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
-        {errors.title && <p className="text-red-500 text-sm">{errors.title._errors[0]}</p>}
+        {errors.title && (
+          <p className="text-red-500 text-sm">{errors.title._errors[0]}</p>
+        )}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -102,7 +119,9 @@ const AddBookModal: React.FC = () => {
           placeholder="Book Author"
           className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
-        {errors.author && <p className="text-red-500 text-sm">{errors.author._errors[0]}</p>}
+        {errors.author && (
+          <p className="text-red-500 text-sm">{errors.author._errors[0]}</p>
+        )}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -116,7 +135,9 @@ const AddBookModal: React.FC = () => {
           className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         ></textarea>
         {errors.description && (
-          <p className="text-red-500 text-sm">{errors.description._errors[0]}</p>
+          <p className="text-red-500 text-sm">
+            {errors.description._errors[0]}
+          </p>
         )}
       </div>
       <div>
@@ -136,7 +157,9 @@ const AddBookModal: React.FC = () => {
             </option>
           ))}
         </select>
-        {errors.year && <p className="text-red-500 text-sm">{errors.year._errors[0]}</p>}
+        {errors.year && (
+          <p className="text-red-500 text-sm">{errors.year._errors[0]}</p>
+        )}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -184,7 +207,10 @@ const AddBookModal: React.FC = () => {
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
           Tags
         </label>
-        <RenderTags handleTagChange={handleTagChange} selectedTags={formData.tags} />
+        <RenderTags
+          handleTagChange={handleTagChange}
+          selectedTags={formData.tags}
+        />
       </div>
       <div className="flex justify-end">
         <button

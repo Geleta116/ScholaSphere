@@ -10,6 +10,13 @@ interface DecodedToken {
   [key: string]: any;
 }
 
+interface Role {
+  role: {
+    name: string;
+    id: string; // Assuming 'name' is of type string
+  };
+}
+
 export const Authorization = (roles: string[]) => {
   return async (req: Req, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(" ")[1];
@@ -42,7 +49,7 @@ export const Authorization = (roles: string[]) => {
         return res.status(401).json({ message: "User not found" });
       }
 
-      const userRoles = user.roles.map((role) => role.role.name);
+      const userRoles = user.roles.map((role : Role) => role.role.name);
       const hasRole = roles.some((role) => userRoles.includes(role));
 
       if (!hasRole) {

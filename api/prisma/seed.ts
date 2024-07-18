@@ -15,7 +15,6 @@ type Book = {
   title: string;
   author: string;
   description: string;
-  image: string;
   createdById: string;
   yearId: string;
   courseId: string;

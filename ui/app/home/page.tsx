@@ -11,7 +11,7 @@ export default function Page() {
 
   useEffect(() => {
     getApprovedBooks();
-  }, []);
+  }, [getApprovedBooks]);
 
   
   return (
