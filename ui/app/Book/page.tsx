@@ -1,11 +1,11 @@
 "use client";
-import AddBook from "@/components/BookOperations/AddBook";
 import BookCard from "@/components/Card/BookCard";
 import ResourceFilterDropDown from "@/components/DropDown/ResourceFilterDropDown";
 import AddBookModal from "@/components/Modal/AddBookModal";
 import Modal from "@/components/Modal/Modal";
 import { useBookStore } from "@/store/book-store";
 import { useEffect, useState } from "react";
+import AddResource from "@/components/ResourceOperations/AddResource";
 
 export default function Page() {
   const { books, fetchFilteredBooks } = useBookStore();
@@ -23,9 +23,8 @@ export default function Page() {
 
       <div className="relative w-full h-full overflow-y-auto flex flex-col items-center">
         <div className="flex flex-col-reverse md:flex-row items-center justify-center ">
-          <AddBook />
-          <button onClick={() => setIsOpen(true)}>Click to Open Modal</button>
-
+          <AddResource handleClick={() => setIsOpen(true)} />
+         
           {isOpen && (
             <Modal handleClose={() => setIsOpen(false)} isOpen={isOpen}>
               <AddBookModal />

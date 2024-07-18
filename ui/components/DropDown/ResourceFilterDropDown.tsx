@@ -2,7 +2,7 @@
 import { useFilterStore } from "@/store/filter-store";
 import { useBookStore } from "@/store/book-store";
 import React, { useEffect } from "react";
-import AddBook from "../BookOperations/AddBook";
+import AddBook from "../ResourceOperations/AddResource";
 import { RenderTags } from "./TagsFilter";
 
 const ResourceFilterDropDown = () => {
