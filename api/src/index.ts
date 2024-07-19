@@ -22,6 +22,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
 app.use("/api/users", UserRouter);
 app.use("/api/auth/", AuthRouter);
 app.use("/api/book/", BookRouter);
