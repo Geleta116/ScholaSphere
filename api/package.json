@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "ScholaSphere: Your go-to hub for AAU students. Access books, notes, and quizzes tailored to your courses. Excel in your academic journey with our centralized platform",
   "main": "index.ts",
+  "type": "module",
   "prisma": {
     "seed": "node --require esbuild-register prisma/seed.ts"
   },
