@@ -7,6 +7,8 @@ interface AuroraBackgroundProps extends React.HTMLProps<HTMLDivElement> {
   showRadialGradient?: boolean;
 }
 
+
+
 export const AuroraBackground = ({
   className,
   children,
