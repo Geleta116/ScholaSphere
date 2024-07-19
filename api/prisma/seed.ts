@@ -172,7 +172,7 @@ async function seed() {
           title: "Data Structures and Algorithms",
           author: "Mark Allen Weiss",
           description: "An in-depth exploration of data structures and algorithms.",
-          image: "path/to/image.jpg",
+       
           createdById: seededUser.id,
           yearId: year.id,
           courseId: course.id,
