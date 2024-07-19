@@ -50,8 +50,7 @@ export const signup = async (req: Request, res: Response, next: any) => {
     const jti = uuidv4();
     const { accessToken, refreshToken } = generateTokens(user, jti);
     await addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
-    res.cookie("access_token", accessToken, { httpOnly: true });
-    res.cookie("refresh_token", refreshToken, { httpOnly: true });
+
     res.json({
       accessToken,
       refreshToken,
@@ -87,8 +86,6 @@ export const Login = async (req: Request, res: Response, next: any) => {
       refreshToken,
       userId: existingUser.id,
     });
-    res.cookie("access_token", accessToken, { httpOnly: true });
-    res.cookie("refresh_token", refreshToken, { httpOnly: true });
     res.json({
       accessToken,
       refreshToken,
@@ -112,8 +109,6 @@ export const RefreshToken = async (
     let jti = uuidv4();
     let { accessToken, refreshToken } = generateTokens(userId, jti);
     await addRefreshTokenToWhitelist({ jti, refreshToken, userId });
-    res.cookie("access_token", accessToken, { httpOnly: true });
-    res.cookie("refresh_token", refreshToken, { httpOnly: true });
 
     return res.json({
       accessToken,

@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "ScholaSphere: Your go-to hub for AAU students. Access books, notes, and quizzes tailored to your courses. Excel in your academic journey with our centralized platform",
   "main": "index.ts",
-  
   "prisma": {
     "seed": "node --require esbuild-register prisma/seed.ts"
   },
@@ -11,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.ts",
     "start": "node dist/index.js",
-    "build": "tsc"
+    "build": "npm install && tsc"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +20,7 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
+    "connect-redis": "^7.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -30,6 +30,7 @@
     "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
+    "redis": "^4.6.15",
     "reflect-metadata": "^0.2.2",
     "uuid": "^9.0.1",
     "validatorjs": "^3.22.1",
