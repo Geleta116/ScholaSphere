@@ -136,6 +136,36 @@ export const filterBook = async (
   }
 };
 
+export const filterUnApprovedBook = async (
+  payload: FilterBookPayload
+): Promise<{ books: Book[] }> => {
+  try {
+    const queryParams = new URLSearchParams();
+    Object.entries(payload).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach((item) => queryParams.append(key, item));
+      } else if (value !== undefined) {
+        queryParams.set(key, value.toString());
+      }
+    });
+    const response = await fetch(
+      `${api}/${bookPath}/filter-unapproved-book?${queryParams}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          "content-type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (e) {
+    console.log("Filter error:", e);
+    throw new Error("Filter failed");
+  }
+};
+
 export const getBookById = async (bookId: string) => {
   try {
     const response = await fetch(

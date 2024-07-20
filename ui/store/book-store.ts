@@ -10,6 +10,7 @@ import {
   deleteBook,
   filterBook,
   CreateBookPayload,
+  filterUnApprovedBook,
 } from "@/util/api/book-api";
 import { Book } from "@/model/Book";
 import useFilterStore from "./filter-store";
@@ -18,6 +19,7 @@ import useFilterStore from "./filter-store";
 interface BookStore {
   books: Book[];
   approvedBooks: Book[];
+  unApprovedBooks: Book[];
   yourApprovedBooks: Book[];
   yourUnApprovedBooks: Book[];
   getBookById: (id: string) => Promise<void>;
@@ -29,6 +31,7 @@ interface BookStore {
   deleteBook: (id: string) => Promise<void>;
   downloadBook: (bookName: string) => Promise<void>;
   fetchFilteredBooks: () => Promise<void>;
+  fetchFilteredUnApprovedBooks: () => Promise<void>;
   addBook: (book: CreateBookPayload) => void;
   error: string | undefined;
 }
@@ -36,6 +39,7 @@ interface BookStore {
 export const useBookStore = create<BookStore>((set) => ({
   books: [],
   approvedBooks: [],
+  unApprovedBooks: [],
   yourApprovedBooks: [],
   yourUnApprovedBooks: [],
   error: undefined,
@@ -119,7 +123,24 @@ export const useBookStore = create<BookStore>((set) => ({
   
     try {
       const response = await filterBook(filter);
-      set({ books: response.books });
+      set({ approvedBooks: response.books });
+    } catch (error) {
+      set({ error: (error as Error).message });
+      throw error;
+    }
+  },
+  fetchFilteredUnApprovedBooks: async () => {
+    const { selectedYear, selectedDepartment, selectedCourse, selectedTags } = useFilterStore.getState();
+    const filter = {
+      year: selectedYear,
+      department: selectedDepartment,
+      course: selectedCourse,
+      tags: selectedTags,
+    };
+  
+    try {
+      const response = await filterUnApprovedBook(filter);
+      set({ unApprovedBooks: response.books });
     } catch (error) {
       set({ error: (error as Error).message });
       throw error;
