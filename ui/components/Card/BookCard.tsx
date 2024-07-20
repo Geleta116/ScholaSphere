@@ -18,7 +18,7 @@ const BookCard = ({ title, description, tags, department, year, course }: Props)
       </div>
       <div className="relative z-0">
         <div className="px-6 py-4 pt-10 sm:pt-4">
-          <p className="font-bold text-lg mb-2  transition-colors duration-300 group-hover:text-blue-500 overflow-hidden whitespace-nowrap text-overflow-ellipsis font-sans">{title}</p>
+          <p className="font-bold text-lg mb-2 text-white  transition-colors duration-300 group-hover:text-blue-500 overflow-hidden whitespace-nowrap text-overflow-ellipsis font-sans">{title}</p>
           <p className="text-gray-300 text-sm  overflow-hidden whitespace-nowrap text-overflow-ellipsis text-wrap">{description}</p>
         </div>
         <div className="px-6 pt-4 pb-2">

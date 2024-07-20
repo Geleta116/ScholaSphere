@@ -70,9 +70,6 @@ export default function ResponsiveDrawer(props: Props) {
 
   return (
     <>
-    <div className="fixed inset-0 dark:bg-black bg-white dark:bg-grid-white/[0.1] bg-grid-black/[0.1]"></div>
-      <div className="fixed inset-0 pointer-events-none flex items-center justify-center dark:bg-black-800 bg-black [mask-image:radial-gradient(ellipse_at_top,transparent_90%,black)]"></div>
-      <div className="fixed inset-0 pointer-events-none flex items-center justify-center dark:bg-purple-800 bg-black [mask-image:radial-gradient(ellipse_at_top,transparent_70%,black)]"></div>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar
@@ -92,8 +89,13 @@ export default function ResponsiveDrawer(props: Props) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap component="div">
-              Responsive drawer
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              className="text-center z-40"
+            >
+              Admin Dashboard
             </Typography>
           </Toolbar>
         </AppBar>
@@ -145,8 +147,24 @@ export default function ResponsiveDrawer(props: Props) {
           <Toolbar />
           {selectedItem === "Book" && (
             <>
+              <Typography
+                variant="h6"
+                align="center"
+                color="textPrimary"
+                className="text-white font-bold text-3xl mb-10"
+              >
+                Approved Books
+              </Typography>
               <ApprovedBook />
               <Divider />
+              <Typography
+                variant="h6"
+                align="center"
+                color="textPrimary"
+                className="text-white font-bold  text-3xl mb-10 "
+              >
+                UnApproved Books
+              </Typography>
               <UnApprovedBook />
             </>
           )}
