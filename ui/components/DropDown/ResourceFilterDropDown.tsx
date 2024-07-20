@@ -26,12 +26,13 @@ const ResourceFilterDropDown = () => {
     fetchFilterOptions,
   } = useFilterStore();
 
-  const { fetchFilteredBooks } = useBookStore();
+  const { fetchFilteredBooks, fetchFilteredUnApprovedBooks } = useBookStore();
 
   useEffect(() => {
     fetchFilterOptions();
     fetchFilteredBooks();
-  }, [fetchFilterOptions, fetchFilteredBooks]);
+    fetchFilteredUnApprovedBooks();
+  }, [fetchFilterOptions, fetchFilteredBooks, fetchFilteredUnApprovedBooks]);
 
   const handleTagChange = (tag: string) => {
     if (selectedTags.includes(tag)) {
@@ -42,7 +43,6 @@ const ResourceFilterDropDown = () => {
     fetchFilteredBooks();
   };
 
-
   return (
     <div className="p-6 rounded-lg shadow-lg w-full flex flex-col items-center justify-center">
       <div className="flex flex-col md:flex-row gap-6">
@@ -52,6 +52,7 @@ const ResourceFilterDropDown = () => {
             onChange={(e) => {
               setSelectedYear(parseInt(e.target.value));
               fetchFilteredBooks();
+              fetchFilteredUnApprovedBooks();
             }}
             className="p-2 rounded-lg border border-gray-800 focus:ring-2 focus:ring-blue-500"
             value={selectedYear || ""}
@@ -71,6 +72,7 @@ const ResourceFilterDropDown = () => {
             onChange={(e) => {
               setSelectedDepartment(e.target.value);
               fetchFilteredBooks();
+              fetchFilteredUnApprovedBooks();
             }}
             className="p-2 rounded-lg border border-gray-800 focus:ring-2 focus:ring-blue-500"
             value={selectedDepartment || ""}
@@ -90,6 +92,7 @@ const ResourceFilterDropDown = () => {
             onChange={(e) => {
               setSelectedCourse(e.target.value);
               fetchFilteredBooks();
+              fetchFilteredUnApprovedBooks();
             }}
             className="p-2 rounded-lg border border-gray-800 focus:ring-2 focus:ring-blue-500"
             value={selectedCourse || ""}
@@ -106,7 +109,10 @@ const ResourceFilterDropDown = () => {
 
       <div className="flex flex-col items-center mt-6 w-full">
         <label className="mb-2 font-bold text-white-700">Tags</label>
-        <RenderTags handleTagChange={handleTagChange} selectedTags={selectedTags}/>
+        <RenderTags
+          handleTagChange={handleTagChange}
+          selectedTags={selectedTags}
+        />
       </div>
     </div>
   );

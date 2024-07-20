@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -12,6 +14,8 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import ApprovedBook from "../ResourceCategory/ApprovedBook";
+import UnApprovedBook from "../ResourceCategory/UnApprovedBook";
 
 const drawerWidth = 240;
 
@@ -32,7 +36,9 @@ export interface ListItem {
 export default function ResponsiveDrawer(props: Props) {
   const { window, items } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [selectedItem, setSelectedItem] = React.useState<string>(items[0].title);
+  const [selectedItem, setSelectedItem] = React.useState<string>(
+    items[0].title
+  );
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -63,132 +69,127 @@ export default function ResponsiveDrawer(props: Props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+    <>
+    <div className="fixed inset-0 dark:bg-black bg-white dark:bg-grid-white/[0.1] bg-grid-black/[0.1]"></div>
+      <div className="fixed inset-0 pointer-events-none flex items-center justify-center dark:bg-black-800 bg-black [mask-image:radial-gradient(ellipse_at_top,transparent_90%,black)]"></div>
+      <div className="fixed inset-0 pointer-events-none flex items-center justify-center dark:bg-purple-800 bg-black [mask-image:radial-gradient(ellipse_at_top,transparent_70%,black)]"></div>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          sx={{
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            ml: { sm: `${drawerWidth}px` },
+          }}
+        >
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap component="div">
+              Responsive drawer
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Box
+          component="nav"
+          sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+          aria-label="mailbox folders"
+        >
+          <Drawer
+            container={container}
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true,
+            }}
+            sx={{
+              display: { xs: "block", sm: "none" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+              },
+            }}
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Responsive drawer
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label="mailbox folders"
-      >
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, 
-          }}
+            {drawer}
+          </Drawer>
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: { xs: "none", sm: "block" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+              },
+            }}
+            open
+          >
+            {drawer}
+          </Drawer>
+        </Box>
+        <Box
+          component="main"
           sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-            },
+            flexGrow: 1,
+            p: 3,
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
           }}
         >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: "none", sm: "block" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-            },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
+          <Toolbar />
+          {selectedItem === "Book" && (
+            <>
+              <ApprovedBook />
+              <Divider />
+              <UnApprovedBook />
+            </>
+          )}
+          {selectedItem === "User" && (
+            <Typography paragraph>
+              <p className="text-white">
+                Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
+                ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
+                elementum integer enim neque volutpat ac tincidunt. Ornare
+                suspendisse sed nisi lacus sed viverra tellus. Purus sit amet
+                volutpat consequat mauris. Elementum eu facilisis sed odio
+                morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
+                tincidunt ornare massa eget egestas purus viverra accumsan in.
+                In hendrerit gravida rutrum quisque non tellus orci ac.
+                Pellentesque nec nam aliquam sem et tortor. Habitant morbi
+                tristique senectus et. Adipiscing elit duis tristique
+                sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+                eleifend. Commodo viverra maecenas accumsan lacus vel facilisis.
+                Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
+              </p>
+            </Typography>
+          )}
+          {selectedItem === "Video" && (
+            <Typography paragraph>
+              <p className="text-white">
+                Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
+                ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
+                elementum integer enim neque volutpat ac tincidunt. Ornare
+                suspendisse sed nisi lacus sed viverra tellus. Purus sit amet
+                volutpat consequat mauris. Elementum eu facilisis sed odio
+                morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
+                tincidunt ornare massa eget egestas purus viverra accumsan in.
+                In hendrerit gravida rutrum quisque non tellus orci ac.
+                Pellentesque nec nam aliquam sem et tortor. Habitant morbi
+                tristique senectus et. Adipiscing elit duis tristique
+                sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
+                eleifend. Commodo viverra maecenas accumsan lacus vel facilisis.
+                Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
+              </p>
+            </Typography>
+          )}
+        </Box>
       </Box>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <Toolbar />
-        {selectedItem === "Book" && (
-          <Typography paragraph>
-             <p className="text-white">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
-            dolor purus non enim praesent elementum facilisis leo vel. Risus at
-            ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum
-            quisque non tellus. Convallis convallis tellus id interdum velit
-            laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed
-            adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies
-            integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate
-            eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo
-            quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat
-            vivamus at augue. At augue eget arcu dictum varius duis at consectetur
-            lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien
-            faucibus et molestie ac.
-            </p>
-          </Typography>
-        )}
-        {selectedItem === "User" && (
-          <Typography paragraph>
-            <p className="text-white">
-            Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-            ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
-            elementum integer enim neque volutpat ac tincidunt. Ornare suspendisse
-            sed nisi lacus sed viverra tellus. Purus sit amet volutpat consequat
-            mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis
-            risus sed vulputate odio. Morbi tincidunt ornare massa eget egestas
-            purus viverra accumsan in. In hendrerit gravida rutrum quisque non
-            tellus orci ac. Pellentesque nec nam aliquam sem et tortor. Habitant
-            morbi tristique senectus et. Adipiscing elit duis tristique
-            sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-            eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-            posuere sollicitudin aliquam ultrices sagittis orci a.
-            </p>
-          </Typography>
-        )}
-        {selectedItem === "Video" && (
-          <Typography paragraph>
-            <p className="text-white">
-            Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-            ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
-            elementum integer enim neque volutpat ac tincidunt. Ornare suspendisse
-            sed nisi lacus sed viverra tellus. Purus sit amet volutpat consequat
-            mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis
-            risus sed vulputate odio. Morbi tincidunt ornare massa eget egestas
-            purus viverra accumsan in. In hendrerit gravida rutrum quisque non
-            tellus orci ac. Pellentesque nec nam aliquam sem et tortor. Habitant
-            morbi tristique senectus et. Adipiscing elit duis tristique
-            sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-            eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-            posuere sollicitudin aliquam ultrices sagittis orci a.
-            </p>
-          </Typography>
-        )}
-      </Box>
-    </Box>
+    </>
   );
 }
