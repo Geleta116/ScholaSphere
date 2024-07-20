@@ -1,10 +1,14 @@
 "use client";
 
-import Sidebar from '@/components/SideBar/index';
+import ResponsiveDrawer, { ListItem } from "@/components/SideBar/start";
+import { HomeIcon, InfoIcon } from "lucide-react";
 import { useState } from "react";
-
+const listItems: ListItem[] = [
+    { title: 'Book', link: '/book' },
+    { title: 'User', link: '/user' },
+    
+  ];
 export default function Page() {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    // return <></>
-    return <><Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/></>
+
+    return <><ResponsiveDrawer items={listItems}  /></>
 }

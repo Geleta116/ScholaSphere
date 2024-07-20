@@ -9,6 +9,7 @@ import {
   GetApprovedBooks,
   GetBookById,
   GetFilteredBooks,
+  GetFilteredUnApprovedBooks,
   GetUnApprovedBooks,
   GetUsersApprovedBook,
   GetUsersUnApprovedBook,
@@ -77,7 +78,8 @@ export const FilterBookController = async (
   }
 };
 
-export const FilterBookControlle = async (
+
+export const FilterUnApprovedBookController = async (
   req: Req,
   res: Response,
   next: NextFunction
@@ -98,7 +100,7 @@ export const FilterBookControlle = async (
   }
 
   try {
-    const books = await GetFilteredBooks(filter);
+    const books = await GetFilteredUnApprovedBooks(filter);
     return res.status(200).json({ books });
   } catch (e) {
     console.error("Error filtering books:", e);

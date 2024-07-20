@@ -57,7 +57,7 @@ interface Book {
   [key: string]: any;
 }
 
-const formatBooks = (books: Book[] ): any[] => {
+const formatBooks = (books: Book[]): any[] => {
   return books?.map((book) => ({
     ...book,
     year: book.year.year,
@@ -70,10 +70,8 @@ const formatBooks = (books: Book[] ): any[] => {
 export async function AddBook(bookDTO: BookDTO) {
   const { tags, year, department, course, createdById, ...bookData } = bookDTO;
 
- 
-  
   let normalizedTags = Array.isArray(tags) ? tags : [tags];
-  
+
   const tagPromises = normalizedTags.map(async (tagName) => {
     return __db?.tag.findFirst({
       where: { name: tagName ? tagName : "UnTagged" },
@@ -152,6 +150,35 @@ export async function GetFilteredBooks(filter: BookFilters) {
         year: year ? { year: year } : undefined,
         department: department ? { departmentName: department } : undefined,
         course: course ? { courseName: course } : undefined,
+        isApproved: true,
+        tags: {
+          some: {
+            tag: {
+              name: {
+                in: tags,
+              },
+            },
+          },
+        },
+      },
+      include: bookInclude,
+    });
+    if (!books) return [];
+    return formatBooks(books);
+  } catch (e) {
+    throw e;
+  }
+}
+
+export async function GetFilteredUnApprovedBooks(filter: BookFilters) {
+  const { tags, year, department, course } = filter;
+  try {
+    const books = await __db?.book.findMany({
+      where: {
+        year: year ? { year: year } : undefined,
+        department: department ? { departmentName: department } : undefined,
+        course: course ? { courseName: course } : undefined,
+        isApproved: false,
         tags: {
           some: {
             tag: {
@@ -311,7 +338,7 @@ export async function ApproveBook(bookId: string) {
   });
 
   if (!bookWithTags) throw new Error("Book not found");
- 
+
   return formatBooks([bookWithTags])[0];
 }
 
