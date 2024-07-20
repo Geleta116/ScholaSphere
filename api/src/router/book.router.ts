@@ -52,15 +52,15 @@ const fileFilter = (
   }
 };
 
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-});
+// const upload = multer({
+//   storage: storage,
+//   fileFilter: fileFilter,
+// });
 
 BookRouter.post(
   "/upload",
   Authorization(["user", "admin"]),
-  upload.single("file"),
+  // upload.single("file"),
   GenericValidator(BookSchema),
   UploadBookController
 );
