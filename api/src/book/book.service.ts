@@ -215,6 +215,21 @@ export async function GetApprovedBooks() {
   }
 }
 
+export async function GetUnApprovedBooks() {
+  try {
+    const books = await __db?.book.findMany({
+      where: {
+        isApproved: false,
+      },
+      include: bookInclude,
+    });
+    if (!books) return [];
+    return formatBooks(books);
+  } catch (e) {
+    throw e;
+  }
+}
+
 export async function UpdateBookById(id: string, data: any): Promise<void> {
   try {
     await __db?.book.update({

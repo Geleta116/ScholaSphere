@@ -5,6 +5,7 @@ import {
   FilterBookController,
   GetApprovedBooksController,
   GetBookByIdController,
+  GetUnApprovedBooksController,
   GetYourApprovedBooksController,
   GetYourUnApprovedBooksController,
   UpdateBookController,
@@ -63,7 +64,6 @@ BookRouter.post(
   upload.single("file"),
   GenericValidator(BookSchema),
   UploadBookController,
-  
 );
 
 BookRouter.get(
@@ -88,6 +88,12 @@ BookRouter.get(
   "/get-approved-books",
   Authorization(["user", "admin"]),
   GetApprovedBooksController
+);
+
+BookRouter.get(
+  "/get-unApproved-books",
+  Authorization(["admin"]),
+  GetUnApprovedBooksController
 );
 
 BookRouter.put(

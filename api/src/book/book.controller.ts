@@ -9,6 +9,7 @@ import {
   GetApprovedBooks,
   GetBookById,
   GetFilteredBooks,
+  GetUnApprovedBooks,
   GetUsersApprovedBook,
   GetUsersUnApprovedBook,
   UpdateBook,
@@ -148,6 +149,19 @@ export const GetApprovedBooksController = async (
 ) => {
   try {
     const books = await GetApprovedBooks();
+    return res.status(200).json(books);
+  } catch (e) {
+    return res.status(500).send("Internal server error");
+  }
+};
+
+export const GetUnApprovedBooksController = async (
+  req: Req,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const books = await GetUnApprovedBooks();
     return res.status(200).json(books);
   } catch (e) {
     return res.status(500).send("Internal server error");
