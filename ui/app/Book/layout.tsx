@@ -1,6 +1,6 @@
 import NavBar from "@/components/NavBar/NavBar";
 
-export default function BookLayout({
+export default function bookLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -12,3 +12,5 @@ export default function BookLayout({
     </div>
   );
 }
+
+
