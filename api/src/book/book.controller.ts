@@ -29,20 +29,24 @@ export const UploadBookController = async (
   res: Response,
   next: NextFunction
 ) => {
- 
-  const bookDTO = plainToClass(BookDTO, req.body, {
-    excludeExtraneousValues: true,
-  });
- 
-  const token = req.headers.authorization?.split(" ")[1];
-  const createdById = await findUserFromToken(token as string);
-  bookDTO.createdById = createdById;
-  bookDTO.title = bookDTO.title || req.file?.originalname || "";
-  if (typeof bookDTO.year === "string") {
-    bookDTO.year = parseInt(bookDTO.year);
+  try {
+    const bookDTO = plainToClass(BookDTO, req.body, {
+      excludeExtraneousValues: true,
+    });
+
+    const token = req.headers.authorization?.split(" ")[1];
+    const createdById = await findUserFromToken(token as string);
+    bookDTO.createdById = createdById;
+    bookDTO.title = bookDTO.title || req.file?.originalname || "";
+    if (typeof bookDTO.year === "string") {
+      bookDTO.year = parseInt(bookDTO.year);
+    }
+    await AddBook(bookDTO);
+    res.json({ message: "File uploaded successfully!" });
+  } catch (e) {
+    console.error("Error uploading book:", e);
+    return res.status(500).send("Internal server error");
   }
-  await AddBook(bookDTO);
-  res.json({ message: "File uploaded successfully!" });
 };
 
 export const FilterBookController = async (
@@ -56,7 +60,6 @@ export const FilterBookController = async (
   if (department) filter.department = department as string;
   if (course) filter.course = course as string;
 
-  
   if (tags) {
     if (typeof tags === "string") {
       filter.tags = [tags];
@@ -87,9 +90,9 @@ export const FilterBookControlle = async (
 
   if (tags) {
     if (typeof tags === "string") {
-      filter.tags = [tags]; 
+      filter.tags = [tags];
     } else if (Array.isArray(tags)) {
-      filter.tags = tags.map(String); 
+      filter.tags = tags.map(String);
     }
   }
 
@@ -178,11 +181,11 @@ export const ApproveBookController = async (
 ) => {
   try {
     const BookId = req?.params.id;
-    if (!BookId) return res.status(400).send({message:"Please add BookId"});
+    if (!BookId) return res.status(400).send({ message: "Please add BookId" });
     const response = await ApproveBook(BookId);
     return res.status(200).send(response);
   } catch (e) {
-    return res.status(500).send({message: "internal server error"});
+    return res.status(500).send({ message: "internal server error" });
   }
 };
 
@@ -225,11 +228,16 @@ export const DownloadBookController = async (
   res: Response,
   next: NextFunction
 ) => {
-  const bookName = req.params.bookName;
-  const filepath = path.join(__dirname, "uploads/books", bookName);
-  res.download(filepath, (err) => {
-    if (err) {
-      res.status(500).send("Error downloading the file");
-    }
-  });
+  try {
+    const bookName = req.params.bookName;
+    const filepath = path.join(__dirname, "uploads/books", bookName);
+    res.download(filepath, (err) => {
+      if (err) {
+        res.status(500).send("Error downloading the file");
+      }
+    });
+  } catch (e) {
+    console.error("Error downloading book:", e);
+    return res.status(500).send("Internal server error");
+  }
 };
