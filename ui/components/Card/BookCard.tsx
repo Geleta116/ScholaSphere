@@ -50,10 +50,18 @@ const BookCard = ({
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setIsEditing(false); // Reset editing state when modal is closed
+    setIsEditing(false);
   };
 
   const handleEditClick = () => setIsEditing(true);
+
+  const handleDelete = (e: FormEvent) => {
+    try {
+      toast.success("Book Deleted successfully", { autoClose: 200 });
+    } catch (error) {
+      toast.error("couldn't delete the book");
+    }
+  };
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const result = updateBookSchema.safeParse(formData);
@@ -62,7 +70,7 @@ const BookCard = ({
       setErrors(fieldErrors);
     } else {
       try {
-        console.log(formData)
+        console.log(formData);
         setIsEditing(false);
         // addBook(formData);
         toast.success("Book updated successfully", { autoClose: 200 });
@@ -74,7 +82,9 @@ const BookCard = ({
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -195,11 +205,13 @@ const BookCard = ({
               } border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
             >
               <option value="">Select Department</option>
-              {useFilterStore.getState().years.map((year: number, index: number) => (
-                <option key={index} value={year}>
-                  {year}
-                </option>
-              ))}
+              {useFilterStore
+                .getState()
+                .years.map((year: number, index: number) => (
+                  <option key={index} value={year}>
+                    {year}
+                  </option>
+                ))}
             </select>
           </div>
           <div className="mb-4">
@@ -216,11 +228,13 @@ const BookCard = ({
               } border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
             >
               <option value="">Select Department</option>
-              {useFilterStore.getState().departments.map((dept: string, index: number) => (
-                <option key={index} value={dept}>
-                  {dept}
-                </option>
-              ))}
+              {useFilterStore
+                .getState()
+                .departments.map((dept: string, index: number) => (
+                  <option key={index} value={dept}>
+                    {dept}
+                  </option>
+                ))}
             </select>
           </div>
           <div className="mb-4">
@@ -237,11 +251,13 @@ const BookCard = ({
               } border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
             >
               <option value="">Select Course</option>
-              {useFilterStore.getState().courses.map((course: string, index: number) => (
-                <option key={index} value={course}>
-                  {course}
-                </option>
-              ))}
+              {useFilterStore
+                .getState()
+                .courses.map((course: string, index: number) => (
+                  <option key={index} value={course}>
+                    {course}
+                  </option>
+                ))}
             </select>
           </div>
           <div className="mb-4">
@@ -254,11 +270,11 @@ const BookCard = ({
             />
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
             {isEditing ? (
               <button
                 onClick={handleSubmit}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+                className="bg-green-600 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-md shadow-md"
               >
                 Submit
               </button>
@@ -270,6 +286,12 @@ const BookCard = ({
                 Edit
               </button>
             )}
+            <button
+              onClick={handleSubmit}
+              className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-md shadow-md"
+            >
+              Delete
+            </button>
           </div>
         </div>
       </Modal>
