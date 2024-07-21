@@ -9,8 +9,10 @@ import updateBookSchema from "@/util/validation/update-book.schema";
 // import ResourceFilterDropDown from "@/components/ResourceFilterDropDown";
 import { useFilterStore } from "@/store/filter-store";
 import { RenderTags } from "../DropDown/TagsFilter";
+import { useBookStore } from "@/store/book-store";
 
 interface Props {
+  id: string,
   title: string;
   description: string;
   tags: string[];
@@ -23,6 +25,7 @@ interface Props {
 type FormData = z.infer<typeof updateBookSchema>;
 
 const BookCard = ({
+  id,
   title,
   description,
   tags,
@@ -34,6 +37,7 @@ const BookCard = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
+     id,
     title,
     description,
     tags,
@@ -42,6 +46,8 @@ const BookCard = ({
     course,
     author,
   });
+
+  const {deleteBook, updateBook} = useBookStore();
 
   const [errors, setErrors] = useState<Partial<z.ZodFormattedError<FormData>>>(
     {}
@@ -57,6 +63,7 @@ const BookCard = ({
 
   const handleDelete = (e: FormEvent) => {
     try {
+      deleteBook(id)
       toast.success("Book Deleted successfully", { autoClose: 200 });
     } catch (error) {
       toast.error("couldn't delete the book");
@@ -71,8 +78,10 @@ const BookCard = ({
     } else {
       try {
         console.log(formData);
+        
         setIsEditing(false);
-        // addBook(formData);
+        updateBook(formData);
+        
         toast.success("Book updated successfully", { autoClose: 200 });
         handleCloseModal();
       } catch (error) {
@@ -287,7 +296,7 @@ const BookCard = ({
               </button>
             )}
             <button
-              onClick={handleSubmit}
+              onClick={handleDelete}
               className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-md shadow-md"
             >
               Delete
