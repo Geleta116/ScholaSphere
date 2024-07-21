@@ -50,7 +50,16 @@ export default function ResponsiveDrawer(props: Props) {
   };
 
   const drawer = (
-    <div>
+    <div
+      style={{
+        backgroundColor: "rgba(0, 0, 0, 0.4)", // Semi-transparent black
+        backdropFilter: "blur(10px)", // Apply blur effect
+        WebkitBackdropFilter: "blur(10px)", // For Safari
+        borderRadius: "8px", // Optional: add some rounding to the edges
+        height: "100%", // Ensure it covers the full height
+        color: "rgba(255,255,255,1)"
+      }}
+    >
       <Toolbar />
       <Divider />
       <List>
@@ -77,6 +86,10 @@ export default function ResponsiveDrawer(props: Props) {
           sx={{
             width: { sm: `calc(100% - ${drawerWidth}px)` },
             ml: { sm: `${drawerWidth}px` },
+            backgroundColor: "rgba(0, 0, 0, 0.4)", // Semi-transparent black
+            backdropFilter: "blur(10px)", // Apply blur effect
+            WebkitBackdropFilter: "blur(10px)", // For Safari
+            borderRadius: "8px",
           }}
         >
           <Toolbar>
@@ -85,7 +98,14 @@ export default function ResponsiveDrawer(props: Props) {
               aria-label="open drawer"
               edge="start"
               onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { sm: "none" } }}
+              sx={{
+                mr: 2,
+                display: { sm: "none" },
+                backgroundColor: "rgba(0, 0, 0, 0.4)", // Semi-transparent black
+                backdropFilter: "blur(10px)", // Apply blur effect
+                WebkitBackdropFilter: "blur(10px)", // For Safari
+                borderRadius: "8px",
+              }}
             >
               <MenuIcon />
             </IconButton>
@@ -117,6 +137,10 @@ export default function ResponsiveDrawer(props: Props) {
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
                 width: drawerWidth,
+                backgroundColor: "rgba(0, 0, 0, 0.4)", // Semi-transparent black
+                backdropFilter: "blur(10px)", // Apply blur effect
+                WebkitBackdropFilter: "blur(10px)", // For Safari
+                borderRadius: "8px",
               },
             }}
           >
@@ -129,6 +153,10 @@ export default function ResponsiveDrawer(props: Props) {
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
                 width: drawerWidth,
+                backgroundColor: "rgba(0, 0, 0, 0.4)", // Semi-transparent black
+                backdropFilter: "blur(10px)", // Apply blur effect
+                WebkitBackdropFilter: "blur(10px)", // For Safari
+                borderRadius: "8px",
               },
             }}
             open
