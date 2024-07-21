@@ -62,19 +62,20 @@ model Book {
   department   Department    @relation(fields: [departmentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   departmentId String
   isApproved   Boolean       @default(false)
-  tags         TagsOnBooks[]
+  tags         TagsOnBooks[] 
+   
 }
 
 model Tag {
   id    String        @id @default(cuid())
   name  String        @unique
-  Books TagsOnBooks[]
+  Books TagsOnBooks[]  
 }
 
 model TagsOnBooks {
-  book   Book   @relation(fields: [bookId], references: [id])
+  book   Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
   bookId String
-  tag    Tag    @relation(fields: [tagId], references: [id])
+  tag    Tag    @relation(fields: [tagId], references: [id],  onDelete: Cascade)
   tagId  String
 
   @@id([bookId, tagId])
