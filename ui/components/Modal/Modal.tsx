@@ -12,7 +12,8 @@ function Modal({ children, isOpen, handleClose }: Props) {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const closeOnEscapeKey = (e: { key: string }) => (e.key === "Escape" ? handleClose() : null);
+    const closeOnEscapeKey = (e: { key: string }) =>
+      e.key === "Escape" ? handleClose() : null;
     document.body.addEventListener("keydown", closeOnEscapeKey);
     return () => {
       document.body.removeEventListener("keydown", closeOnEscapeKey);
@@ -21,7 +22,10 @@ function Modal({ children, isOpen, handleClose }: Props) {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
         handleClose();
       }
     };
@@ -43,12 +47,6 @@ function Modal({ children, isOpen, handleClose }: Props) {
             ref={modalRef}
             className="bg-white dark:bg-black p-6 rounded-lg shadow-lg w-11/12 md:w-1/2 lg:w-1/3"
           >
-            <button
-              onClick={handleClose}
-              className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100"
-            >
-              Close
-            </button>
             <div className="modal-content">{children}</div>
           </div>
         </div>

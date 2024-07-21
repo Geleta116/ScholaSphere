@@ -34,6 +34,7 @@ const UnApprovedBook = () => {
               department={book.department || "Software"}
               year={book.year || 3}
               course={book.course}
+              author={book.author}
             />
           ))
         ) : (

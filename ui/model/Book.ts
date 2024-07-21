@@ -6,4 +6,5 @@ export interface Book {
     department: string;
     year: number;
     course: string;
+    author: string;
 }
