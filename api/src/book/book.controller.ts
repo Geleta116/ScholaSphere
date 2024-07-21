@@ -140,6 +140,7 @@ export const DeleteBookController = async (
     );
     return res.status(204).json({ DeletedBook });
   } catch (e) {
+    console.log(e)
     return res.status(500).send("Internal server error");
   }
 };
@@ -186,6 +187,7 @@ export const UpdateBookController = async (
     await UpdateBook(BookId, userData, updateDto);
     return res.status(204).send();
   } catch (e) {
+    console.log(e)
     return res.status(500).send("Internal server error");
   }
 };
