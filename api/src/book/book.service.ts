@@ -259,58 +259,128 @@ export async function GetUnApprovedBooks() {
 
 export async function UpdateBookById(id: string, data: any): Promise<void> {
   try {
+    const updateData: any = {};
+
+    // Handle updating year
+    if (data.yearId) {
+      const year = await __db?.year.findUnique({ where: { id: data.yearId } });
+      if (year) {
+        updateData.yearId = data.yearId;
+      } else {
+        throw new Error(`Year with ID ${data.yearId} not found`);
+      }
+    }
+
+    // Handle updating course
+    if (data.courseId) {
+      const course = await __db?.course.findUnique({
+        where: { id: data.courseId },
+      });
+      if (course) {
+        updateData.courseId = data.courseId;
+      } else {
+        throw new Error(`Course with ID ${data.courseId} not found`);
+      }
+    }
+
+    // Handle updating department
+    if (data.departmentId) {
+      const department = await __db?.department.findUnique({
+        where: { id: data.departmentId },
+      });
+      if (department) {
+        updateData.departmentId = data.departmentId;
+      } else {
+        throw new Error(`Department with ID ${data.departmentId} not found`);
+      }
+    }
+
+    // Handle updating tags
+    if (data.tags) {
+      const tags = await __db?.tag.findMany({
+        where: { id: { in: data.tags } },
+      });
+      if (tags?.length === data.tags.length) {
+        await __db?.tagsOnBooks.deleteMany({ where: { bookId: id } });
+        for (const tagId of data.tags) {
+          await __db?.tagsOnBooks.create({
+            data: {
+              bookId: id,
+              tagId: tagId,
+            },
+          });
+        }
+      } else {
+        throw new Error(`Some tags not found`);
+      }
+    }
+
+    // Update book with remaining data
+    const allowedFields: Array<keyof typeof updateData> = ["title", "author", "description", "isApproved"];
+    for (const field of allowedFields) {
+      if (data[field] !== undefined) {
+        updateData[field] = data[field];
+      }
+    }
+
     await __db?.book.update({
       where: { id: id },
-      data: { ...data },
+      data: updateData,
     });
     return;
   } catch (error) {
+    console.error(error);
     throw new Error(`Failed to update book with ID ${id}: ${error}`);
   }
 }
-
 export async function UpdateBook(
   id: string,
   userData: { id: string; role: string[] },
   requestBody: UpdateBookDto
-) {
-  const book = await __db?.book.findFirst({
-    where: {
-      id,
-    },
-  });
+): Promise<void> {
+  try {
+    const book = await __db?.book.findUnique({
+      where: { id },
+    });
 
-  if (!book) {
-    throw new Error("Book not found.");
-  }
+    if (!book) {
+      throw new Error("Book not found.");
+    }
 
-  if (book.createdById !== userData.id && !userData.role.includes("admin"))
-    throw new Error("you don't have permission to delete the book");
+    if (book.createdById !== userData.id && !userData.role.includes("admin")) {
+      throw new Error("You don't have permission to update this book");
+    }
 
-  if (book.isApproved && !userData.role.includes("admin"))
-    throw new Error("you can't edit this book as it has been approved");
+    if (book.isApproved && !userData.role.includes("admin")) {
+      throw new Error("You can't edit this book as it has been approved");
+    }
 
-  if (!book.isApproved) {
-    const allowedFields = [
-      "title",
-      "author",
-      "description",
-      "year",
-      "course",
-      "department",
-    ];
-    const updateData = Object.keys(requestBody).reduce((obj, key) => {
-      if (allowedFields.includes(key)) {
-        (obj as any)[key] = (requestBody as any)[key];
-      }
-      return obj;
-    }, {});
+    if (!book.isApproved) {
+      const allowedFields: Array<keyof UpdateBookDto> = [
+        "title",
+        "author",
+        "description",
+        "year",
+        "course",
+        "department",
+      ];
+      const updateData = Object.keys(requestBody).reduce((obj, key) => {
+        if (allowedFields.includes(key as keyof UpdateBookDto)) {
+          (obj as any)[key] = (requestBody as any)[key];
+        }
+        return obj;
+      }, {} as UpdateBookDto);
 
-    await UpdateBookById(id, updateData);
-  } else {
-    await UpdateBookById(id, requestBody);
+      await UpdateBookById(id, updateData);
+    } else {
+      await UpdateBookById(id, requestBody);
+    }
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Failed to update book with ID ${id}: ${error}`);
   }
 }
+
 
 export async function ApproveBook(bookId: string) {
   const book = await __db?.book.findFirst({
