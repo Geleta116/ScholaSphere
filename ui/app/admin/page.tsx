@@ -10,5 +10,5 @@ const listItems: ListItem[] = [
   ];
 export default function Page() {
 
-    return <><ResponsiveDrawer items={listItems}  /></>
+    return <ResponsiveDrawer items={listItems}  />
 }

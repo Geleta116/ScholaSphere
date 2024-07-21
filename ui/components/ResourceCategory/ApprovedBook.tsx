@@ -12,10 +12,8 @@ const ApprovedBook = () => {
   }, [fetchFilteredBooks]);
 
   return (
-    <div className=" w-full   relative overflow-hidden">
-
-
-      <div className="flex flex-wrap justify-center items-center gap-4 lg:grid-cols-3 mt-4 w-full px-4">
+    <div className=" w-full relative overflow-hidden">
+      <div className="flex flex-wrap justify-start items-start gap-4 lg:grid-cols-3 mt-4 w-full px-4">
         {Array.isArray(approvedBooks) && approvedBooks.length > 0 ? (
           approvedBooks.map((book) => (
             <BookCard

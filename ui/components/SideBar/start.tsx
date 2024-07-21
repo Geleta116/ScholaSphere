@@ -20,10 +20,6 @@ import UnApprovedBook from "../ResourceCategory/UnApprovedBook";
 const drawerWidth = 240;
 
 interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * Remove this when copying and pasting into your project.
-   */
   window?: () => Window;
   items: ListItem[];
 }
@@ -46,7 +42,7 @@ export default function ResponsiveDrawer(props: Props) {
 
   const handleListItemClick = (title: string) => {
     setSelectedItem(title);
-    setMobileOpen(false); // Close the drawer on item click
+    setMobileOpen(false);
   };
 
   const drawer = (
@@ -57,7 +53,7 @@ export default function ResponsiveDrawer(props: Props) {
         WebkitBackdropFilter: "blur(10px)", // For Safari
         borderRadius: "8px", // Optional: add some rounding to the edges
         height: "100%", // Ensure it covers the full height
-        color: "rgba(255,255,255,1)"
+        color: "rgba(255,255,255,1)",
       }}
     >
       <Toolbar />
@@ -175,24 +171,18 @@ export default function ResponsiveDrawer(props: Props) {
           <Toolbar />
           {selectedItem === "Book" && (
             <>
-              <Typography
-                variant="h6"
-                align="center"
-                color="textPrimary"
-                className="text-white font-bold text-3xl mb-10"
-              >
-                Approved Books
-              </Typography>
+              <div className=" w-full relative overflow-hidden">
+                <div className="text-center w-full text-5xl text-white">
+                  Approved Books
+                </div>
+              </div>
               <ApprovedBook />
               <Divider />
-              <Typography
-                variant="h6"
-                align="center"
-                color="textPrimary"
-                className="text-white font-bold  text-3xl mb-10 "
-              >
-                UnApproved Books
-              </Typography>
+              <div className=" w-full relative overflow-hidden">
+                <div className="text-center w-full text-5xl text-white">
+                  UnApproved Books
+                </div>
+              </div>
               <UnApprovedBook />
             </>
           )}
