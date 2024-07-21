@@ -12,9 +12,8 @@ export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     fetchFilteredBooks();
-   
   }, [fetchFilteredBooks]);
- 
+
   return (
     <div className="w-screen h-screen dark:bg-black bg-white relative overflow-hidden">
       <div className="fixed inset-0 dark:bg-black bg-white dark:bg-grid-white/[0.1] bg-grid-black/[0.1]"></div>
@@ -24,7 +23,7 @@ export default function Page() {
       <div className="relative w-full h-full overflow-y-auto flex flex-col items-center">
         <div className="flex flex-col-reverse md:flex-row items-center justify-center ">
           <AddResource handleClick={() => setIsOpen(true)} />
-         
+
           {isOpen && (
             <Modal handleClose={() => setIsOpen(false)} isOpen={isOpen}>
               <AddBookModal handleClose={() => setIsOpen(false)} />
@@ -40,6 +39,7 @@ export default function Page() {
           {Array.isArray(books) && books.length > 0 ? (
             books.map((book) => (
               <BookCard
+                id={book.id}
                 title={book.title}
                 description={book.description}
                 key={book.id}
