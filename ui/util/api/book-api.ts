@@ -13,7 +13,7 @@ export interface CreateBookPayload {
 }
 
 export interface UpdateBookPayload {
-  bookId: string;
+  id: string;
   title?: string;
   description?: string;
   tags?: string[];
@@ -67,40 +67,27 @@ export const uploadBook = async (payload: CreateBookPayload) => {
     throw new Error("Upload failed");
   }
 };
-
 export const updateBook = async (payload: UpdateBookPayload) => {
   try {
-    const formData = new FormData();
-    if (payload.title) {
-      formData.append("title", payload.title);
-    }
-    if (payload.description) {
-      formData.append("description", payload.description);
-    }
-    if (payload.tags) {
-      formData.append("tags", JSON.stringify(payload.tags));
-    }
-    if (payload.file) {
-      formData.append("file", payload.file);
-    }
-    if (payload.year) {
-      formData.append("year", payload.year.toString());
-    }
-    if (payload.department) {
-      formData.append("department", payload.department);
+    console.log('Payload before stringification:', payload);
+
+    const response = await fetch(`${api}/${bookPath}/update-book/${payload.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    console.log('Payload after stringification:', JSON.stringify(payload));
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to update book");
     }
 
-    const response = await fetch(
-      `${api}/${bookPath}/update-book:${payload.bookId}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          "Content-Type": "multipart/form-data",
-        },
-        body: formData,
-      }
-    );
+    return response.json();
   } catch (e) {
     console.log("Update error:", e);
     throw new Error("Update failed");
@@ -189,6 +176,8 @@ export const getBookById = async (bookId: string) => {
     throw new Error("Failed to get book");
   }
 };
+
+
 
 export const deleteBook = async (bookId: string) => {
   try {

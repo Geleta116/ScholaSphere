@@ -13,20 +13,20 @@ const UnApprovedBook = () => {
 
   return (
     <div className="w-full   relative overflow-hidden">
-       {Array.isArray(unApprovedBooks) ? (
-          <div className="  relative overflow-hidden">
-            <div className="text-center w-full  h-12 text-3xl text-white">
-              <p>COUNT: {unApprovedBooks.length} Books</p>
-            </div>
+      {Array.isArray(unApprovedBooks) ? (
+        <div className="  relative overflow-hidden">
+          <div className="text-center w-full  h-12 text-3xl text-white">
+            <p>COUNT: {unApprovedBooks.length} Books</p>
           </div>
-        ) : (
-          <p>ERROR</p>
-        )}
+        </div>
+      ) : (
+        <p>ERROR</p>
+      )}
       <div className="flex flex-wrap justify-start items-center gap-4 lg:grid-cols-3 mt-4 w-full px-4">
-       
         {Array.isArray(unApprovedBooks) && unApprovedBooks.length > 0 ? (
           unApprovedBooks.map((book) => (
             <BookCard
+              id={book.id}
               title={book.title}
               description={book.description}
               key={book.id}
@@ -38,8 +38,7 @@ const UnApprovedBook = () => {
             />
           ))
         ) : (
-          <div className="  relative overflow-hidden">
-          </div>
+          <div className="  relative overflow-hidden"></div>
         )}
       </div>
     </div>
