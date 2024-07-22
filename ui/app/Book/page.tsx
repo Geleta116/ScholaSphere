@@ -12,6 +12,7 @@ export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     fetchFilteredBooks();
+
   }, [fetchFilteredBooks]);
 
   return (

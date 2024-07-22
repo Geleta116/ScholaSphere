@@ -47,7 +47,7 @@ const BookCard = ({
     author,
   });
 
-  const {deleteBook, updateBook} = useBookStore();
+  const {deleteBook, updateBook, fetchFilteredBooks, fetchFilteredUnApprovedBooks} = useBookStore();
 
   const [errors, setErrors] = useState<Partial<z.ZodFormattedError<FormData>>>(
     {}
@@ -61,10 +61,14 @@ const BookCard = ({
 
   const handleEditClick = () => setIsEditing(true);
 
-  const handleDelete = (e: FormEvent) => {
+  const handleDelete = async (e: FormEvent) => {
     try {
-      deleteBook(id)
+       await deleteBook(id)
+      handleCloseModal();
       toast.success("Book Deleted successfully", { autoClose: 200 });
+      
+      await fetchFilteredBooks();
+      await fetchFilteredUnApprovedBooks();
     } catch (error) {
       toast.error("couldn't delete the book");
     }
