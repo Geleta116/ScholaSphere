@@ -87,7 +87,7 @@ export const updateBook = async (payload: UpdateBookPayload) => {
       throw new Error(errorData.message || "Failed to update book");
     }
 
-    return response.json();
+    return;
   } catch (e) {
     console.log("Update error:", e);
     throw new Error("Update failed");

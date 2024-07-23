@@ -73,7 +73,7 @@ const BookCard = ({
       toast.error("couldn't delete the book");
     }
   };
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const result = updateBookSchema.safeParse(formData);
     if (!result.success) {
@@ -84,9 +84,11 @@ const BookCard = ({
         console.log(formData);
         
         setIsEditing(false);
-        updateBook(formData);
+        await updateBook(formData);
         
         toast.success("Book updated successfully", { autoClose: 200 });
+        await fetchFilteredBooks();
+        await fetchFilteredUnApprovedBooks();
         handleCloseModal();
       } catch (error) {
         toast.error("Failed to update book");

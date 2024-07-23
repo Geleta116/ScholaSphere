@@ -22,7 +22,7 @@ const ApprovedBook = () => {
       ) : (
         <p>ERROR</p>
       )}
-      <div className="flex flex-wrap justify-start items-start gap-4 lg:grid-cols-3 mt-4 w-full px-4">
+      <div className="flex flex-wrap justify-center 2xl:justify-start items-center lg:items-start  gap-4 lg:grid-cols-3 mt-4 w-full px-4">
         {Array.isArray(approvedBooks) && approvedBooks.length > 0 ? (
           approvedBooks.map((book) => (
             <BookCard

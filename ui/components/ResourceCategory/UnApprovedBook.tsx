@@ -22,7 +22,7 @@ const UnApprovedBook = () => {
       ) : (
         <p>ERROR</p>
       )}
-      <div className="flex flex-wrap justify-start items-center gap-4 lg:grid-cols-3 mt-4 w-full px-4">
+      <div className="flex flex-wrap  justify-center 2xl:justify-start items-center xl:items-start gap-4 lg:grid-cols-3 mt-4 w-full px-4">
         {Array.isArray(unApprovedBooks) && unApprovedBooks.length > 0 ? (
           unApprovedBooks.map((book) => (
             <BookCard
