@@ -1,18 +1,17 @@
 "use client";
 
-import React, { FormEvent, useState, useEffect } from "react";
+import React, { FormEvent, useState } from "react";
 import Image from "next/image";
 import Modal from "@/components/Modal/Modal";
 import { z } from "zod";
 import { toast } from "react-toastify";
 import updateBookSchema from "@/util/validation/update-book.schema";
-// import ResourceFilterDropDown from "@/components/ResourceFilterDropDown";
 import { useFilterStore } from "@/store/filter-store";
 import { RenderTags } from "../DropDown/TagsFilter";
 import { useBookStore } from "@/store/book-store";
 
 interface Props {
-  id: string,
+  id: string;
   title: string;
   description: string;
   tags: string[];
@@ -37,7 +36,7 @@ const BookCard = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-     id,
+    id,
     title,
     description,
     tags,
@@ -47,11 +46,9 @@ const BookCard = ({
     author,
   });
 
-  const {deleteBook, updateBook, fetchFilteredBooks, fetchFilteredUnApprovedBooks} = useBookStore();
+  const { deleteBook, updateBook, fetchFilteredBooks, fetchFilteredUnApprovedBooks } = useBookStore();
 
-  const [errors, setErrors] = useState<Partial<z.ZodFormattedError<FormData>>>(
-    {}
-  );
+  const [errors, setErrors] = useState<Partial<z.ZodFormattedError<FormData>>>({});
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => {
@@ -63,16 +60,16 @@ const BookCard = ({
 
   const handleDelete = async (e: FormEvent) => {
     try {
-       await deleteBook(id)
+      await deleteBook(id);
       handleCloseModal();
       toast.success("Book Deleted successfully", { autoClose: 200 });
-      
       await fetchFilteredBooks();
       await fetchFilteredUnApprovedBooks();
     } catch (error) {
-      toast.error("couldn't delete the book");
+      toast.error("Couldn't delete the book");
     }
   };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const result = updateBookSchema.safeParse(formData);
@@ -81,11 +78,8 @@ const BookCard = ({
       setErrors(fieldErrors);
     } else {
       try {
-        console.log(formData);
-        
         setIsEditing(false);
         await updateBook(formData);
-        
         toast.success("Book updated successfully", { autoClose: 200 });
         await fetchFilteredBooks();
         await fetchFilteredUnApprovedBooks();
@@ -97,9 +91,7 @@ const BookCard = ({
   };
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -120,7 +112,7 @@ const BookCard = ({
   return (
     <>
       <div
-        className="relative max-w-sm overflow-hidden border-gray-900 shadow-lg p-2 px-6 bg-zinc-950 transform transition-transform duration-300 hover:scale-105 hover:border-blue-500 hover:bg-neutral-900 border-2 group rounded-2xl min-w-96 min-h-80 mb-4"
+        className="relative max-w-sm overflow-hidden border-gray-900 shadow-lg p-2 px-6 bg-zinc-950 transform transition-transform duration-300 hover:scale-105 hover:border-blue-500 hover:bg-neutral-900 border-2 group rounded-2xl min-w-96 min-h-80 mb-4  overflow-y-auto"
         onClick={handleOpenModal}
       >
         <div className="absolute top-5 left-5 transform -translate-x-1/2 -translate-y-1/2 z-10">
@@ -160,7 +152,7 @@ const BookCard = ({
       </div>
 
       <Modal isOpen={isModalOpen} handleClose={handleCloseModal}>
-        <div className="p-4 backdrop-blur-lg rounded-lg shadow-md">
+        <div className="p-4 backdrop-blur-lg rounded-lg shadow-md max-h-[80vh] overflow-auto">
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Title

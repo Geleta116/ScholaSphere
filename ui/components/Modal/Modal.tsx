@@ -40,17 +40,17 @@ function Modal({ children, isOpen, handleClose }: Props) {
 
   return (
     <ReactPortal wrapperId="react-portal-modal-container">
-      <>
-        <div className="fixed inset-0 backdrop-blur-sm z-50"></div>
-        <div className="fixed inset-0 flex items-center justify-center z-50">
+      
+        <div className="fixed inset-0 backdrop-blur-sm z-50  overflow-y-auto"></div>
+        <div className="fixed inset-0 flex items-center justify-center z-50  overflow-y-auto">
           <div
             ref={modalRef}
-            className="bg-white dark:bg-black p-6 rounded-lg shadow-lg w-11/12 md:w-1/2 lg:w-1/3"
+            className="bg-white dark:bg-black p-6 rounded-lg shadow-lg w-11/12 md:w-1/2 lg:w-1/3  overflow-y-auto"
           >
-            <div className="modal-content">{children}</div>
+            <div className="modal-content overflow-y-auto">{children}</div>
           </div>
         </div>
-      </>
+      
     </ReactPortal>
   );
 }

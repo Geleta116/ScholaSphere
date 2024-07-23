@@ -16,12 +16,12 @@ import Typography from "@mui/material/Typography";
 import ResourceFilterDropDown from "@/components/DropDown/ResourceFilterDropDown";
 import ApprovedBook from "@/components/ResourceCategory/ApprovedBook";
 import UnApprovedBook from "@/components/ResourceCategory/UnApprovedBook";
-import { HomeIcon, InfoIcon } from "lucide-react";
+import {  BookIcon,User2Icon} from "lucide-react";
 import { useState } from "react";
 
 const listItems: ListItem[] = [
-    { title: 'Book', link: '/book' },
-    { title: 'User', link: '/user' },
+    { title: 'Book', link: '/book', icon: <BookIcon /> },
+    { title: 'User', link: '/user', icon : <User2Icon /> },
 ];
 
 const drawerWidth = 240;
@@ -29,6 +29,7 @@ const drawerWidth = 240;
 export interface ListItem {
   title: string;
   link: string;
+  icon: any
 }
 
 export default function Page() {
@@ -63,7 +64,9 @@ export default function Page() {
         {items.map((item) => (
           <ListItem key={item.title} disablePadding>
             <ListItemButton onClick={() => handleListItemClick(item.title)}>
+               {item.icon}
               <ListItemText primary={item.title} />
+              
             </ListItemButton>
           </ListItem>
         ))}
