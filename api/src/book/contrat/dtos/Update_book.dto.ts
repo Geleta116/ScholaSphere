@@ -18,4 +18,7 @@ export class UpdateBookDto {
   
     @Expose()
     department?: string;
+
+    @Expose()
+    tags?: string[];
 }

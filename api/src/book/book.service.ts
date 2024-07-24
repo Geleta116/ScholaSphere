@@ -257,69 +257,99 @@ export async function GetUnApprovedBooks() {
   }
 }
 
-export async function UpdateBookById(id: string, data: any): Promise<void> {
+export async function UpdateBookById(
+  id: string,
+  data: UpdateBookDto
+): Promise<void> {
   try {
     const updateData: any = {};
 
-    // Handle updating year
-    if (data.yearId) {
-      const year = await __db?.year.findUnique({ where: { id: data.yearId } });
+   
+    if (data.year) {
+      const year = await __db?.year.findUnique({ where: { year: data.year } });
       if (year) {
-        updateData.yearId = data.yearId;
+        updateData.yearId = year.id;
       } else {
-        throw new Error(`Year with ID ${data.yearId} not found`);
+        throw new Error(`Year not found`);
       }
     }
 
-    // Handle updating course
-    if (data.courseId) {
+    
+    if (data.course) {
       const course = await __db?.course.findUnique({
-        where: { id: data.courseId },
+        where: { courseName: data.course },
       });
       if (course) {
-        updateData.courseId = data.courseId;
+        updateData.courseId = course.id;
       } else {
-        throw new Error(`Course with ID ${data.courseId} not found`);
+        throw new Error(`Course not found`);
       }
     }
 
     // Handle updating department
-    if (data.departmentId) {
+    if (data.department) {
       const department = await __db?.department.findUnique({
-        where: { id: data.departmentId },
+        where: { departmentName: data.department },
       });
       if (department) {
-        updateData.departmentId = data.departmentId;
+        updateData.departmentId = department.id;
       } else {
-        throw new Error(`Department with ID ${data.departmentId} not found`);
+        throw new Error(`Department not found`);
       }
     }
 
     // Handle updating tags
-    if (data.tags) {
+    
+    if (data.tags && data.tags.length > 0) {
+      console.log(data.tags.length);
       const tags = await __db?.tag.findMany({
-        where: { id: { in: data.tags } },
+        where: { name: { in: data.tags } },
       });
-      if (tags?.length === data.tags.length) {
-        await __db?.tagsOnBooks.deleteMany({ where: { bookId: id } });
-        for (const tagId of data.tags) {
+
+      // First, delete existing tags
+      await __db?.tagsOnBooks.deleteMany({ where: { bookId: id } });
+      // Then, create new tag associations
+      if (tags) {
+        for (const tag of tags) {
           await __db?.tagsOnBooks.create({
             data: {
               bookId: id,
-              tagId: tagId,
+              tagId: tag.id,
             },
           });
         }
-      } else {
-        throw new Error(`Some tags not found`);
       }
+    } else {
+      console.log("hereeeeeeeeeee");
+      await __db?.tagsOnBooks.deleteMany({
+        where: {
+          bookId: id,
+        },
+      });
+      const unTaggedId = await __db?.tag.findFirst({
+        where: {
+          name: "UnTagged",
+        },
+      });
+      if (!unTaggedId) throw Error("Untagged Tag doesn't exist");
+      await __db?.tagsOnBooks.create({
+        data: {
+          bookId: id,
+          tagId: unTaggedId?.id,
+        },
+      });
     }
 
     // Update book with remaining data
-    const allowedFields: Array<keyof typeof updateData> = ["title", "author", "description", "isApproved"];
+    const allowedFields: Array<keyof typeof updateData> = [
+      "title",
+      "author",
+      "description",
+      "isApproved",
+    ];
     for (const field of allowedFields) {
-      if (data[field] !== undefined) {
-        updateData[field] = data[field];
+      if (data[field as keyof UpdateBookDto] !== undefined) {
+        updateData[field] = data[field as keyof UpdateBookDto];
       }
     }
 
@@ -327,12 +357,11 @@ export async function UpdateBookById(id: string, data: any): Promise<void> {
       where: { id: id },
       data: updateData,
     });
-    return;
   } catch (error) {
-    console.error(error);
-    throw new Error(`Failed to update book with ID ${id}: ${error}`);
+    throw Error(`${error}`);
   }
 }
+
 export async function UpdateBook(
   id: string,
   userData: { id: string; role: string[] },
@@ -355,7 +384,10 @@ export async function UpdateBook(
       throw new Error("You can't edit this book as it has been approved");
     }
 
-    if (!book.isApproved) {
+    if (
+      userData.role.includes("admin") ||
+      (!book.isApproved && userData.id === book.createdById)
+    ) {
       const allowedFields: Array<keyof UpdateBookDto> = [
         "title",
         "author",
@@ -363,6 +395,7 @@ export async function UpdateBook(
         "year",
         "course",
         "department",
+        "tags",
       ];
       const updateData = Object.keys(requestBody).reduce((obj, key) => {
         if (allowedFields.includes(key as keyof UpdateBookDto)) {
@@ -373,14 +406,13 @@ export async function UpdateBook(
 
       await UpdateBookById(id, updateData);
     } else {
-      await UpdateBookById(id, requestBody);
+      throw new Error(`Failed to update book`);
     }
   } catch (error) {
     console.error(error);
     throw new Error(`Failed to update book with ID ${id}: ${error}`);
   }
 }
-
 
 export async function ApproveBook(bookId: string) {
   const book = await __db?.book.findFirst({
