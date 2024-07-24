@@ -3,8 +3,9 @@ import BookCard from "@/components/Card/BookCard";
 import { useBookStore } from "@/store/book-store";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import WithAuth from "@/components/WithAuth";
 
-export default function Page() {
+function Page() {
   const router = useRouter();
   const { books, getBookById, approvedBooks, getApprovedBooks } =
     useBookStore();
@@ -68,3 +69,5 @@ export default function Page() {
     </div>
   );
 }
+
+export default WithAuth(Page, ["admin", "user"]);

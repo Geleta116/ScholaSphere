@@ -18,6 +18,7 @@ import ApprovedBook from "@/components/ResourceCategory/ApprovedBook";
 import UnApprovedBook from "@/components/ResourceCategory/UnApprovedBook";
 import {  BookIcon,User2Icon} from "lucide-react";
 import { useState } from "react";
+import WithAuth from "@/components/WithAuth";
 
 const listItems: ListItem[] = [
     { title: 'Book', link: '/book', icon: <BookIcon /> },
@@ -31,8 +32,7 @@ export interface ListItem {
   link: string;
   icon: any
 }
-
-export default function Page() {
+function Page() {
   const items = listItems;
   
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -227,3 +227,6 @@ export default function Page() {
     </>
   );
 }
+
+
+export default WithAuth(Page, ["admin", "user"]);

@@ -1,6 +1,7 @@
 // components/withAuth.tsx
+"use client";
 import { useEffect, useState, ComponentType, ReactNode } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { fetchUserRole } from "@/util/api/auth-api";
 
 interface WithAuthProps {
@@ -19,9 +20,9 @@ const WithAuth = <P extends object>(
     useEffect(() => {
       const checkAuth = async () => {
         try {
-          const token = localStorage.getItem("authToken");
+          const token = localStorage.getItem("accessToken");
+
           if (!token) {
-            router.push("/login");
             return;
           }
 

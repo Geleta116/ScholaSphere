@@ -9,6 +9,7 @@ import updateBookSchema from "@/util/validation/update-book.schema";
 import { useFilterStore } from "@/store/filter-store";
 import { RenderTags } from "../DropDown/TagsFilter";
 import { useBookStore } from "@/store/book-store";
+import { useRouter, usePathname } from "next/navigation";
 
 interface Props {
   id: string;
@@ -46,9 +47,18 @@ const BookCard = ({
     author,
   });
 
-  const { deleteBook, updateBook, fetchFilteredBooks, fetchFilteredUnApprovedBooks } = useBookStore();
+  const currentRoute = usePathname();
 
-  const [errors, setErrors] = useState<Partial<z.ZodFormattedError<FormData>>>({});
+  const {
+    deleteBook,
+    updateBook,
+    fetchFilteredBooks,
+    fetchFilteredUnApprovedBooks,
+  } = useBookStore();
+
+  const [errors, setErrors] = useState<Partial<z.ZodFormattedError<FormData>>>(
+    {}
+  );
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => {
@@ -91,7 +101,9 @@ const BookCard = ({
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -276,30 +288,31 @@ const BookCard = ({
               selectedTags={formData.tags}
             />
           </div>
-
-          <div className="flex justify-end gap-2">
-            {isEditing ? (
+          {currentRoute != "/book" && (
+            <div className="flex justify-end gap-2">
+              {isEditing ? (
+                <button
+                  onClick={handleSubmit}
+                  className="bg-green-600 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-md shadow-md"
+                >
+                  Submit
+                </button>
+              ) : (
+                <button
+                  onClick={handleEditClick}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+                >
+                  Edit
+                </button>
+              )}
               <button
-                onClick={handleSubmit}
-                className="bg-green-600 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-md shadow-md"
+                onClick={handleDelete}
+                className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-md shadow-md"
               >
-                Submit
+                Delete
               </button>
-            ) : (
-              <button
-                onClick={handleEditClick}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
-              >
-                Edit
-              </button>
-            )}
-            <button
-              onClick={handleDelete}
-              className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-md shadow-md"
-            >
-              Delete
-            </button>
-          </div>
+            </div>
+          )}
         </div>
       </Modal>
     </>
