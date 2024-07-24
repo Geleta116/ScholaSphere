@@ -64,22 +64,23 @@ export const Login = async (payload: LoginPayload): Promise<AuthResponse> => {
   }
 };
 
-export const fetchUserRole = async () => {
+export const fetchUserRole = async (token: string) => {
   try {
     const response = await fetch(`${api}/${authPath}/fetchRole`, {
       method: "GET",
       headers: {
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to signup");
+      throw new Error(errorData.message || "Failed to get user role");
     }
 
     return await response.json();
   } catch (error) {
-    throw new Error((error as Error).message || "Signup failed");
+    throw new Error((error as Error).message || "Failed to get user role");
   }
 };
