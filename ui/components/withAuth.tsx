@@ -1,13 +1,16 @@
 // components/withAuth.tsx
-import { useEffect, useState, ComponentType, ReactNode } from 'react';
-import { useRouter } from 'next/router';
-import { fetchUserRole } from '@/util/api/auth-api';
+import { useEffect, useState, ComponentType, ReactNode } from "react";
+import { useRouter } from "next/router";
+import { fetchUserRole } from "@/util/api/auth-api";
 
 interface WithAuthProps {
   requiredRole: string;
 }
 
-const WithAuth = <P extends object>(WrappedComponent: ComponentType<P>, requiredRole: string) => {
+const WithAuth = <P extends object>(
+  WrappedComponent: ComponentType<P>,
+  requiredRole: string[]
+) => {
   const WithAuth = (props: P) => {
     const [loading, setLoading] = useState(true);
     const [authorized, setAuthorized] = useState(false);
@@ -16,21 +19,25 @@ const WithAuth = <P extends object>(WrappedComponent: ComponentType<P>, required
     useEffect(() => {
       const checkAuth = async () => {
         try {
-          const token = localStorage.getItem('authToken');
+          const token = localStorage.getItem("authToken");
           if (!token) {
-            router.push('/login');
+            router.push("/login");
             return;
           }
 
-          const role = await fetchUserRole(token);
+          const userRoles = await fetchUserRole(token);
 
-          if (role === requiredRole) {
+          const hasRequiredRole = userRoles.some((role: string) =>
+            requiredRole.includes(role)
+          );
+
+          if (hasRequiredRole) {
             setAuthorized(true);
           } else {
-            router.push('/login');
+            router.push("/login");
           }
         } catch (error) {
-          router.push('/login');
+          router.push("/login");
         } finally {
           setLoading(false);
         }
@@ -44,7 +51,7 @@ const WithAuth = <P extends object>(WrappedComponent: ComponentType<P>, required
     }
 
     if (!authorized) {
-      return null; 
+      return null;
     }
 
     return <WrappedComponent {...props} />;
