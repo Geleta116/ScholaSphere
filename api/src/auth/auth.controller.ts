@@ -120,7 +120,7 @@ export const RefreshToken = async (
   }
 };
 
-export const getUserRoleFromToken = async (
+export const getUserRole = async (
   req: Request,
   res: Response,
   next: NextFunction

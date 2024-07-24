@@ -19,9 +19,7 @@ export interface AuthResponse {
   refreshToken: string;
 }
 
-export const SignUp = async (
-  payload: SignUpPayload
-): Promise<AuthResponse> => {
+export const SignUp = async (payload: SignUpPayload): Promise<AuthResponse> => {
   try {
     const response = await fetch(`${api}/${authPath}/sign-up`, {
       method: "POST",
@@ -62,6 +60,26 @@ export const Login = async (payload: LoginPayload): Promise<AuthResponse> => {
     return tokens;
   } catch (error) {
     console.error("Signup error:", error);
+    throw new Error((error as Error).message || "Signup failed");
+  }
+};
+
+export const fetchUserRole = async () => {
+  try {
+    const response = await fetch(`${api}/${authPath}/fetchRole`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to signup");
+    }
+
+    return await response.json();
+  } catch (error) {
     throw new Error((error as Error).message || "Signup failed");
   }
 };
