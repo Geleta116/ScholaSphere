@@ -13,7 +13,7 @@ interface DecodedToken {
 interface Role {
   role: {
     name: string;
-    id: string; // Assuming 'name' is of type string
+    id: string; 
   };
 }
 

@@ -5,6 +5,18 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
+interface DecodedToken {
+  userId: string;
+  [key: string]: any;
+}
+
+interface Role {
+  role: {
+    name: string;
+    id: string;
+  };
+}
+
 export function addRefreshTokenToWhitelist({
   jti,
   refreshToken,
@@ -79,6 +91,39 @@ export async function findUserFromToken(authToken: string) {
   else throw new Error("Invalid token");
 }
 
+export const findRoleFromToken = async (token: string) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+
+    if (!decoded) {
+      throw new Error("un authenticated");
+    }
+
+    const newDecod = jwt.decode(token) as DecodedToken;
+
+    const user = await db.user.findUnique({
+      where: { id: newDecod.userId },
+      include: {
+        roles: {
+          include: {
+            role: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const userRoles = user.roles.map((role: Role) => role.role.name);
+
+    return userRoles;
+  } catch (e) {
+    throw new Error("Internal server error");
+  }
+};
+
 module.exports = {
   addRefreshTokenToWhitelist,
   findRefreshTokenById,
@@ -86,4 +131,5 @@ module.exports = {
   revokeTokens,
   refreshTokenService,
   findUserFromToken,
+  findRoleFromToken,
 };

@@ -13,6 +13,7 @@ import { generateTokens } from "../utils/jwt";
 import hashTokens from "../utils/hashToken";
 import {
   addRefreshTokenToWhitelist,
+  findRoleFromToken,
   refreshTokenService,
 } from "./auth.service";
 
@@ -119,10 +120,21 @@ export const RefreshToken = async (
   }
 };
 
-function session(arg0: {
-  secret: string;
-  resave: boolean;
-  saveUninitialized: boolean;
-}): any {
-  throw new Error("Function not implemented.");
-}
+export const getUserRoleFromToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const token = await req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ message: "no token provided" });
+  }
+
+  try {
+    const roles = await findRoleFromToken(token);
+    return res.status(200).json(roles);
+  } catch (e) {
+    return res.status(500).json("Internal server error");
+  }
+};
