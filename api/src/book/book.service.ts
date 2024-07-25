@@ -444,6 +444,37 @@ export async function ApproveBook(bookId: string) {
   return formatBooks([bookWithTags])[0];
 }
 
+export async function UnApproveBook(bookId: string) {
+  const book = await __db?.book.findFirst({
+    where: {
+      id: bookId,
+    },
+  });
+
+  if (!book) throw new Error("Book not found");
+
+  await __db?.book.update({
+    where: {
+      id: bookId,
+    },
+    data: {
+      isApproved: false,
+    },
+  });
+
+  const bookWithTags = await __db?.book.findUnique({
+    where: {
+      id: bookId,
+    },
+    include: bookInclude,
+  });
+
+  if (!bookWithTags) throw new Error("Book not found");
+
+  return formatBooks([bookWithTags])[0];
+}
+
+
 export async function GetUsersUnApprovedBook(userId: string) {
   try {
     const books = await __db?.book.findMany({

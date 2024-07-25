@@ -117,6 +117,12 @@ BookRouter.put(
   ApproveBookController
 );
 
+BookRouter.put(
+  "/unApprove-book/:id",
+  Authorization(["admin"]),
+  ApproveBookController
+);
+
 BookRouter.get(
   "/get-your-approved-books",
   Authorization(["user", "admin"]),
