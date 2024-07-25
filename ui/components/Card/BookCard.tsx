@@ -288,7 +288,7 @@ const BookCard = ({
               selectedTags={formData.tags}
             />
           </div>
-          {currentRoute != "/book" && (
+          {currentRoute == "/admin"  && (
             <div className="flex justify-end gap-2">
               {isEditing ? (
                 <button
