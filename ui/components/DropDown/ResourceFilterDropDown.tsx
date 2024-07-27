@@ -39,7 +39,7 @@ const ResourceFilterDropDown = () => {
   };
 
   return (
-    <div className="p-6 rounded-lg shadow-lg w-full flex flex-col items-center justify-center">
+    <div className="p-6 rounded-lg shadow-lg  flex flex-col items-center justify-center">
       <div className="flex flex-col md:flex-row gap-6">
         <div className="flex flex-col min-w-fit sm:min-w-52">
           <label className="mb-2 font-bold text-white-700 ">Year</label>

@@ -177,23 +177,17 @@ function Page() {
           <Toolbar />
           {selectedItem === "Book" && (
             <>
-              <div>
-                <div className="flex flex-col items-center w-full text-white">
-                  <div className="w-full flex justify-center items-center z-10 pt-20 text-white">
-                    <AddResource handleClick={() => setIsOpen(true)} />
+                <div className="w-full  flex items-center justify-center z-10 pt-20 text-white">
+                  <AddResource handleClick={() => setIsOpen(true)} />
 
-                    {isOpen && (
-                      <Modal
-                        handleClose={() => setIsOpen(false)}
-                        isOpen={isOpen}
-                      >
-                        <AddBookModal handleClose={() => setIsOpen(false)} />
-                      </Modal>
-                    )}
-                    <ResourceFilterDropDown />
-                  </div>
+                  {isOpen && (
+                    <Modal handleClose={() => setIsOpen(false)} isOpen={isOpen}>
+                      <AddBookModal handleClose={() => setIsOpen(false)} />
+                    </Modal>
+                  )}
+                  <ResourceFilterDropDown />
                 </div>
-              </div>
+
               <div className=" w-full relative overflow-hidden">
                 <div className="text-center w-full text-5xl text-white">
                   Approved Books
