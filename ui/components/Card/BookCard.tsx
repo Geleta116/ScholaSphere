@@ -10,6 +10,8 @@ import { useFilterStore } from "@/store/filter-store";
 import { RenderTags } from "../DropDown/TagsFilter";
 import { useBookStore } from "@/store/book-store";
 import { useRouter, usePathname } from "next/navigation";
+import { CiEdit, CiTrash } from "react-icons/ci";
+import { FaCheckCircle, FaFlagCheckered } from "react-icons/fa";
 
 interface Props {
   id: string;
@@ -20,6 +22,7 @@ interface Props {
   department: string;
   course: string;
   author: string;
+  isApproved: boolean;
 }
 
 type FormData = z.infer<typeof updateBookSchema>;
@@ -33,6 +36,7 @@ const BookCard = ({
   year,
   course,
   author,
+  isApproved,
 }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -45,6 +49,7 @@ const BookCard = ({
     department,
     course,
     author,
+    isApproved,
   });
 
   const currentRoute = usePathname();
@@ -54,6 +59,8 @@ const BookCard = ({
     updateBook,
     fetchFilteredBooks,
     fetchFilteredUnApprovedBooks,
+    approveBook,
+    unApproveBook,
   } = useBookStore();
 
   const [errors, setErrors] = useState<Partial<z.ZodFormattedError<FormData>>>(
@@ -100,6 +107,30 @@ const BookCard = ({
     }
   };
 
+  const handleApprove = async (e: FormEvent) => {
+    try {
+      await approveBook(id);
+      handleCloseModal();
+      toast.success("Book approved successfully", { autoClose: 200 });
+      await fetchFilteredBooks();
+      await fetchFilteredUnApprovedBooks();
+    } catch (error) {
+      toast.error("couldn't Approve the book");
+    }
+  };
+
+  const handleUnApprove = async (e: FormEvent) => {
+    try {
+      await unApproveBook(id);
+      handleCloseModal();
+      toast.success("Book unapproved successfully", { autoClose: 200 });
+      await fetchFilteredBooks();
+      await fetchFilteredUnApprovedBooks();
+    } catch (error) {
+      toast.error("couldn't Approve the book");
+    }
+  };
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -124,7 +155,7 @@ const BookCard = ({
   return (
     <>
       <div
-        className="relative max-w-sm overflow-hidden border-gray-900 shadow-lg p-2 px-6 bg-zinc-950 transform transition-transform duration-300 hover:scale-105 hover:border-blue-500 hover:bg-neutral-900 border-2 group rounded-2xl min-w-96 min-h-80 mb-4  overflow-y-auto"
+        className="relative max-w-sm overflow-hidden border-gray-900 shadow-lg p-2 px-6 bg-zinc-950 transform transition-transform duration-300 hover:scale-105 hover:border-blue-500 hover:bg-neutral-900 border-2 group rounded-2xl min-w-96 min-h-80 mb-4  overflow-y-auto hover:border-r-4 b hover:border-r-green-400 hover:border-l-4 b hover:border-l-green-400"
         onClick={handleOpenModal}
       >
         <div className="absolute top-5 left-5 transform -translate-x-1/2 -translate-y-1/2 z-10">
@@ -288,7 +319,7 @@ const BookCard = ({
               selectedTags={formData.tags}
             />
           </div>
-          {currentRoute == "/admin"  && (
+          {currentRoute == "/admin" && (
             <div className="flex justify-end gap-2">
               {isEditing ? (
                 <button
@@ -300,17 +331,32 @@ const BookCard = ({
               ) : (
                 <button
                   onClick={handleEditClick}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md shadow-md"
+                  className=" font-extrabold px-2 hover:bg-zinc-800 rounded-md shadow-md text-blue-900 text-xl hover:text-blue-600 "
                 >
-                  Edit
+                  <CiEdit className=" " />
                 </button>
               )}
               <button
                 onClick={handleDelete}
-                className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-md shadow-md"
+                className=" font-bold p-2  rounded-md shadow-md text-red-900 hover:text-red-500 hover:bg-zinc-800"
               >
-                Delete
+                <CiTrash />
               </button>
+              {!isApproved ? (
+                <button
+                  className=" rounded text-green-900 hover:text-green-500 hover:bg-zinc-800 p-2"
+                  onClick={handleApprove}
+                >
+                  <FaCheckCircle />
+                </button>
+              ) : (
+                <button
+                  className=" rounded text-zinc-600 hover:text-white hover:bg-zinc-800 p-2"
+                  onClick={handleUnApprove}
+                >
+                  <FaFlagCheckered />
+                </button>
+              )}
             </div>
           )}
         </div>

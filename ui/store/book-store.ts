@@ -11,10 +11,11 @@ import {
   filterBook,
   CreateBookPayload,
   filterUnApprovedBook,
+  approveBook,
+  unApproveBook,
 } from "@/util/api/book-api";
 import { Book } from "@/model/Book";
 import useFilterStore from "./filter-store";
-
 
 interface BookStore {
   books: Book[];
@@ -33,6 +34,8 @@ interface BookStore {
   fetchFilteredBooks: () => Promise<void>;
   fetchFilteredUnApprovedBooks: () => Promise<void>;
   addBook: (book: CreateBookPayload) => void;
+  approveBook: (id: string) => void;
+  unApproveBook: (id: string) => void;
   error: string | undefined;
 }
 
@@ -113,14 +116,15 @@ export const useBookStore = create<BookStore>((set) => ({
     }
   },
   fetchFilteredBooks: async () => {
-    const { selectedYear, selectedDepartment, selectedCourse, selectedTags } = useFilterStore.getState();
+    const { selectedYear, selectedDepartment, selectedCourse, selectedTags } =
+      useFilterStore.getState();
     const filter = {
       year: selectedYear,
       department: selectedDepartment,
       course: selectedCourse,
       tags: selectedTags,
     };
-  
+
     try {
       const response = await filterBook(filter);
       set({ approvedBooks: response.books });
@@ -130,14 +134,15 @@ export const useBookStore = create<BookStore>((set) => ({
     }
   },
   fetchFilteredUnApprovedBooks: async () => {
-    const { selectedYear, selectedDepartment, selectedCourse, selectedTags } = useFilterStore.getState();
+    const { selectedYear, selectedDepartment, selectedCourse, selectedTags } =
+      useFilterStore.getState();
     const filter = {
       year: selectedYear,
       department: selectedDepartment,
       course: selectedCourse,
       tags: selectedTags,
     };
-  
+
     try {
       const response = await filterUnApprovedBook(filter);
       set({ unApprovedBooks: response.books });
@@ -148,7 +153,24 @@ export const useBookStore = create<BookStore>((set) => ({
   },
   addBook: async (book: CreateBookPayload) => {
     try {
-    const response = await uploadBook(book);
+      const response = await uploadBook(book);
+    } catch (error) {
+      set({ error: (error as Error).message });
+      throw error;
+    }
+  },
+  
+  approveBook: async (id: string) => {
+    try {
+      await approveBook(id);
+    } catch (error) {
+      set({ error: (error as Error).message });
+      throw error;
+    }
+  },
+  unApproveBook: async (id: string) => {
+    try {
+      await unApproveBook(id);
     } catch (error) {
       set({ error: (error as Error).message });
       throw error;

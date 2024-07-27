@@ -30,6 +30,7 @@ function Page() {
               course={book.course}
               id={book.id}
               author={book.author}
+              isApproved={book.isApproved}
             />
           ))}
           <p
@@ -54,6 +55,7 @@ function Page() {
               course={book.course}
               id={book.id}
               author={book.author}
+              isApproved={book.isApproved}
             />
           ))}
           <p

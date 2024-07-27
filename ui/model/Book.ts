@@ -7,4 +7,5 @@ export interface Book {
     year: number;
     course: string;
     author: string;
+    isApproved: boolean;
 }

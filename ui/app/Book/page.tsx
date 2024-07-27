@@ -50,6 +50,7 @@ function Page() {
                 year={book.year || 3}
                 course={book.course}
                 author={book.author}
+                isApproved={book.isApproved}
               />
             ))
           ) : (

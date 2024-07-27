@@ -9,6 +9,7 @@ import {
   GetUnApprovedBooksController,
   GetYourApprovedBooksController,
   GetYourUnApprovedBooksController,
+  UnApproveBookController,
   UpdateBookController,
   UploadBookController,
 } from "../book/book.controller";
@@ -120,7 +121,7 @@ BookRouter.put(
 BookRouter.put(
   "/unApprove-book/:id",
   Authorization(["admin"]),
-  ApproveBookController
+  UnApproveBookController
 );
 
 BookRouter.get(

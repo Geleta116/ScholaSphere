@@ -216,8 +216,10 @@ export async function DeleteBookById(
     }
     if (
       (!book.isApproved && roles.includes("admin")) ||
-      (!book.isApproved && book.createdById === currUserId)
+      (!book.isApproved && book.createdById === currUserId) ||
+      roles.includes("admin")
     ) {
+      console.log("working");
       return await __db?.book.delete({
         where: { id: bookid },
       });
@@ -264,7 +266,6 @@ export async function UpdateBookById(
   try {
     const updateData: any = {};
 
-   
     if (data.year) {
       const year = await __db?.year.findUnique({ where: { year: data.year } });
       if (year) {
@@ -274,7 +275,6 @@ export async function UpdateBookById(
       }
     }
 
-    
     if (data.course) {
       const course = await __db?.course.findUnique({
         where: { courseName: data.course },
@@ -299,7 +299,7 @@ export async function UpdateBookById(
     }
 
     // Handle updating tags
-    
+
     if (data.tags && data.tags.length > 0) {
       console.log(data.tags.length);
       const tags = await __db?.tag.findMany({
@@ -473,7 +473,6 @@ export async function UnApproveBook(bookId: string) {
 
   return formatBooks([bookWithTags])[0];
 }
-
 
 export async function GetUsersUnApprovedBook(userId: string) {
   try {

@@ -1,5 +1,7 @@
 "use client";
 import * as React from "react";
+import AddResource from "@/components/ResourceOperations/AddResource";
+import AddBookModal from "@/components/Modal/AddBookModal"; // Import the AddResource component from the correct file
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -16,13 +18,14 @@ import Typography from "@mui/material/Typography";
 import ResourceFilterDropDown from "@/components/DropDown/ResourceFilterDropDown";
 import ApprovedBook from "@/components/ResourceCategory/ApprovedBook";
 import UnApprovedBook from "@/components/ResourceCategory/UnApprovedBook";
-import {  BookIcon,User2Icon} from "lucide-react";
+import { BookIcon, User2Icon } from "lucide-react";
 import { useState } from "react";
 import WithAuth from "@/components/WithAuth";
+import Modal from "@/components/Modal/Modal";
 
 const listItems: ListItem[] = [
-    { title: 'Book', link: '/book', icon: <BookIcon /> },
-    { title: 'User', link: '/user', icon : <User2Icon /> },
+  { title: "Book", link: "/book", icon: <BookIcon /> },
+  { title: "User", link: "/user", icon: <User2Icon /> },
 ];
 
 const drawerWidth = 240;
@@ -30,11 +33,11 @@ const drawerWidth = 240;
 export interface ListItem {
   title: string;
   link: string;
-  icon: any
+  icon: any;
 }
 function Page() {
   const items = listItems;
-  
+  const [isOpen, setIsOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string>(items[0].title);
 
@@ -64,9 +67,8 @@ function Page() {
         {items.map((item) => (
           <ListItem key={item.title} disablePadding>
             <ListItemButton onClick={() => handleListItemClick(item.title)}>
-               {item.icon}
+              {item.icon}
               <ListItemText primary={item.title} />
-              
             </ListItemButton>
           </ListItem>
         ))}
@@ -74,7 +76,8 @@ function Page() {
     </div>
   );
 
-  const container = typeof window !== 'undefined' ? window.document.body : undefined;
+  const container =
+    typeof window !== "undefined" ? window.document.body : undefined;
 
   return (
     <>
@@ -175,8 +178,18 @@ function Page() {
           {selectedItem === "Book" && (
             <>
               <div>
-                <div className="flex flex-col items-center w-full">
+                <div className="flex flex-col items-center w-full text-white">
                   <div className="w-full flex justify-center items-center z-10 pt-20 text-white">
+                    <AddResource handleClick={() => setIsOpen(true)} />
+
+                    {isOpen && (
+                      <Modal
+                        handleClose={() => setIsOpen(false)}
+                        isOpen={isOpen}
+                      >
+                        <AddBookModal handleClose={() => setIsOpen(false)} />
+                      </Modal>
+                    )}
                     <ResourceFilterDropDown />
                   </div>
                 </div>
@@ -227,6 +240,5 @@ function Page() {
     </>
   );
 }
-
 
 export default WithAuth(Page, ["admin", "user"]);
