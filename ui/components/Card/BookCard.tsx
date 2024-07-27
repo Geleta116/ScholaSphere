@@ -155,7 +155,7 @@ const BookCard = ({
   return (
     <>
       <div
-        className="relative max-w-sm overflow-hidden border-gray-900 shadow-lg p-2 px-6 bg-zinc-950 transform transition-transform duration-300 hover:scale-105 hover:border-blue-500 hover:bg-neutral-900 border-2 group rounded-2xl min-w-96 min-h-80 mb-4  overflow-y-auto hover:border-r-4 b hover:border-r-green-400 hover:border-l-4 b hover:border-l-green-400"
+        className="relative max-w-sm overflow-hidden border-gray-900 shadow-lg p-2 px-6 bg-zinc-950 transform transition-transform duration-300 hover:scale-105 hover:border-purple-500 hover:bg-neutral-900 border-2 group rounded-2xl min-w-96 min-h-80 mb-4  overflow-y-auto hover:border-r-4 b hover:border-r-purple-400 hover:border-l-4 b hover:border-l-purple-400"
         onClick={handleOpenModal}
       >
         <div className="absolute top-5 left-5 transform -translate-x-1/2 -translate-y-1/2 z-10">
@@ -169,7 +169,7 @@ const BookCard = ({
         </div>
         <div className="relative z-0">
           <div className="px-6 py-4 pt-10 sm:pt-4">
-            <p className="font-bold text-lg mb-2 text-white transition-colors duration-300 group-hover:text-blue-500 overflow-hidden whitespace-nowrap text-overflow-ellipsis font-sans">
+            <p className="font-bold text-lg mb-2 text-white transition-colors duration-300 group-hover:text-purple-500 overflow-hidden whitespace-nowrap text-overflow-ellipsis font-sans">
               {title}
             </p>
             <p className="text-gray-300 text-sm overflow-hidden whitespace-nowrap text-overflow-ellipsis text-wrap">
