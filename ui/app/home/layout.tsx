@@ -12,7 +12,6 @@ export default function HomeLayout({
       <div className="fixed inset-0 z-30 pointer-events-none flex items-center justify-center dark:bg-purple-800 bg-black [mask-image:radial-gradient(ellipse_at_top,transparent_70%,black)]"></div>
       <div className="relative z-40">
         <NavBar />
-
         {children}
       </div>
     </div>
