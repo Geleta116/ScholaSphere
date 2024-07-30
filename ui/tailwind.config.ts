@@ -4,7 +4,6 @@ const {
 } = require("tailwindcss/lib/util/flattenColorPalette");
 
 const svgToDataUri = require("mini-svg-data-uri");
- 
 const colors = require("tailwindcss/colors");
 
 const config: Config = {
@@ -18,12 +17,12 @@ const config: Config = {
       backgroundImage: {
         'radial-gradient': 'radial-gradient(var(--tw-gradient-stops))',
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       animation: {
         aurora: "aurora 60s linear infinite",
       },
+     
       keyframes: {
         aurora: {
           from: {
@@ -34,9 +33,21 @@ const config: Config = {
           },
         },
       },
+      transform: {
+        'preserve-3d': 'preserve-3d',
+      },
+      translate: {
+        'z-600': '600px',
+      },
+      rotate: {
+        'y-0': 'rotateY(0deg)',
+        'y-120': 'rotateY(120deg)',
+        'y-240': 'rotateY(240deg)',
+      },
     },
   },
-  plugins: [addVariablesForColors,
+  plugins: [
+    addVariablesForColors,
     function ({ matchUtilities, theme }: any) {
       matchUtilities(
         {
@@ -61,6 +72,7 @@ const config: Config = {
     },
   ],
 };
+
 export default config;
 
 function addVariablesForColors({ addBase, theme }: any) {
