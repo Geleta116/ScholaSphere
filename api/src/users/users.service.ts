@@ -32,10 +32,12 @@ export const FindUserByEmail = async (email: string): Promise<User | null> => {
   });
 };
 
-export const FindUserByUserName = async (userName: string): Promise<User | null> => {
+export const FindUserByUserName = async (
+  userName: string
+): Promise<User | null> => {
   return db.user.findUnique({
     where: {
-      userName : userName,
+      userName: userName,
     },
   });
 };
@@ -43,7 +45,14 @@ export const FindUserByUserName = async (userName: string): Promise<User | null>
 export const CreateUser = async (user: any) => {
   user.password = bcrypt.hashSync(user.password, 12);
 
-  const { firstName, lastName, userName, email, password, roles=["user"] } = user;
+  const {
+    firstName,
+    lastName,
+    userName,
+    email,
+    password,
+    roles = ["user"],
+  } = user;
 
   const createdUser = await db.user.create({
     data: {
@@ -51,7 +60,7 @@ export const CreateUser = async (user: any) => {
       password,
       firstName,
       lastName,
-      userName
+      userName,
     },
   });
 
@@ -77,6 +86,65 @@ export function findUserById(id: string) {
   return db.user.findUnique({
     where: {
       id,
+    },
+  });
+}
+
+export function getProfile(id: string) {
+  return db.user.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      roles: true,
+    },
+  });
+}
+
+export function deleteUser(id: string) {
+  return db.user.delete({
+    where: {
+      id,
+    },
+  });
+}
+
+export function updateProfile(
+  loggedInUserid: string,
+  roles: string[],
+  IdOfUserToBeUpdated: string,
+  data: any
+) {
+  if (loggedInUserid != IdOfUserToBeUpdated && !roles.includes("admin")) {
+    throw new Error("Unauthorized");
+  }
+  return db.user.update({
+    where: {
+      id: IdOfUserToBeUpdated,
+    },
+    data,
+  });
+}
+
+export async function promoteToAdmin(id: string) {
+  const adminRole = await db.role.findUnique({
+    where: {
+      name: "admin",
+    },
+  });
+
+  if (!adminRole) {
+    throw new Error("Admin role not found");
+  }
+
+  return db.user.update({
+    where: {
+      id,
+    },
+    data: {
+      roles: {
+        set: [{ userId_roleId: { userId: id, roleId: adminRole.id } }],
+      },
     },
   });
 }

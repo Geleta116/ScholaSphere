@@ -10,7 +10,6 @@ UserRouter.get(  "/get-all",
     GetAllUserController
 )
 
-
 UserRouter.get(  "/get-profile  ",
     Authorization(["admin"]),
     GetAllUserController
