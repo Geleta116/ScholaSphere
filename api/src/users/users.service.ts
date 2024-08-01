@@ -2,6 +2,7 @@ import { db } from "../utils/db.server";
 import { Express } from "express";
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import { UpdateUserDto } from "./dtos/updateUser.dto";
 
 type User = {
   id: any;
@@ -90,18 +91,59 @@ export function findUserById(id: string) {
   });
 }
 
-export function getProfile(id: string) {
-  return db.user.findUnique({
+type Role = {
+  role: {
+    name: string;
+  };
+};
+
+export async function getProfile(id: string) {
+  // Fetch the user data including nested roles
+  const user = await db.user.findUnique({
     where: {
       id,
     },
-    include: {
-      roles: true,
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      userName: true,
+      phonenumber: true,
+      description: true,
+      roles: {
+        select: {
+          role: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
     },
   });
+
+  if (user) {
+    // Transform roles to a simple list of role names
+    user.roles = user.roles.map((r: Role) => r.role.name);
+  }
+
+  return user;
 }
 
-export function deleteUser(id: string) {
+
+export async function deleteUser(id: string) {
+
+  const userToDelete = await db.user.findFirst({
+    where: {
+      id,
+    }
+  })
+
+  if (!userToDelete) {
+    throw new Error("User doesn't Exist")
+  }
+
   return db.user.delete({
     where: {
       id,
@@ -109,22 +151,34 @@ export function deleteUser(id: string) {
   });
 }
 
-export function updateProfile(
+
+
+export async function updateProfile(
   loggedInUserid: string,
   roles: string[],
   IdOfUserToBeUpdated: string,
-  data: any
+  data: Partial<UpdateUserDto>
 ) {
-  if (loggedInUserid != IdOfUserToBeUpdated && !roles.includes("admin")) {
+  if (loggedInUserid !== IdOfUserToBeUpdated && !roles.includes("admin")) {
     throw new Error("Unauthorized");
   }
+
+  const userExists = await db.user.findUnique({
+    where: { id: IdOfUserToBeUpdated },
+  });
+
+  if (!userExists) {
+    throw new Error("User not found");
+  }
+
   return db.user.update({
-    where: {
-      id: IdOfUserToBeUpdated,
-    },
-    data,
+    where: { id: IdOfUserToBeUpdated },
+    data: { ...data },
   });
 }
+
+
+
 
 export async function promoteToAdmin(id: string) {
   const adminRole = await db.role.findUnique({

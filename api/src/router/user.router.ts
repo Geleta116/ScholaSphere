@@ -1,5 +1,5 @@
 import { Authorization } from "../middlewares/authorization.middleware";
-import { GetAllUserController } from "../users/users.controller";
+import { DeleteUserController, GetAllUserController, GetProfileController, PromoteToAdminController, UpdateProfileController } from "../users/users.controller";
 import express from "express";
 
 
@@ -10,22 +10,22 @@ UserRouter.get(  "/get-all",
     GetAllUserController
 )
 
-UserRouter.get(  "/get-profile  ",
-    Authorization(["admin"]),
-    GetAllUserController
+UserRouter.get(  "/get-profile",
+    Authorization(["user","admin"]),
+    GetProfileController
 )
 
-UserRouter.get(  "/delete-user",
+UserRouter.delete(  "/delete-user/:id",
     Authorization(["admin"]),
-    GetAllUserController
+    DeleteUserController
 )
 
-UserRouter.get(  "/update-profile",
+UserRouter.patch(  "/update-profile/:id",
     Authorization(["admin"]),
-    GetAllUserController
+    UpdateProfileController
 )
 
-UserRouter.get(  "/promot-to-admin",
+UserRouter.patch(  "/promot-to-admin/:id",
     Authorization(["admin"]),
-    GetAllUserController
+    PromoteToAdminController
 )

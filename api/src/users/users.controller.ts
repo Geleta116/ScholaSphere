@@ -2,8 +2,20 @@ import type { Request, Response } from "express";
 import * as UserService from "./users.service";
 import { Req } from "@/utils/req";
 import { plainToClass } from "class-transformer";
-import { UpdateBookDto } from "@/book/contrat/dtos/Update_book.dto";
+import { UpdateUserDto } from "./dtos/updateUser.dto";
 
+
+interface User {
+  firstName: string,
+  middleName: string,
+  email: string,
+  password: string,
+  phonenumber: string | undefined,
+  profilepicture: string | undefined,
+  description: string | undefined,
+  userName: string
+
+}
 export const GetAllUserController = async (
   request: Req,
   response: Response
@@ -26,7 +38,7 @@ export const GetProfileController = async (
       return res.status(401).send("Unauthenticated");
     }
     const userProfile = await UserService.getProfile(user.id);
-    return res.status(200).json(user);
+    return res.status(200).json(userProfile);
   } catch (error: any) {
     return res.status(500).json(error.message);
   }
@@ -53,10 +65,13 @@ export const UpdateProfileController = async (
     if (!user) {
       return res.status(401).send("Unauthenticated");
     }
-    const updateDto = plainToClass(UpdateBookDto, req.body);
-    const updatedUser = await UserService.updateProfile(user.id, user.roles, req.body.id, updateDto);
+    const updateDto = plainToClass(UpdateUserDto, req.body);
+    const userId =  req.params.id as string;
+    console.log(userId,user.id, userId, user.roles, updateDto)
+    const updatedUser = await UserService.updateProfile(user.id, user.roles, userId, updateDto);
     return res.status(200).json(updatedUser);
   } catch (error: any) {
+    console.error("Error updating profile:", error);
     return res.status(500).json(error.message);
   }
 }
