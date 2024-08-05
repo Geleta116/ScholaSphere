@@ -20,3 +20,91 @@ export const GetAllUser = async () => {
         throw new Error((error as Error).message || "Signup failed");
     }
 }
+
+export const GetProfile = async () => {
+    try {
+        const response = await fetch(`${api}/${userPath}/get-profile`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to signup");
+        }
+        return response.json();
+
+    } catch (error) {
+        console.log(error)
+        throw new Error((error as Error).message || "Signup failed");
+    }
+}
+
+export const DeleteUser = async (id: string) => {
+    try {
+        const response = await fetch(`${api}/${userPath}/delete-user/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to signup");
+        }
+        return response.json();
+
+    } catch (error) {
+        console.log(error)
+        throw new Error((error as Error).message || "Signup failed");
+    }
+
+}
+
+export const UpdateProfile = async (id: string, updateDto: any) => {
+    try {
+        const response = await fetch(`${api}/${userPath}/update-profile/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(updateDto)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to signup");
+        }
+        return response.json();
+
+    } catch (error) {
+        console.log(error)
+        throw new Error((error as Error).message || "Signup failed");
+    }
+
+}
+
+export const PromoteToAdmin = async (id: string) => {
+    try {
+        const response = await fetch(`${api}/${userPath}/promot-to-admin/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to signup");
+        }
+        return response.json();
+
+    } catch (error) {
+        console.log(error)
+        throw new Error((error as Error).message || "Signup failed");
+    }
+
+}
