@@ -12,6 +12,19 @@ type User = {
   userName: string;
   password: string;
 };
+
+interface UserResponse {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  userName: string;
+  phoneNumber: string | null;
+  description: string | null;
+  profilePicture: string | null;
+  roles: string[];
+}
+
 export const allUsers = async (): Promise<User[]> => {
   return db.user.findMany({
     select: {
@@ -112,7 +125,7 @@ export async function getProfile(id: string) {
       phonenumber: true,
       description: true,
       profilepicture: true,
-      
+
       roles: {
         select: {
           role: {
@@ -126,8 +139,20 @@ export async function getProfile(id: string) {
   });
 
   if (user) {
-    // Transform roles to a simple list of role names
-    user.roles = user.roles.map((r: Role) => r.role.name);
+    // Create a new user object with transformed roles
+    const transformedUser: UserResponse = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      userName: user.userName,
+      phoneNumber: user.phonenumber,
+      description: user.description,
+      profilePicture: user.profilepicture,
+      roles: user.roles.map((r) => r.role.name), // Transform roles to a list of names
+    };
+
+    return transformedUser;
   }
 
   return user;
