@@ -1,47 +1,29 @@
-"use client";
+import React from 'react'
+import Profile from '../Profile'
 
-import React from "react";
-import { FloatingNav } from "@/components/NavBar/FloatingNavBar";
-import {
-  IconHome,
-  IconBook,
-  IconUser,
-  IconFileDescription,
-  IconBrandYoutube,
-} from "@tabler/icons-react";
-import { ModeToggle } from "../ModeToggle/ModeToggle";
-const NavBar: React.FC = () => {
-  const navItems = [
-    {
-      name: "Home",
-      link: "/home",
-      icon: <IconHome className="h-4 w-4 text-neutral-500 dark:text-white" />,
-    },
-    {
-      name: "Book",
-      link: "/book",
-      icon: <IconBook className="h-4 w-4 text-neutral-500 dark:text-white" />,
-    },
-    {
-      name: "Video",
-      link: "/video",
-      icon: (
-        <IconBrandYoutube className="h-4 w-4 text-neutral-500 dark:text-white" />
-      ),
-    },
-    {
-      name: "Exams",
-      link: "/exams",
-      icon: (
-        <IconFileDescription className="h-4 w-4 text-neutral-500 dark:text-white" />
-      ),
-    },
-  ];
+const NavBar = () => {
   return (
-    <div className="flex flex-col ">
-      <FloatingNav navItems={navItems}  />   
-    </div>
-  );
-};
+    <nav className='backdrop-blur-xl fixed top-0  text-white w-full py-4'>
+      <div className='container mx-auto flex items-center justify-between'>
+        <h1 className='text-xl font-bold'>Schola Sphere</h1>
+        <ul className='flex space-x-6'>
+          <li>
+            <a href="/home" className='hover:text-gray-400'>Home</a>
+          </li>
+          <li>
+            <a href="/book" className='hover:text-gray-400'>Book</a>
+          </li>
+          <li>
+            <a href="#video" className='hover:text-gray-400'>Video</a>
+          </li>
+          <li>
+            <a href="#exams" className='hover:text-gray-400'>Exams</a>
+          </li>
+        </ul>
+        <Profile />
+      </div>
+    </nav>
+  )
+}
 
-export default NavBar;
+export default NavBar

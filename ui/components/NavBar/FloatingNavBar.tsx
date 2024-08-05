@@ -44,7 +44,7 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({
   };
 
   return (
-    <div>
+    <div className="bg-red-600">
       <AnimatePresence mode="wait">
         {visible && (
           <motion.div
