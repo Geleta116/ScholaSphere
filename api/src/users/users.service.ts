@@ -139,7 +139,7 @@ export async function getProfile(id: string) {
   });
 
   if (user) {
-    // Create a new user object with transformed roles
+   
     const transformedUser: UserResponse = {
       id: user.id,
       firstName: user.firstName,
@@ -149,12 +149,11 @@ export async function getProfile(id: string) {
       phoneNumber: user.phonenumber,
       description: user.description,
       profilePicture: user.profilepicture,
-      roles: user.roles.map((r) => r.role.name), // Transform roles to a list of names
+      roles: user.roles.map((r) => r.role.name), 
     };
 
     return transformedUser;
   }
-
   return user;
 }
 

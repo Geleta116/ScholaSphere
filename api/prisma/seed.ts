@@ -90,7 +90,7 @@ async function seed() {
         },
       });
 
-      // Assign roles to the user
+    
       await Promise.all(
         roles.map(async (roleName) => {
           const role = await db.role.findUnique({
@@ -110,7 +110,7 @@ async function seed() {
     })
   );
 
-  // Create tags
+ 
   const createdTags = await Promise.all(
     getTags().map((tag) => {
       return db.tag.create({
@@ -121,7 +121,7 @@ async function seed() {
     })
   );
 
-  // Create years
+  
   const createdYears = await Promise.all(
     getYears().map((year) => {
       return db.year.create({
