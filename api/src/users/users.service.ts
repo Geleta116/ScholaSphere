@@ -111,6 +111,8 @@ export async function getProfile(id: string) {
       userName: true,
       phonenumber: true,
       description: true,
+      profilepicture: true,
+      
       roles: {
         select: {
           role: {
