@@ -17,10 +17,8 @@ function Page() {
   }, [fetchFilteredBooks]);
 
   return (
-    <div className="w-screen h-screen dark:bg-black bg-white relative overflow-hidden">
-      <div className="fixed inset-0 dark:bg-black bg-white dark:bg-grid-white/[0.1] bg-grid-black/[0.1]"></div>
-      <div className="fixed inset-0 pointer-events-none flex items-center justify-center dark:bg-black-800 bg-black [mask-image:radial-gradient(ellipse_at_top,transparent_90%,black)]"></div>
-      <div className="fixed inset-0 pointer-events-none flex items-center justify-center dark:bg-purple-800 bg-black [mask-image:radial-gradient(ellipse_at_top,transparent_70%,black)]"></div>
+    <div className="w-screen h-screen relative overflow-hidden">
+    
 
       <div className="relative w-full h-full overflow-y-auto flex flex-col items-center">
         <div className="flex flex-col-reverse md:flex-row items-center justify-center ">

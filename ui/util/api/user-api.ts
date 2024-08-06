@@ -5,7 +5,8 @@ export const GetAllUser = async () => {
         const response = await fetch(`${api}/${userPath}/get-all`, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
 
@@ -23,10 +24,11 @@ export const GetAllUser = async () => {
 
 export const GetProfile = async () => {
     try {
-        const response = await fetch(`${api}/${userPath}/get-profile`, {
+        const response = await fetch(`${api}/users/get-profile`, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
 
@@ -47,7 +49,8 @@ export const DeleteUser = async (id: string) => {
         const response = await fetch(`${api}/${userPath}/delete-user/${id}`, {
             method: "DELETE",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
 
@@ -69,7 +72,8 @@ export const UpdateProfile = async (id: string, updateDto: any) => {
         const response = await fetch(`${api}/${userPath}/update-profile/${id}`, {
             method: "PATCH",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
             body: JSON.stringify(updateDto)
         });
@@ -92,7 +96,8 @@ export const PromoteToAdmin = async (id: string) => {
         const response = await fetch(`${api}/${userPath}/promot-to-admin/${id}`, {
             method: "PATCH",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
 
