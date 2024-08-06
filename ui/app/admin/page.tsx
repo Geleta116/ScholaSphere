@@ -16,12 +16,12 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import ResourceFilterDropDown from "@/components/DropDown/ResourceFilterDropDown";
-import ApprovedBook from "@/components/ResourceCategory/ApprovedBook";
-import UnApprovedBook from "@/components/ResourceCategory/UnApprovedBook";
 import { BookIcon, User2Icon } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import WithAuth from "@/components/WithAuth";
 import Modal from "@/components/Modal/Modal";
+import { useBookStore } from "@/store/book-store";
+import BookGrid from "@/components/ResourceCategory/BookGrid";
 
 const listItems: ListItem[] = [
   { title: "Book", link: "/book", icon: <BookIcon /> },
@@ -44,6 +44,17 @@ function Page() {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const { approvedBooks,unApprovedBooks,  fetchFilteredBooks, fetchFilteredUnApprovedBooks } = useBookStore();
+
+  useEffect(() => {
+    fetchFilteredBooks();
+    fetchFilteredUnApprovedBooks();
+  }, [fetchFilteredBooks, fetchFilteredUnApprovedBooks]);
+
+
+
+
 
   const handleListItemClick = (title: string) => {
     setSelectedItem(title);
@@ -156,8 +167,8 @@ function Page() {
                 boxSizing: "border-box",
                 width: drawerWidth,
                 backgroundColor: "rgba(0, 0, 0, 0.4)",
-                backdropFilter: "blur(10px)", // Apply blur effect
-                WebkitBackdropFilter: "blur(10px)", // For Safari
+                backdropFilter: "blur(10px)", 
+                WebkitBackdropFilter: "blur(10px)", 
                 borderRadius: "8px",
               },
             }}
@@ -193,14 +204,14 @@ function Page() {
                   Approved Books
                 </div>
               </div>
-              <ApprovedBook />
+              <BookGrid books={approvedBooks} />
               <Divider />
               <div className=" w-full relative overflow-hidden">
                 <div className="text-center w-full text-5xl text-white">
                   UnApproved Books
                 </div>
               </div>
-              <UnApprovedBook />
+              <BookGrid books={unApprovedBooks} />
             </>
           )}
           {selectedItem === "User" && (
