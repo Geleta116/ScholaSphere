@@ -9,6 +9,7 @@ interface UserStore {
     userName: string;
     phoneNumber?: string;
     profilePicture?: string;
+    description: string;
     email: string;
     roles: string[];
     allUsers: User[];
@@ -27,6 +28,7 @@ export const useUserStore = create<UserStore>((set) => ({
     userName: "",
     phoneNumber: undefined,
     profilePicture: undefined,
+    description: "",
     email: "",
     roles: [],
     allUsers: [],
@@ -43,7 +45,8 @@ export const useUserStore = create<UserStore>((set) => ({
                 profilePicture: user.profilePicture,
                 email: user.email,
                 roles: user.roles,
-                bookError: undefined
+                bookError: undefined,
+                description: user.description
             });
         } catch (error) {
             set({ bookError: (error as Error).message });
