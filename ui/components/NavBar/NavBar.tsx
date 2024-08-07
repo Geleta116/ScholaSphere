@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useUserStore } from '@/store/user-store';
 import { FaUserCircle } from 'react-icons/fa';
 
@@ -12,21 +12,27 @@ const NavBar = () => {
     getProfile,
   } = useUserStore();
 
+  const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
+
   useEffect(() => {
-    getProfile(); // Ensure this is the correct function to call
+    getProfile();
   }, [getProfile]);
 
   return (
-    <nav className='backdrop-blur-xl fixed top-0 w-full py-4 z-50  text-white'>
-      <div className='container mx-auto flex items-center justify-between'>
-        <h1 className='text-xl font-bold'>Schola Sphere</h1>
-        <ul className='flex space-x-6'>
+    <nav className='backdrop-blur-xl fixed top-0 w-full py-4 z-50  text-white flex-col md:flex-row'>
+      <div className={`md:hidden ml-2` } onClick={() => setMenuIsOpen(!menuIsOpen)}>{menuIsOpen ? <p>X</p> : <p> ☰ Menu</p>}</div>
+
+      <div className={` ${menuIsOpen ? "block" : "hidden"}  md:flex container mx-auto flex items-center justify-between flex-col md:flex-row `}>
+
+
+        <h1 className='text-xl font-bold '>Schola Sphere</h1>
+        <ul className='flex gap-2 flex-col md:flex-row'>
           <li>
             <a href="/home" className='hover:text-gray-400'>Home</a>
           </li>
           <li>
             <a href="/book" className='hover:text-gray-400'>Book</a>
-          </li>
+          </li> 
           <li>
             <a href="#video" className='hover:text-gray-400'>Video</a>
           </li>
