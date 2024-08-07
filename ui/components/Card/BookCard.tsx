@@ -158,7 +158,7 @@ const BookCard = ({
         className="relative max-w-sm overflow-visible border-gray-900 shadow-lg p-2 px-6 bg-zinc-950 transform transition-transform duration-300 hover:scale-105 hover:border-purple-500 hover:bg-neutral-900 border-2 group rounded-2xl min-w-96 min-h-80 mb-4   hover:border-r-4 b hover:border-r-purple-400 hover:border-l-4 b hover:border-l-purple-400"
         onClick={handleOpenModal}
       >
-         <div className="absolute top-[-25px] left-[-25px] transform translate-x-0 translate-y-0 z-50">
+         <div className="absolute top-[-5px] left-[-5px] transform translate-x-0 translate-y-0 z-50">
     <Image
       width={50}
       height={50}

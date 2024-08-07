@@ -36,7 +36,7 @@ const NavBar = () => {
         </ul>
         <div className='flex items-center space-x-2'>
           <a href='/profile' className='flex items-center space-x-2'>
-            <div className='relative rounded-full border-2 border-white overflow-hidden w-10 h-10 bg-cyan-300 flex items-center justify-center'>
+            <div className='relative rounded-full border-2 border-white overflow-hidden w-10 h-10  flex items-center justify-center'>
               {profilePicture ? (
                 <img
                   src={profilePicture}

@@ -45,10 +45,10 @@ const Page: React.FC = () => {
     if (error) return <div className="w-screen h-screen flex items-center justify-center text-red-500 text-2xl">{error}</div>;
 
     return (
-        <div className="w-screen h-screen flex">
+        <div className="w-screen h-screen flex overflow-auto">
             <div className="   p-6 rounded-lg shadow-lg backdrop-blur-xl  text-white">
 
-                <div className="mb-6 flex flex-col items-center mt-10">
+                <div className="mb-6 flex flex-col items-center mt-20">
                     <Image
                         src={profilePicture || "/profile_placeholder.png"}
                         width={200}
