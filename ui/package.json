@@ -23,6 +23,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
+    "firebase": "^10.12.5",
     "framer-motion": "^11.3.19",
     "lucide-react": "^0.408.0",
     "mini-svg-data-uri": "^1.4.4",
@@ -40,6 +41,7 @@
     "zustand-persist": "^0.4.0"
   },
   "devDependencies": {
+    "@types/firebase": "^3.2.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
