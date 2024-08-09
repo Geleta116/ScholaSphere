@@ -1,4 +1,4 @@
-import WithAuth from "@/components/WithAuth";
+import WithAuth from "../components/WithAuth";
 
 function Page() {
   return (

@@ -3,7 +3,7 @@ import BookCard from "@/components/Card/BookCard";
 import { useBookStore } from "@/store/book-store";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import WithAuth from "@/components/WithAuth";
+import WithAuth from "../components/WithAuth";
 import Image from "next/image";
 import { FlipWords } from "@/components/flipword";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";

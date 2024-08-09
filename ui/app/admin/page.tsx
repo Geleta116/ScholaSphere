@@ -18,7 +18,7 @@ import Typography from "@mui/material/Typography";
 import ResourceFilterDropDown from "@/components/DropDown/ResourceFilterDropDown";
 import { BookIcon, User2Icon } from "lucide-react";
 import { useState, useEffect } from "react";
-import WithAuth from "@/components/WithAuth";
+import WithAuth from "../components/WithAuth";
 import Modal from "@/components/Modal/Modal";
 import { useBookStore } from "@/store/book-store";
 import BookGrid from "@/components/ResourceCategory/BookGrid";

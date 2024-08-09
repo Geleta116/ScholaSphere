@@ -6,7 +6,7 @@ import Modal from "@/components/Modal/Modal";
 import { useBookStore } from "@/store/book-store";
 import { useEffect, useState } from "react";
 import AddResource from "@/components/ResourceOperations/AddResource";
-import WithAuth from "@/components/WithAuth";
+import WithAuth from "../components/WithAuth";
 
 function Page() {
   const { approvedBooks, fetchFilteredBooks } = useBookStore();
