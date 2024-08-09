@@ -2,6 +2,20 @@
 
 Welcome to ScholaSphere, the ultimate hub designed specifically for AAU students. Our platform centralizes essential academic resources including books, notes, and quizzes, all tailored to your courses. Enhance your academic journey with ease using our comprehensive and user-friendly platform.
 
+## Technologies Used
+
+- **Next.js**: For building the frontend of the application.
+  
+- **Express.js**: For managing the backend services.
+
+- **Zustand**: For state management in the frontend.
+
+- **ZOD**: For form validation.
+
+- **Firebase**: For storage solutions.
+
+- **Docker**: For containerization and environment management.
+
 ## Features
 
 ### 1. Managing Resources
