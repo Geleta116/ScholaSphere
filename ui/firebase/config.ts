@@ -1,4 +1,6 @@
 import { initializeApp, getApps } from "firebase/app";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -12,5 +14,20 @@ const firebaseConfig = {
 
 
 let firebase_app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+
+const storage = getStorage(firebase_app);
+
+
+export const uploadFile = async (file: Blob | Uint8Array | ArrayBuffer) => {
+  try {
+  const storageRef = ref(storage, 'books/' +  Date().toString());
+  await uploadBytes(storageRef, file);
+  const downloadURL = await getDownloadURL(storageRef);
+  console.log("uploaded succesfully")
+  return downloadURL;}
+  catch(e){
+    throw e;
+  }
+};
 
 export default firebase_app;

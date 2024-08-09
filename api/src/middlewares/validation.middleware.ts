@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { JsonArray } from "@prisma/client/runtime/library";
 export const GenericValidator = (schema: ZodSchema<any>) => {
   return async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.body)
     const result = await schema.safeParse(req.body);
 
     if (result.success) {

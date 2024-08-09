@@ -23,47 +23,46 @@ import multer, { FileFilterCallback } from "multer";
 
 export const BookRouter = express.Router();
 
-const storage = multer.diskStorage({
-  destination: (
-    req: Req,
-    file: Express.Multer.File,
-    cb: (error: Error | null, destination: string) => void
-  ) => {
-    cb(null, "uploads/books/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (
+//     req: Req,
+//     file: Express.Multer.File,
+//     cb: (error: Error | null, destination: string) => void
+//   ) => {
+//     cb(null, "uploads/books/");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, file.originalname);
+//   },
+// });
 
-const fileFilter = (
-  req: Req,
-  file: Express.Multer.File,
-  cb: FileFilterCallback
-) => {
-  const allowedMimeTypes = [
-    "application/pdf",
-    "text/plain",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  ];
-  if (allowedMimeTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(
-      new Error("Invalid file type. Only PDF, TXT, and DOCX files are allowed.")
-    );
-  }
-};
+// const fileFilter = (
+//   req: Req,
+//   file: Express.Multer.File,
+//   cb: FileFilterCallback
+// ) => {
+//   const allowedMimeTypes = [
+//     "application/pdf",
+//     "text/plain",
+//     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+//   ];
+//   if (allowedMimeTypes.includes(file.mimetype)) {
+//     cb(null, true);
+//   } else {
+//     cb(
+//       new Error("Invalid file type. Only PDF, TXT, and DOCX files are allowed.")
+//     );
+//   }
+// };
 
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-});
+// const upload = multer({
+//   storage: storage,
+//   fileFilter: fileFilter,
+// });
 
 BookRouter.post(
   "/upload",
   Authorization(["user", "admin"]),
-  upload.single("file"),
   GenericValidator(BookSchema),
   UploadBookController,
 );

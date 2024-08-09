@@ -1,11 +1,12 @@
 import { Book } from "@/model/Book";
 import { api, bookPath } from "./shared";
+import { uploadFile } from "@/firebase/config";
 
 export interface CreateBookPayload {
   title: string;
   description: string;
   tags: string[];
-  file: File | null;
+  file: File;
   year: number;
   department: string;
   course: string;
@@ -32,28 +33,14 @@ export interface FilterBookPayload {
 }
 export const uploadBook = async (payload: CreateBookPayload) => {
   try {
-
-    const formData = new FormData();
-    formData.append("title", payload.title);
-    formData.append("description", payload.description);
-    
-    payload.tags.forEach((tag) => {
-      formData.append("tags", tag);
-    });
-    if (payload.file) {
-      formData.append("file", payload.file);
-    }
-    formData.append("year", payload.year.toString());
-    formData.append("department", payload.department);
-    formData.append("course", payload.course);
-    formData.append("author", payload.author);
-
+    const fileURL = await uploadFile(payload.file);
     const response = await fetch(`${api}/${bookPath}/upload`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        "Content-Type": "application/json", // Ensure Content-Type is set
       },
-      body: formData,
+      body:JSON.stringify({ ...payload, link: fileURL }), 
     });
 
     if (!response.ok) {
