@@ -77,7 +77,7 @@ export const Login = async (req: Request, res: Response, next: any) => {
 
     const validPassword = await bcrypt.compare(password, existingUser.password);
     if (!validPassword) {
-      return res.status(403).send("Invalid Credentials");
+      return res.status(403).send({ message: "Invalid Credentials" });
     }
 
     const jti = uuidv4();
@@ -135,6 +135,6 @@ export const getUserRole = async (
     const roles = await findRoleFromToken(token);
     return res.status(200).json(roles);
   } catch (e) {
-    return res.status(500).json("Internal server error");
+    return res.status(500).json({ message: "Internal server erro" });
   }
 };
