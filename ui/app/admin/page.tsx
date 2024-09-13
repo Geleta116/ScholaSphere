@@ -18,7 +18,7 @@ import Typography from "@mui/material/Typography";
 import ResourceFilterDropDown from "@/components/DropDown/ResourceFilterDropDown";
 import { BookIcon, User2Icon } from "lucide-react";
 import { useState, useEffect } from "react";
-import WithAuth from "../components/WithAuth";
+import WithAuth from "@/components/WithAuth";
 import Modal from "@/components/Modal/Modal";
 import { useBookStore } from "@/store/book-store";
 import BookGrid from "@/components/ResourceCategory/BookGrid";
@@ -70,9 +70,13 @@ function Page() {
         borderRadius: "8px",
         height: "100%",
         color: "rgba(255,255,255,1)",
+        textAlign: "center",
+        padding:"10px"
       }}
     >
+      <a href="/home" className='hover:text-gray-400 text-center text-2xl font-bold '>ScholaSphere</a>
       <Toolbar />
+      
       <Divider />
       <List>
         {items.map((item) => (

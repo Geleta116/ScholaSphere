@@ -116,6 +116,12 @@ const SignUpForm: React.FC = () => {
       </div>
 
       <PrimaryButton type="submit" title="Sign Up" />
+      <div>
+        Already have an account?{" "}
+        <a href="/login" className="text-blue-400">
+          login
+        </a>
+      </div>
     </form>
   );
 };

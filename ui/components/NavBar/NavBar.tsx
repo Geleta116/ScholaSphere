@@ -43,7 +43,7 @@ const NavBar = () => {
 
       <div className={` ${menuIsOpen ? "block" : "hidden"} md:flex container mx-auto flex items-center justify-between flex-col md:flex-row `}>
         <h1 className='text-xl font-bold'>Schola Sphere</h1>
-        <ul className='flex gap-2 flex-col md:flex-row'>
+        <ul className='flex gap-8 flex-col md:flex-row'>
           <li>
             <a href="/home" className='hover:text-gray-400'>Home</a>
           </li>
@@ -51,10 +51,7 @@ const NavBar = () => {
             <a href="/book" className='hover:text-gray-400'>Book</a>
           </li>
           <li>
-            <a href="#video" className='hover:text-gray-400'>Video</a>
-          </li>
-          <li>
-            <a href="#exams" className='hover:text-gray-400'>Exams</a>
+            <a href="/admin" className='hover:text-gray-400'>admin</a>
           </li>
         </ul>
         <div className='flex items-center space-x-2'>

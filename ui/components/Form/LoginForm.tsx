@@ -70,6 +70,12 @@ const LoginForm = () => {
         )}
       </div>
       <PrimaryButton type="submit" title="Login" />
+      <div>
+        Don't have an account?{" "}
+        <a href="/signup" className="text-blue-400">
+          Sign up here
+        </a>
+      </div>
     </form>
   );
 };

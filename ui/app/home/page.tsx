@@ -23,21 +23,20 @@ function Page() {
   }, [getApprovedBooks]);
 
   return (
-    <div className="mt-40  flex flex-col  p-10 text-white ">
-
-      <section className=" items-center justify-center  mb-20">
-        <br />
-
-        <div className="text-white text-4xl md:text-6xl font-semibold leading-snug mx-auto max-w-5xl">
+    <div className="mt-20 px-4 md:px-10 lg:px-20 py-10 text-white">
+     
+      <section className="flex flex-col items-center mb-12 text-center">
+        <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold leading-snug max-w-3xl mx-auto">
           <span className="text-purple-400">Excited?</span> We are here to
-          provide the best{" "}
+          provide the best{" "} <br/>
           <FlipWords className="text-purple-400" words={words} />
         </div>
       </section>
 
-      <section className="flex items-center justify-center gap-3"> 
-         <HomePageBookCard
-          title={" Introduction to Algorithms"}
+      {/* Featured Books Section */}
+      <section className="flex flex-wrap justify-center gap-6 mb-12">
+        <HomePageBookCard
+          title={"Introduction to Algorithms"}
           description={
             "This title covers a broad range of algorithms in depth, yet makes their design and analysis accessible to all levels of readers."
           }
@@ -46,24 +45,20 @@ function Page() {
         <HomePageBookCard
           title={"Introduction to OOP"}
           description={
-            "This is the best place to find All the concepts you need to know about OOP"
+            "This is the best place to find All the concepts you need to know about OOP."
           }
           image={"/oop.jpg"}
-        /> 
-          <HomePageBookCard
+        />
+        <HomePageBookCard
           title={"Introduction to Networking"}
           description={
-            "This is the best place to find All the concepts you need to know about Networking"
+            "This is the best place to find All the concepts you need to know about Networking."
           }
-          image={"/network_two.jpg"}  
-        />  
-       </section> 
-      {/* <section className="flex justify-around w-full mb-20">
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/s2mYsPWzLjg?si=cHeK5uGLSILOyLih" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/s2mYsPWzLjg?si=cHeK5uGLSILOyLih" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/s2mYsPWzLjg?si=cHeK5uGLSILOyLih" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+          image={"/network_two.jpg"}
+        />
       </section>
-      <Carousel/> */}
+
+
     </div>
   );
 }

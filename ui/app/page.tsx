@@ -1,3 +1,4 @@
+"use client"
 import WithAuth from "../components/WithAuth";
 
 function Page() {
